@@ -217,6 +217,96 @@ app.post("/my/signout", (req, res) => {
     }
 })
 
+app.post("/server/info", (req, res) => {
+    const server = req.body.params;
+    const user_id = server.user_id;
+    const srv_id = server.srv_id;
+
+    // select server information
+    // user is server host?
+    let is_host;
+    // chat list : chat_id, chat_name
+    let chats;
+    // member list : user_id, user_name, imgs_path
+    let members;
+
+    if(TRUE){
+        res.send({
+            "result": "ok",
+            "is_host": is_host,
+            "chats": chats,
+            "members": members
+        })
+    } else {
+        res.send({
+            "result": "fail"
+        })
+    }
+})
+
+app.post("/server/notice", (req, res) => {
+    const server = req.body.params;
+    const srv_id = server.srv_id;
+
+    // search
+    let notice_id;
+    let notice_name;
+    let notice_memo;
+    // write user name
+    let writer;
+    let notice_writeDate;
+
+    if(TRUE){
+        res.send({
+            "result": "ok",
+            "notice_id": notice_id,
+            "notice_name": notice_name,
+            "notice_memo": notice_memo,
+            "writer": writer,
+            "notice_writeDate": notice_writeDate
+        })
+    } else {
+        res.send({
+            "result": "fail"
+        })
+    }
+})
+
+app.post("/server/calendar", (req, res) => {
+    const server = req.body.params;
+    const srv_id = server.srv_id;
+
+    // search
+    let calendar_id;
+    let calendar_date;
+    let calendar_time;
+    let calendar_nowVal;
+    let calendar_name; 
+    let calendar_memo;
+    // write user name
+    let writer;
+    let calendar_writeDate;
+
+    if(TRUE){
+        res.send({
+            "result": "ok",
+            "calendar_id": calendar_id,
+            "calendar_date": calendar_date,
+            "calendar_time": calendar_time,
+            "calendar_nowVal": calendar_nowVal,
+            "calendar_name": calendar_name,
+            "calendar_memo": calendar_memo,
+            "writer": writer,
+            "calendar_wrtieDate": calendar_writeDate
+        })
+    } else {
+        res.send({
+            "result": "fail"
+        })
+    }
+})
+
+
 
 // express server listen
 const handleListen = () => 
