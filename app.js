@@ -28,11 +28,11 @@ app.get("/", (req, res) => res.render("home"));
 // post
 app.post("/login", (req, res) => {
     const account = req.body.params;
-    const email = account.email;
-    const password = account.password;
+    const user_email = account.user_email;
+    const user_pwd = account.user_pwd;
 
     // login check
-    if(email == "test@test.com" && password == "1234"){
+    if(user_email == "test@test.com" && user_pwd == "1234"){
         res.send({"result": "ok"});
     } else {
         res.send({"result": "fail"});
@@ -41,14 +41,14 @@ app.post("/login", (req, res) => {
 
 app.post("/join", (req, res) => {
     const account = req.body.params;
-    const name = account.name;
-    const email = account.email;
-    const password = account.password;
-    const tel = account.tel;
+    const user_name = account.user_name;
+    const user_email = account.user_email;
+    const user_pwd = account.user_pwd;
+    const user_tel = account.user_tel;
     const agree = account.agree;
 
-    // Join
-    if(name == "test"){
+    // save db
+    if(user_name == "test"){
         res.send({"result": "ok"});
     } else {
         res.send({"result": "fail"});
@@ -57,8 +57,8 @@ app.post("/join", (req, res) => {
 
 app.post("/account/password", (req, res) => {
     const account = req.body.params;
-    const name = account.name;
-    const email = account.email;
+    const user_name = account.user_name;
+    const user_email = account.user_email;
 
     // account check
 
@@ -78,7 +78,7 @@ app.post("/account/password", (req, res) => {
 })
 
 app.post("/home", (req, res) => {
-    const id = req.body.params.id;
+    const user_id = req.body.params.user_id;
 
     // search server list
     // return srv_id, srv_name, (next)calendar_date, (next)calendar_time, memberList_attendRate
@@ -94,6 +94,121 @@ app.post("/home", (req, res) => {
             "srv_name": srv_name,
             "next_meeting": next_meeting,
             "attend_rate": attend_rate
+        })
+    } else {
+        res.send({
+            "result": "fail" 
+        })
+    }
+})
+
+app.post("/my/account", (req, res) => {
+    const user_id = req.body.params.user_id;
+
+    // search 
+    // return user_name, imgs_path, user_msg
+    let user_name;
+    let imgs_path;
+    let user_msg;
+
+    if(TRUE){
+        res.send({
+            "result":"ok",
+            "user_name": user_name,
+            "imgs_path": imgs_path,
+            "user_msg": user_msg
+        })
+    } else {
+        res.send({
+            "result": "fail" 
+        })
+    }
+
+})
+
+app.post("/my/imgs", (req, res) => {
+    const profile = req.body.params;
+    const user_id = profile.user_id;
+    const imgs_name = profile.imgs_name;
+    const imgs_path = profile.imgs_path;
+
+    // save db
+    if(TRUE){
+        res.send({
+            "result":"ok"
+        })
+    } else {
+        res.send({
+            "result": "fail" 
+        })
+    }
+})
+
+app.post("/my/name", (req, res) => {
+    const profile = req.body.params;
+    const user_id = profile.user_id;
+    const new_name = profile.new_name;
+
+    // save db
+    if(TRUE){
+        res.send({
+            "result":"ok"
+        })
+    } else {
+        res.send({
+            "result": "fail" 
+        })
+    }
+})
+
+app.post("/my/msg", (req, res) => {
+    const profile = req.body.params;
+    const user_id = profile.user_id;
+    const new_msg = profile.new_msg;
+
+    // save db
+    if(TRUE){
+        res.send({
+            "result":"ok"
+        })
+    } else {
+        res.send({
+            "result": "fail" 
+        })
+    }
+})
+
+app.post("/my/password", (req, res) => {
+    const profile = req.body.params;
+    const user_id = profile.user_id;
+    const user_pwd = profile.user_pwd;
+    const new_pwd = profile.new_pwd;
+
+    // check now password is correct
+
+    // save db
+    if(TRUE){
+        res.send({
+            "result":"ok"
+        })
+    } else {
+        res.send({
+            "result": "fail" 
+        })
+    }
+})
+
+app.post("/my/signout", (req, res) => {
+    const profile = req.body.params;
+    const user_id = profile.user_id;
+    const user_pwd = profile.user_pwd;
+
+    // check password is correct
+
+    // delete account
+    if(TRUE){
+        res.send({
+            "result":"ok"
         })
     } else {
         res.send({
