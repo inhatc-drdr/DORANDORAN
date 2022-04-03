@@ -1,52 +1,236 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Hello, world!</title>
-  </head>
-  <body>
-    <h1>Hello, world!</h1>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
-    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img src="https://images.pexels.com/photos/2544554/pexels-photo-2544554.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"
-             class="d-block w-100" alt="...">
+  <title>Hello, world!</title>
+
+  <style>
+    .form-signin {
+      width: 100%;
+      max-width: 330px;
+      padding: 15px;
+      margin: auto;
+    }
+
+    .form-signin .checkbox {
+      font-weight: 400;
+    }
+
+    .form-signin .form-floating:focus-within {
+      z-index: 2;
+    }
+
+    .form-signin input[type="email"] {
+      margin-bottom: -1px;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    .form-signin input[type="password"] {
+      margin-bottom: 10px;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+
+    <header class="text-center">
+      <h1>Hello, world!</h1>
+      <p></p>
+    </header>
+
+
+    <!-- 탭 메뉴 -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="userinfo-tab" data-bs-toggle="tab" data-bs-target="#userinfo" type="button"
+          role="tab" aria-controls="userinfo" aria-selected="true">로그인</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="myreview-tab" data-bs-toggle="tab" data-bs-target="#myreview" type="button"
+          role="tab" aria-controls="myreview" aria-selected="false">회원가입</button>
+      </li>
+      <!-- <li class="nav-item" role="presentation">
+      <button class="nav-link" id="wishlist-tab" data-bs-toggle="tab" data-bs-target="#wishlist" type="button"
+        role="tab" aria-controls="wishlist" aria-selected="false">위시리스트</button>
+    </li> -->
+    </ul>
+
+    <!-- 내용 -->
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active text-center" id="userinfo" role="tabpanel" aria-labelledby="userinfo-tab">
+        <div class="form-signin">
+          <img class="mb-4" src="/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+          <h1 class="h3 mb-3 fw-normal">Login</h1>
+
+          <div class="form-floating">
+            <input type="email" class="form-control" id="email" placeholder="name@example.com">
+            <label for="email">Email address</label>
           </div>
-          <div class="carousel-item">
-            <img src="https://images.pexels.com/photos/213399/pexels-photo-213399.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"
-             class="d-block w-100" alt="...">
+          <div class="form-floating">
+            <input type="password" class="form-control" id="password" placeholder="Password">
+            <label for="password">Password</label>
           </div>
-          <div class="carousel-item">
-            <img src="https://images.pexels.com/photos/2355519/pexels-photo-2355519.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
-             class="d-block w-100" alt="...">
-          </div>
+          <p></p>
+          <button class="w-100 btn btn-lg btn-primary submit">Login</button>
+          <p class="mt-5 mb-3 text-muted">© 2022.04.03</p>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
       </div>
 
-    <!-- Optional JavaScript; choose one of the two! -->
+      <div class="tab-pane fade text-center" id="myreview" role="tabpanel" aria-labelledby="myreview-tab">
+        <div class="form-signin">
+          <img class="mb-4" src="/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+          <h1 class="h3 mb-3 fw-normal">Join</h1>
 
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+          <div class="form-floating">
+            <input type="text" class="form-control" id="join_name" placeholder="name">
+            <label for="join_name">Name</label>
+          </div>
+          <div class="form-floating">
+            <input type="email" class="form-control" id="join_email" placeholder="name@example.com">
+            <label for="join_email">Email address</label>
+          </div>
+          <div class="form-floating">
+            <input type="password" class="form-control" id="join_pwd" placeholder="Password">
+            <label for="join_pwd">Password</label>
+          </div>
+          <div class="form-floating">
+            <input type="text" class="form-control" id="join_tel" placeholder="01012345678">
+            <label for="join_tel">Phone</label>
+          </div>
+          <div class="checkbox mb-3">
+            <label>
+              <input type="checkbox" value="remember-me" id="agree"> Remember me
+            </label>
+          </div>
+          <p></p>
+          <button class="w-100 btn btn-lg btn-primary join">Join</button>
+          <p class="mt-5 mb-3 text-muted">© 2022.04.03</p>
+        </div>
+      </div>
 
-    <!-- Option 2: Separate Popper and Bootstrap JS -->
-    <!--
+      <!-- <div class="tab-pane fade" id="wishlist" role="tabpanel" aria-labelledby="wishlist-tab">위시리스트 탭</div> -->
+
+    </div>
+
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+
+    $(() => {
+      $('.submit').click(() => {
+        var email = $('#email').val();
+        var password = $('#password').val();
+
+        // var parmas = {"user_email": email, "user_pwd":password}
+
+        axios.post('/login', {
+          params: {
+            'user_email': email,
+            'user_pwd': password
+          }
+        })
+          .then(res => {
+            let result = res.data.result;
+
+            if (result == "ok") {
+              alert("로그인 성공")
+            } else {
+              alert("로그인 실패")
+            }
+
+          })
+          .catch(e => console.log(e))
+      })
+
+      $('.join').click(() => {
+        var name = $('#join_name').val();
+        var email = $('#join_email').val();
+        var password = $('#join_pwd').val();
+        var tel = $('#join_tel').val();
+
+        // var parmas = {"user_email": email, "user_pwd":password}
+
+        axios.post('/join', {
+          params: {
+            'user_name': name,
+            'user_email': email,
+            'user_pwd': password,
+            'user_tel': tel,
+          }
+        })
+          .then(res => {
+            let result = res.data.result;
+
+            if (result == "ok") {
+              alert("회원가입 성공")
+            } else {
+              alert("회원가입 실패")
+            }
+
+          })
+          .catch(e => console.log(e))
+      })
+    })
+
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+  <script>
+    let key = "${param.key}";
+    console.log(key);
+    if (key === "userinfo") {
+
+      $("#myreview-tab").removeClass("active");
+      $("#wishlist-tab").removeClass("active");
+      $("#userinfo-tab").addClass("active");
+
+      $("#myreview").removeClass("show active");
+      $("#wishlist").removeClass("show active");
+      $("#userinfo").addClass("show active");
+
+    } else if (key === "myreview") {
+
+      $("#wishlist-tab").removeClass("active");
+      $("#userinfo-tab").removeClass("active");
+      $("#myreview-tab").addClass("active");
+
+      $("#userinfo").removeClass("show active");
+      $("#wishlist").removeClass("show active");
+      $("#myreview").addClass("show active");
+
+    } else if (key === "wishlist") {
+
+      $("#userinfo-tab").removeClass("active");
+      $("#myreview-tab").removeClass("active");
+      $("#wishlist-tab").addClass("active");
+
+      $("#myreview").removeClass("show active");
+      $("#userinfo").removeClass("show active");
+      $("#wishlist").addClass("show active");
+
+    }
+  </script>
+  <!-- Option 2: Separate Popper and Bootstrap JS -->
+  <!--
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
     -->
-  </body>
+</body>
+
 </html>

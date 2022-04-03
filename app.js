@@ -1,13 +1,16 @@
+require("dotenv").config();
+
 const express = require('express');
 const path = require("path");
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
+const connection = require('./models/config')
+
 const app = express();
+const PORT = process.env.PORT;
 
-const PORT = 5000;
-
-// cors
+// cors 
 app.use(cors());
 
 // view
@@ -32,11 +35,19 @@ app.post("/login", (req, res) => {
     const user_pwd = account.user_pwd;
 
     // login check
-    if(user_email == "test@test.com" && user_pwd == "1234"){
-        res.send({"result": "ok"});
-    } else {
-        res.send({"result": "fail"});
-    }
+    let sql = 'SELECT count(*) AS count FROM user WHERE user_email=? and user_pwd=?';
+    connection.query(sql, [user_email, user_pwd], (error, results, fields) => {
+        if (error) throw error;
+        console.log(results[0].count);
+
+        // return result
+        const count = results[0].count;
+        if(count){
+            res.send({"result": "ok"});
+        } else {
+            res.send({"result": "fail"});
+        }
+    })
 })
 
 app.post("/join", (req, res) => {
@@ -45,14 +56,20 @@ app.post("/join", (req, res) => {
     const user_email = account.user_email;
     const user_pwd = account.user_pwd;
     const user_tel = account.user_tel;
-    const agree = account.agree;
 
     // save db
-    if(user_name == "test"){
+    console.log(account) 
+
+    let sql = 'INSERT INTO user (user_name, user_email, user_pwd, user_tel) VALUES(?,?,?,?)';
+    connection.query(sql, [user_name, user_email, user_pwd, user_tel], (error, results, fields) => {
+        if (error) {
+            res.send({"result": "fail"});
+            throw error;
+        } 
+
         res.send({"result": "ok"});
-    } else {
-        res.send({"result": "fail"});
-    }
+    })
+    
 })
 
 app.post("/account/password", (req, res) => {
