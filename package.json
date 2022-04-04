@@ -4,7 +4,8 @@
   "description": "```\r DEMO-NODE\r ⊢ react     // 리액트\r ⊢ public    // 클라이언트 폴더\r ∣   ⊢ js\r ∣   ⊢ imgs\r ⊢ models    // DB 관련 스키마, 연결 코드\r ⊢ routes    // 라우터\r ⊢ views     // 템플릿\r ⊢ app.js    // 서버\r ⊢ package.json \r ⊢ nodemon.json\r ⊢ babel.cofing.json\r ⊢ .env      // 환경변수, 비밀번호 등 보호되어야할 정보들이 담긴 파일\r ⊢ readme.md\r ⊢ readmes   // 설명 파일 등\r ```",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "db-test": "node models/db-test.js"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,8 @@
     "dotenv": "^16.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.3",
-    "localtunnel": "^2.0.2"
+    "localtunnel": "^2.0.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3"
   }
 }

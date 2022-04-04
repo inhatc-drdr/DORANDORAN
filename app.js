@@ -5,7 +5,7 @@ const path = require("path");
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-const connection = require('./models/config')
+const DB = require('./models/config')
 
 const app = express();
 const PORT = process.env.PORT;
@@ -36,16 +36,20 @@ app.post("/login", (req, res) => {
 
     // login check
     let sql = 'SELECT count(*) AS count FROM user WHERE user_email=? and user_pwd=?';
-    connection.query(sql, [user_email, user_pwd], (error, results, fields) => {
-        if (error) throw error;
-        console.log(results[0].count);
+    let params = [user_email, user_pwd];
+    DB(sql, params).then((result) => {
 
-        // return result
-        const count = results[0].count;
-        if(count){
-            res.send({"result": "ok"});
-        } else {
+        // return 
+        if(!result.state){
+            console.log(result.err);
             res.send({"result": "fail"});
+        } else {
+            let count = result.rows[0].count;
+            if(!count){
+                res.send({"result": "fail"});
+            } else {
+                res.send({"result": "ok"});
+            }
         }
     })
 })
@@ -61,15 +65,17 @@ app.post("/join", (req, res) => {
     console.log(account) 
 
     let sql = 'INSERT INTO user (user_name, user_email, user_pwd, user_tel) VALUES(?,?,?,?)';
-    connection.query(sql, [user_name, user_email, user_pwd, user_tel], (error, results, fields) => {
-        if (error) {
-            res.send({"result": "fail"});
-            throw error;
-        } 
+    let params = [user_name, user_email, user_pwd, user_tel];
+    DB(sql, params).then(function(result) {
 
-        res.send({"result": "ok"});
+        // return 
+        if(!result.state){
+            res.send({"result": "fail"});
+        } else {
+            res.send({"result": "ok"});
+        }
     })
-    
+
 })
 
 app.post("/account/password", (req, res) => {
