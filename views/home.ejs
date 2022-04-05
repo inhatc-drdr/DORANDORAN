@@ -138,11 +138,27 @@
           </div>
           <p></p>
           <button class="w-100 btn btn-lg btn-primary createsrv">생성</button>
-          <p class="mt-5 mb-3 text-muted">© 2022.04.03</p>
+          <p class="mt-5 mb-3 text-muted">© 2022.04.05</p>
         </div>
       </div>
 
-      <div class="tab-pane fade text-center" id="invent" role="tabpanel" aria-labelledby="invent-tab">회원초대탭</div>
+      <div class="tab-pane fade text-center" id="invent" role="tabpanel" aria-labelledby="invent-tab">
+        <div class="form-signin">
+          <h1 class="h3 mb-3 fw-normal">회원초대</h1>
+
+          <div class="form-floating">
+            <input type="text" class="form-control" id="invent_srv_id" placeholder="name">
+            <label for="invent_srv_id">서버ID</label>
+          </div>
+          <div class="form-floating">
+            <input type="text" class="form-control" id="invent_user_email" placeholder="name">
+            <label for="invent_user_email">회원 EMAIL</label>
+          </div>
+          <p></p>
+          <button class="w-100 btn btn-lg btn-primary invent">초대</button>
+          <p class="mt-5 mb-3 text-muted">© 2022.04.05</p>
+        </div>
+      </div>
 
     </div>
 
@@ -229,6 +245,30 @@
           })
           .catch(e => console.log(e))
       })
+
+      $('.invent').click(() => {
+        var invent_srv_id = $('#invent_srv_id').val();
+        var invent_user_email = $('#invent_user_email').val();
+
+        axios.post('/server/invent', {
+          params: {
+            'srv_id': invent_srv_id,
+            'user_email': invent_user_email,
+          }
+        })
+          .then(res => {
+            let result = res.data.result;
+
+            if (result == "ok") {
+              alert("회원초대 성공")
+            } else {
+              alert("회원초대 실패")
+            }
+
+          })
+          .catch(e => console.log(e))
+      })
+
     })
 
   </script>

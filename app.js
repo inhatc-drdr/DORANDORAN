@@ -40,15 +40,15 @@ app.post("/login", (req, res) => {
     DB(sql, params).then((result) => {
 
         // return 
-        if(!result.state){
+        if (!result.state) {
             console.log(result.err);
-            res.send({"result": "fail"});
+            res.send({ "result": "fail" });
         } else {
             let count = result.rows[0].count;
-            if(!count){
-                res.send({"result": "fail"});
+            if (!count) {
+                res.send({ "result": "fail" });
             } else {
-                res.send({"result": "ok"});
+                res.send({ "result": "ok" });
             }
         }
     })
@@ -61,18 +61,18 @@ app.post("/join", (req, res) => {
     const user_pwd = account.user_pwd;
     const user_tel = account.user_tel;
 
-    // save db
-    console.log(account) 
+    // insert db
+    console.log(account)
 
     let sql = 'INSERT INTO user (user_name, user_email, user_pwd, user_tel) VALUES(?,?,?,?)';
     let params = [user_name, user_email, user_pwd, user_tel];
-    DB(sql, params).then(function(result) {
+    DB(sql, params).then(function (result) {
 
         // return 
-        if(!result.state){
-            res.send({"result": "fail"});
+        if (!result.state) {
+            res.send({ "result": "fail" });
         } else {
-            res.send({"result": "ok"});
+            res.send({ "result": "ok" });
         }
     })
 
@@ -93,10 +93,10 @@ app.post("/account/password", (req, res) => {
     let sendEmail = false;
 
     // return 
-    if(new_password != null && sendEmail){
-        res.send({"result": "ok"});
+    if (new_password != null && sendEmail) {
+        res.send({ "result": "ok" });
     } else {
-        res.send({"result": "fail"});
+        res.send({ "result": "fail" });
     }
 })
 
@@ -110,9 +110,9 @@ app.post("/home", (req, res) => {
     let next_meeting;
     let attend_rate;
 
-    if(TRUE){
+    if (TRUE) {
         res.send({
-            "result":"ok",
+            "result": "ok",
             "srv_id": srv_id,
             "srv_name": srv_name,
             "next_meeting": next_meeting,
@@ -120,7 +120,7 @@ app.post("/home", (req, res) => {
         })
     } else {
         res.send({
-            "result": "fail" 
+            "result": "fail"
         })
     }
 })
@@ -148,7 +148,7 @@ app.post("/my/name", (req, res) => {
     const new_name = profile.new_name;
 
     // save db
-    
+
 })
 
 app.post("/my/msg", (req, res) => {
@@ -177,13 +177,13 @@ app.post("/my/signout", (req, res) => {
     // check password is correct
 
     // delete account
-    if(TRUE){
+    if (TRUE) {
         res.send({
-            "result":"ok"
+            "result": "ok"
         })
     } else {
         res.send({
-            "result": "fail" 
+            "result": "fail"
         })
     }
 })
@@ -193,18 +193,56 @@ app.post("/server/create", (req, res) => {
     const srv_name = server.srv_name;
     const user_id = server.user_id;
 
-    // save db
-    console.log(server) 
+    // insert db
+    console.log(server)
 
     let sql = 'INSERT INTO srv (srv_name, user_id) VALUES(?,?)';
     let params = [srv_name, user_id];
-    DB(sql, params).then(function(result) {
+    DB(sql, params).then(function (result) {
 
         // return 
-        if(!result.state){
-            res.send({"result": "fail"});
+        if (!result.state) {
+            res.send({ "result": "fail" });
         } else {
-            res.send({"result": "ok"});
+            res.send({ "result": "ok" });
+        }
+    })
+})
+
+app.post("/server/invent", (req, res) => {
+    const server = req.body.params;
+    const srv_id = server.srv_id;
+    const user_email = server.user_email;
+
+    console.log(server)
+
+    // Check if you are already a member
+    let sql = 'SELECT count(*) as count FROM srvuser WHERE srv_id=? ' +
+        'AND user_id=(SELECT user_id FROM user WHERE user_email=?)';
+    let params = [srv_id, user_email];
+    DB(sql, params).then(function (result) {
+
+        if (!result.state) {
+            res.send({ "result": "fail" });
+        } else {
+            let count = result.rows[0].count;
+            if (count) {
+                res.send({ "result": "fail" });
+            } else {
+
+                // insert db
+                sql = 'INSERT INTO srvuser (srv_id, user_id) ' +
+                    'VALUES(?, (SELECT user_id FROM user WHERE user_email=?))';
+                DB(sql, params).then(function (result) {
+
+                    // return 
+                    if (!result.state) {
+                        res.send({ "result": "fail" });
+                    } else {
+                        res.send({ "result": "ok" });
+                    }
+                })
+            }
         }
     })
 })
@@ -222,7 +260,7 @@ app.post("/server/info", (req, res) => {
     // member list : user_id, user_name, imgs_path
     let members;
 
-    if(TRUE){
+    if (TRUE) {
         res.send({
             "result": "ok",
             "is_host": is_host,
@@ -248,7 +286,7 @@ app.post("/server/notice", (req, res) => {
     let writer;
     let notice_writeDate;
 
-    if(TRUE){
+    if (TRUE) {
         res.send({
             "result": "ok",
             "notice_id": notice_id,
@@ -273,13 +311,13 @@ app.post("/server/calendar", (req, res) => {
     let calendar_date;
     let calendar_time;
     let calendar_nowVal;
-    let calendar_name; 
+    let calendar_name;
     let calendar_memo;
     // write user name
     let writer;
     let calendar_writeDate;
 
-    if(TRUE){
+    if (TRUE) {
         res.send({
             "result": "ok",
             "calendar_id": calendar_id,
@@ -301,7 +339,7 @@ app.post("/server/calendar", (req, res) => {
 
 
 // express server listen
-const handleListen = () => 
+const handleListen = () =>
     console.log(`Listening on http://localhost:${PORT}`);
 
 app.listen(PORT, handleListen);
