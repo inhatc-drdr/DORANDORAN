@@ -130,23 +130,6 @@ app.post("/my/account", (req, res) => {
 
     // search 
     // return user_name, imgs_path, user_msg
-    let user_name;
-    let imgs_path;
-    let user_msg;
-
-    if(TRUE){
-        res.send({
-            "result":"ok",
-            "user_name": user_name,
-            "imgs_path": imgs_path,
-            "user_msg": user_msg
-        })
-    } else {
-        res.send({
-            "result": "fail" 
-        })
-    }
-
 })
 
 app.post("/my/imgs", (req, res) => {
@@ -156,15 +139,7 @@ app.post("/my/imgs", (req, res) => {
     const imgs_path = profile.imgs_path;
 
     // save db
-    if(TRUE){
-        res.send({
-            "result":"ok"
-        })
-    } else {
-        res.send({
-            "result": "fail" 
-        })
-    }
+
 })
 
 app.post("/my/name", (req, res) => {
@@ -173,15 +148,7 @@ app.post("/my/name", (req, res) => {
     const new_name = profile.new_name;
 
     // save db
-    if(TRUE){
-        res.send({
-            "result":"ok"
-        })
-    } else {
-        res.send({
-            "result": "fail" 
-        })
-    }
+    
 })
 
 app.post("/my/msg", (req, res) => {
@@ -190,15 +157,6 @@ app.post("/my/msg", (req, res) => {
     const new_msg = profile.new_msg;
 
     // save db
-    if(TRUE){
-        res.send({
-            "result":"ok"
-        })
-    } else {
-        res.send({
-            "result": "fail" 
-        })
-    }
 })
 
 app.post("/my/password", (req, res) => {
@@ -208,17 +166,7 @@ app.post("/my/password", (req, res) => {
     const new_pwd = profile.new_pwd;
 
     // check now password is correct
-
     // save db
-    if(TRUE){
-        res.send({
-            "result":"ok"
-        })
-    } else {
-        res.send({
-            "result": "fail" 
-        })
-    }
 })
 
 app.post("/my/signout", (req, res) => {
@@ -238,6 +186,27 @@ app.post("/my/signout", (req, res) => {
             "result": "fail" 
         })
     }
+})
+
+app.post("/server/create", (req, res) => {
+    const server = req.body.params;
+    const srv_name = server.srv_name;
+    const user_id = server.user_id;
+
+    // save db
+    console.log(server) 
+
+    let sql = 'INSERT INTO srv (srv_name, user_id) VALUES(?,?)';
+    let params = [srv_name, user_id];
+    DB(sql, params).then(function(result) {
+
+        // return 
+        if(!result.state){
+            res.send({"result": "fail"});
+        } else {
+            res.send({"result": "ok"});
+        }
+    })
 })
 
 app.post("/server/info", (req, res) => {

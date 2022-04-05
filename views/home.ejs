@@ -54,22 +54,26 @@
     <!-- 탭 메뉴 -->
     <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="userinfo-tab" data-bs-toggle="tab" data-bs-target="#userinfo" type="button"
-          role="tab" aria-controls="userinfo" aria-selected="true">로그인</button>
+        <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button"
+          role="tab" aria-controls="login" aria-selected="true">로그인</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="myreview-tab" data-bs-toggle="tab" data-bs-target="#myreview" type="button"
-          role="tab" aria-controls="myreview" aria-selected="false">회원가입</button>
+        <button class="nav-link" id="join-tab" data-bs-toggle="tab" data-bs-target="#join" type="button"
+          role="tab" aria-controls="join" aria-selected="false">회원가입</button>
       </li>
-      <!-- <li class="nav-item" role="presentation">
-      <button class="nav-link" id="wishlist-tab" data-bs-toggle="tab" data-bs-target="#wishlist" type="button"
-        role="tab" aria-controls="wishlist" aria-selected="false">위시리스트</button>
-    </li> -->
+      <li class="nav-item" role="presentation">
+      <button class="nav-link" id="createsrv-tab" data-bs-toggle="tab" data-bs-target="#createsrv" type="button"
+        role="tab" aria-controls="createsrv" aria-selected="false">서버생성</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="invent-tab" data-bs-toggle="tab" data-bs-target="#invent" type="button"
+        role="tab" aria-controls="invent" aria-selected="false">회원초대</button>
+    </li>
     </ul>
 
     <!-- 내용 -->
     <div class="tab-content" id="myTabContent">
-      <div class="tab-pane fade show active text-center" id="userinfo" role="tabpanel" aria-labelledby="userinfo-tab">
+      <div class="tab-pane fade show active text-center" id="login" role="tabpanel" aria-labelledby="login-tab">
         <div class="form-signin">
           <img class="mb-4" src="/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
           <h1 class="h3 mb-3 fw-normal">Login</h1>
@@ -88,7 +92,7 @@
         </div>
       </div>
 
-      <div class="tab-pane fade text-center" id="myreview" role="tabpanel" aria-labelledby="myreview-tab">
+      <div class="tab-pane fade text-center" id="join" role="tabpanel" aria-labelledby="join-tab">
         <div class="form-signin">
           <img class="mb-4" src="/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
           <h1 class="h3 mb-3 fw-normal">Join</h1>
@@ -120,7 +124,25 @@
         </div>
       </div>
 
-      <!-- <div class="tab-pane fade" id="wishlist" role="tabpanel" aria-labelledby="wishlist-tab">위시리스트 탭</div> -->
+      <div class="tab-pane fade text-center" id="createsrv" role="tabpanel" aria-labelledby="createsrv-tab">
+        <div class="form-signin">
+          <h1 class="h3 mb-3 fw-normal">서버 생성</h1>
+
+          <div class="form-floating">
+            <input type="text" class="form-control" id="srv_user_id" placeholder="name">
+            <label for="srv_user_id">회원ID(임시)</label>
+          </div>
+          <div class="form-floating">
+            <input type="text" class="form-control" id="srv_name" placeholder="name">
+            <label for="srv_name">서버명</label>
+          </div>
+          <p></p>
+          <button class="w-100 btn btn-lg btn-primary createsrv">생성</button>
+          <p class="mt-5 mb-3 text-muted">© 2022.04.03</p>
+        </div>
+      </div>
+
+      <div class="tab-pane fade text-center" id="invent" role="tabpanel" aria-labelledby="invent-tab">회원초대탭</div>
 
     </div>
 
@@ -184,6 +206,29 @@
           })
           .catch(e => console.log(e))
       })
+
+      $('.createsrv').click(() => {
+        var srv_user_id = $('#srv_user_id').val();
+        var srv_name = $('#srv_name').val();
+
+        axios.post('/server/create', {
+          params: {
+            'user_id': srv_user_id,
+            'srv_name': srv_name,
+          }
+        })
+          .then(res => {
+            let result = res.data.result;
+
+            if (result == "ok") {
+              alert("서버생성 성공")
+            } else {
+              alert("서버생성 실패")
+            }
+
+          })
+          .catch(e => console.log(e))
+      })
     })
 
   </script>
@@ -194,35 +239,53 @@
   <script>
     let key = "${param.key}";
     console.log(key);
-    if (key === "userinfo") {
+    if (key === "login") {
 
-      $("#myreview-tab").removeClass("active");
-      $("#wishlist-tab").removeClass("active");
-      $("#userinfo-tab").addClass("active");
+      $("join-tab").removeClass("active");
+      $("#createsrv-tab").removeClass("active");
+      $("#invent-tab").removeClass("active");
+      $("#login-tab").addClass("active");
 
-      $("#myreview").removeClass("show active");
-      $("#wishlist").removeClass("show active");
-      $("#userinfo").addClass("show active");
+      $("join").removeClass("show active");
+      $("#createsrv").removeClass("show active");
+      $("#invent").removeClass("show active");
+      $("#login").addClass("show active");
 
-    } else if (key === "myreview") {
+    } else if (key === "join") {
 
-      $("#wishlist-tab").removeClass("active");
-      $("#userinfo-tab").removeClass("active");
-      $("#myreview-tab").addClass("active");
+      $("#createsrv-tab").removeClass("active");
+      $("#login-tab").removeClass("active");
+      $("#invent-tab").removeClass("active");
+      $("join-tab").addClass("active");
 
-      $("#userinfo").removeClass("show active");
-      $("#wishlist").removeClass("show active");
-      $("#myreview").addClass("show active");
+      $("#login").removeClass("show active");
+      $("#createsrv").removeClass("show active");
+      $("#invent").removeClass("show active");
+      $("join").addClass("show active");
 
-    } else if (key === "wishlist") {
+    } else if (key === "createsrv") {
 
-      $("#userinfo-tab").removeClass("active");
-      $("#myreview-tab").removeClass("active");
-      $("#wishlist-tab").addClass("active");
+      $("#login-tab").removeClass("active");
+      $("join-tab").removeClass("active");
+      $("invent-tab").removeClass("active");
+      $("#createsrv-tab").addClass("active");
 
-      $("#myreview").removeClass("show active");
-      $("#userinfo").removeClass("show active");
-      $("#wishlist").addClass("show active");
+      $("join").removeClass("show active");
+      $("#login").removeClass("show active");
+      $("#invent").removeClass("show active");
+      $("#createsrv").addClass("show active");
+
+    } else if (key === "invent") {
+
+      $("#login-tab").removeClass("active");
+      $("join-tab").removeClass("active");
+      $("#createsrv-tab").removeClass("active");
+      $("#invent-tab").addClass("active");
+
+      $("join").removeClass("show active");
+      $("#login").removeClass("show active");
+      $("#createsrv").removeClass("show active");
+      $("#invent").addClass("show active");
 
     }
   </script>
