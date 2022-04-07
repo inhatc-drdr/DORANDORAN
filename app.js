@@ -189,7 +189,7 @@ app.post("/my/signout", (req, res) => {
 })
 
 app.post("/server/create", (req, res) => {
-    const server = req.body.params;
+    const server = req.body.params; 
     const srv_name = server.srv_name;
     const user_id = server.user_id;
 
@@ -247,95 +247,56 @@ app.post("/server/invent", (req, res) => {
     })
 })
 
-app.post("/server/info", (req, res) => {
+app.post("/server/notice/add", (req, res) => {
     const server = req.body.params;
+    const srv_id = server.srv_id;
     const user_id = server.user_id;
-    const srv_id = server.srv_id;
+    const notice_name = server.notice_name;
+    const notice_memo = server.notice_memo;
 
-    // select server information
-    // user is server host?
-    let is_host;
-    // chat list : chat_id, chat_name
-    let chats;
-    // member list : user_id, user_name, imgs_path
-    let members;
+    console.log(server);
 
-    if (TRUE) {
-        res.send({
-            "result": "ok",
-            "is_host": is_host,
-            "chats": chats,
-            "members": members
-        })
-    } else {
-        res.send({
-            "result": "fail"
-        })
-    }
+    // check if the user is the administrator of the server
+    let sql = 'SELECT user_id FROM srv WHERE srv_id=?';
+    let params = [srv_id];
+    DB(sql, params).then(function (result) {
+
+        if (!result.state) {
+            res.send({ "result": "fail" });
+        } else {
+            if(!result.rows[0]){
+                res.send({ "result": "fail" });
+            } else {
+                let admin_id = result.rows[0];
+
+                if(user_id == admin_id){
+                
+                    // insert db
+                    sql = 'INSERT INTO notice (srv_id, user_id, notice_name, notice_memo)'
+                            + ' VALUES(?,?,?,?)';
+                    params = [srv_id, user_id, notice_name, notice_memo];
+                    DB(sql, params).then(function (result) {
+                        // return 
+                        if (!result.state) {
+                            res.send({ "result": "fail" });
+                        } else {
+                            res.send({ "result": "ok" });
+                        }
+                    })
+                } 
+                res.send({"result": "fail"});
+            }
+        }
+    })
 })
 
-app.post("/server/notice", (req, res) => {
-    const server = req.body.params;
-    const srv_id = server.srv_id;
+app.post("/server/notice/list", (req, res) => {
 
-    // search
-    let notice_id;
-    let notice_name;
-    let notice_memo;
-    // write user name
-    let writer;
-    let notice_writeDate;
-
-    if (TRUE) {
-        res.send({
-            "result": "ok",
-            "notice_id": notice_id,
-            "notice_name": notice_name,
-            "notice_memo": notice_memo,
-            "writer": writer,
-            "notice_writeDate": notice_writeDate
-        })
-    } else {
-        res.send({
-            "result": "fail"
-        })
-    }
 })
 
-app.post("/server/calendar", (req, res) => {
-    const server = req.body.params;
-    const srv_id = server.srv_id;
-
-    // search
-    let calendar_id;
-    let calendar_date;
-    let calendar_time;
-    let calendar_nowVal;
-    let calendar_name;
-    let calendar_memo;
-    // write user name
-    let writer;
-    let calendar_writeDate;
-
-    if (TRUE) {
-        res.send({
-            "result": "ok",
-            "calendar_id": calendar_id,
-            "calendar_date": calendar_date,
-            "calendar_time": calendar_time,
-            "calendar_nowVal": calendar_nowVal,
-            "calendar_name": calendar_name,
-            "calendar_memo": calendar_memo,
-            "writer": writer,
-            "calendar_wrtieDate": calendar_writeDate
-        })
-    } else {
-        res.send({
-            "result": "fail"
-        })
-    }
+app.post("/server/notice/detail", (req, res) => {
+    
 })
-
 
 
 // express server listen
