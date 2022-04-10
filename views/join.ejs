@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+
+    <style>
+        .form-signin {
+            width: 100%;
+            max-width: 330px;
+            padding: 15px;
+            margin: auto;
+        }
+
+        .form-signin .checkbox {
+            font-weight: 400;
+        }
+
+        .form-signin .form-floating:focus-within {
+            z-index: 2;
+        }
+
+        .form-signin input[type="email"] {
+            margin-bottom: -1px;
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .form-signin input[type="password"] {
+            margin-bottom: 10px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+
+        <header class="text-center">
+            <h1>Hello, world!</h1>
+            <p></p>
+        </header>
+
+        <div class="form-signin">
+            <img class="mb-4" src="/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+            <h1 class="h3 mb-3 fw-normal">Join</h1>
+
+            <div class="form-floating">
+                <input type="text" class="form-control" id="join_name" placeholder="name">
+                <label for="join_name">Name</label>
+            </div>
+            <p></p>
+            <div class="form-floating">
+                <input type="email" class="form-control" id="join_email" placeholder="name@example.com">
+                <label for="join_email">Email address</label>
+                <button class="w-100 btn btn-sm btn-primary email_check">이메일 중복 확인</button>
+            </div>
+            <p></p>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="join_pwd" placeholder="Password">
+                <label for="join_pwd">Password</label>
+            </div>
+            <p></p>
+            <div class="form-floating">
+                <input type="text" class="form-control" id="join_tel" placeholder="01012345678">
+                <label for="join_tel">Phone</label>
+            </div>
+            <p></p>
+            <button class="w-100 btn btn-lg btn-primary join">Join</button>
+            <p class="mt-5 mb-3 text-muted">© 2022.04.03</p>
+        </div>
+
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+
+        $(() => {
+
+            $('.join').click(() => {
+                var name = $('#join_name').val();
+                var email = $('#join_email').val();
+                var password = $('#join_pwd').val();
+                var tel = $('#join_tel').val();
+
+                // var parmas = {"user_email": email, "user_pwd":password}
+
+                axios.post('/join', {
+                    params: {
+                        'user_name': name,
+                        'user_email': email,
+                        'user_pwd': password,
+                        'user_tel': tel,
+                    }
+                })
+                    .then(res => {
+                        let result = res.data.result;
+
+                        if (result == "ok") {
+                            alert("회원가입 성공")
+                        } else {
+                            alert("회원가입 실패")
+                        }
+
+                    })
+                    .catch(e => console.log(e))
+            })
+
+            $('.email_check').click(() => {
+                var email = $('#join_email').val();
+
+                // var parmas = {"user_email": email, "user_pwd":password}
+
+                axios.post('/join/email', {
+                    params: {
+                        'user_email': email,
+                    }
+                })
+                    .then(res => {
+                        let result = res.data.result;
+
+                        if (result == "ok") {
+                            alert("사용가능한 이메일")
+                        } else {
+                            alert("중복된 이메일")
+                        }
+
+                    })
+                    .catch(e => console.log(e))
+            })
+        })
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    -->
+</body>
+
+</html>

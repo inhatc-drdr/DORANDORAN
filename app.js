@@ -27,6 +27,10 @@ app.use("/public", express.static(__dirname + "/public"));
 
 // get
 app.get("/", (req, res) => res.render("home"));
+app.get("/login", (req, res) => res.render("login"));
+app.get("/join", (req, res) => res.render("join"));
+app.get("/server", (req, res) => res.render("server")); // 서버 생성, 초대
+app.get("/server/notice", (req, res) => res.render("notice"));  // 공지 추가 목록 상세
 
 // post
 // 로그인
@@ -125,8 +129,27 @@ app.post("/server/create", (req, res) => {
         if (!result.state) {
             console.log(result.err);
             res.send({ "result": "fail" });
+
         } else {
-            res.send({ "result": "ok" });
+
+            // 관리자를 서버 회원 목록에 추가
+            sql = 'INSERT INTO srvuser (srv_id, user_id) VALUES('
+                + ' (SELECT srv_id FROM srv WHERE srv_name=? and user_id=?), ?)';
+            params = [srv_name, user_id, user_id];
+            DB(sql, params).then(function (result) {
+
+                if (!result.state) {
+                    console.log(result.err);
+
+                    // 롤백 해야함
+
+                    res.send({ "result": "fail" });
+
+                } else {
+                    res.send({ "result": "ok" });
+                }
+            })
+           
         }
     })
 })
