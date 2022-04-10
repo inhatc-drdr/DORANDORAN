@@ -6,7 +6,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const DB = require('./models/config');
-const { use } = require("express/lib/application");
 
 const app = express();
 const PORT = process.env.PORT;
