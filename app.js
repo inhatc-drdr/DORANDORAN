@@ -5,7 +5,8 @@ const path = require("path");
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-const DB = require('./models/config')
+const DB = require('./models/config');
+const { use } = require("express/lib/application");
 
 const app = express();
 const PORT = process.env.PORT;
@@ -72,6 +73,7 @@ app.post("/join", (req, res) => {
 
         // return 
         if (!result.state) {
+            console.log(result.err);
             res.send({ "result": "fail" });
         } else {
             res.send({ "result": "ok" });
@@ -82,7 +84,29 @@ app.post("/join", (req, res) => {
 
 // 회원가입 - 이메일 중복 확인
 app.post("/join/email", (req, res) => {
+    const account = req.body.params;
+    const user_email = account.user_email;
 
+    console.log(account)
+
+    let sql = 'SELECT count(*) as count FROM user WHERE user_email = ?';
+    let params = [user_email];
+    DB(sql, params).then(function (result) {
+
+        if(!result.state) {
+            console.log(result.err);
+            res.send({"result": "fail"});
+
+        } else {
+            let count = result.rows[0].count;
+            if (!count) {
+                res.send({ "result": "ok" });
+            } else {
+                res.send({ "result": "fail" });
+            }
+
+        }
+    })
 })
 
 // 서버 생성
@@ -100,6 +124,7 @@ app.post("/server/create", (req, res) => {
 
         // return 
         if (!result.state) {
+            console.log(result.err);
             res.send({ "result": "fail" });
         } else {
             res.send({ "result": "ok" });
@@ -122,7 +147,9 @@ app.post("/server/invent", (req, res) => {
     DB(sql, params).then(function (result) {
 
         if (!result.state) {
+            console.log(result.err);
             res.send({ "result": "fail" });
+
         } else {
             let count = result.rows[0].count;
             if (count) {
@@ -146,6 +173,11 @@ app.post("/server/invent", (req, res) => {
     })
 })
 
+// 서버 메뉴
+app.post("/server/menu", (req, res) => {
+
+})
+
 // 공지 추가
 app.post("/server/notice/add", (req, res) => {
     const server = req.body.params;
@@ -162,6 +194,7 @@ app.post("/server/notice/add", (req, res) => {
     DB(sql, params).then(function (result) {
 
         if (!result.state) {
+            console.log(result.err);
             res.send({ "result": "fail" });
 
         } else {
@@ -198,7 +231,7 @@ app.post("/server/notice/list", (req, res) => {
 
 })
 
-// 공지 내용
+// 공지 상세
 app.post("/server/notice/detail", (req, res) => {
 
 })

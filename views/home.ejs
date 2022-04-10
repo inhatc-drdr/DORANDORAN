@@ -109,22 +109,21 @@
             <input type="text" class="form-control" id="join_name" placeholder="name">
             <label for="join_name">Name</label>
           </div>
+          <p></p>
           <div class="form-floating">
             <input type="email" class="form-control" id="join_email" placeholder="name@example.com">
             <label for="join_email">Email address</label>
+            <button class="w-100 btn btn-sm btn-primary email_check">이메일 중복 확인</button>
           </div>
+          <p></p>
           <div class="form-floating">
             <input type="password" class="form-control" id="join_pwd" placeholder="Password">
             <label for="join_pwd">Password</label>
           </div>
+          <p></p>
           <div class="form-floating">
             <input type="text" class="form-control" id="join_tel" placeholder="01012345678">
             <label for="join_tel">Phone</label>
-          </div>
-          <div class="checkbox mb-3">
-            <label>
-              <input type="checkbox" value="remember-me" id="agree"> Remember me
-            </label>
           </div>
           <p></p>
           <button class="w-100 btn btn-lg btn-primary join">Join</button>
@@ -291,6 +290,29 @@
               alert("회원가입 성공")
             } else {
               alert("회원가입 실패")
+            }
+
+          })
+          .catch(e => console.log(e))
+      })
+
+      $('.email_check').click(() => {
+        var email = $('#join_email').val();
+
+        // var parmas = {"user_email": email, "user_pwd":password}
+
+        axios.post('/join/email', {
+          params: {
+            'user_email': email,
+          }
+        })
+          .then(res => {
+            let result = res.data.result;
+
+            if (result == "ok") {
+              alert("사용가능한 이메일")
+            } else {
+              alert("중복된 이메일")
             }
 
           })
