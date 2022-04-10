@@ -29,6 +29,7 @@ app.use("/public", express.static(__dirname + "/public"));
 app.get("/", (req, res) => res.render("home"));
 
 // post
+// 로그인
 app.post("/login", (req, res) => {
     const account = req.body.params;
     const user_email = account.user_email;
@@ -54,6 +55,7 @@ app.post("/login", (req, res) => {
     })
 })
 
+// 회원가입
 app.post("/join", (req, res) => {
     const account = req.body.params;
     const user_name = account.user_name;
@@ -78,118 +80,14 @@ app.post("/join", (req, res) => {
 
 })
 
-app.post("/account/password", (req, res) => {
-    const account = req.body.params;
-    const user_name = account.user_name;
-    const user_email = account.user_email;
-
-    // account check
-
-    // create temporary password
-    let new_password;
-    new_password = "1111";
-
-    // send email
-    let sendEmail = false;
-
-    // return 
-    if (new_password != null && sendEmail) {
-        res.send({ "result": "ok" });
-    } else {
-        res.send({ "result": "fail" });
-    }
-})
-
-app.post("/home", (req, res) => {
-    const user_id = req.body.params.user_id;
-
-    // search server list
-    // return srv_id, srv_name, (next)calendar_date, (next)calendar_time, memberList_attendRate
-    let srv_id;
-    let srv_name;
-    let next_meeting;
-    let attend_rate;
-
-    if (TRUE) {
-        res.send({
-            "result": "ok",
-            "srv_id": srv_id,
-            "srv_name": srv_name,
-            "next_meeting": next_meeting,
-            "attend_rate": attend_rate
-        })
-    } else {
-        res.send({
-            "result": "fail"
-        })
-    }
-})
-
-app.post("/my/account", (req, res) => {
-    const user_id = req.body.params.user_id;
-
-    // search 
-    // return user_name, imgs_path, user_msg
-})
-
-app.post("/my/imgs", (req, res) => {
-    const profile = req.body.params;
-    const user_id = profile.user_id;
-    const imgs_name = profile.imgs_name;
-    const imgs_path = profile.imgs_path;
-
-    // save db
+// 회원가입 - 이메일 중복 확인
+app.post("/join/email", (req, res) => {
 
 })
 
-app.post("/my/name", (req, res) => {
-    const profile = req.body.params;
-    const user_id = profile.user_id;
-    const new_name = profile.new_name;
-
-    // save db
-
-})
-
-app.post("/my/msg", (req, res) => {
-    const profile = req.body.params;
-    const user_id = profile.user_id;
-    const new_msg = profile.new_msg;
-
-    // save db
-})
-
-app.post("/my/password", (req, res) => {
-    const profile = req.body.params;
-    const user_id = profile.user_id;
-    const user_pwd = profile.user_pwd;
-    const new_pwd = profile.new_pwd;
-
-    // check now password is correct
-    // save db
-})
-
-app.post("/my/signout", (req, res) => {
-    const profile = req.body.params;
-    const user_id = profile.user_id;
-    const user_pwd = profile.user_pwd;
-
-    // check password is correct
-
-    // delete account
-    if (TRUE) {
-        res.send({
-            "result": "ok"
-        })
-    } else {
-        res.send({
-            "result": "fail"
-        })
-    }
-})
-
+// 서버 생성
 app.post("/server/create", (req, res) => {
-    const server = req.body.params; 
+    const server = req.body.params;
     const srv_name = server.srv_name;
     const user_id = server.user_id;
 
@@ -209,6 +107,7 @@ app.post("/server/create", (req, res) => {
     })
 })
 
+// 회원 초대
 app.post("/server/invent", (req, res) => {
     const server = req.body.params;
     const srv_id = server.srv_id;
@@ -247,6 +146,7 @@ app.post("/server/invent", (req, res) => {
     })
 })
 
+// 공지 추가
 app.post("/server/notice/add", (req, res) => {
     const server = req.body.params;
     const srv_id = server.srv_id;
@@ -263,17 +163,19 @@ app.post("/server/notice/add", (req, res) => {
 
         if (!result.state) {
             res.send({ "result": "fail" });
-        } else {
-            if(!result.rows[0]){
-                res.send({ "result": "fail" });
-            } else {
-                let admin_id = result.rows[0];
 
-                if(user_id == admin_id){
-                
+        } else {
+            if (!result.rows[0]) {
+                res.send({ "result": "fail" });
+
+            } else {
+                let admin_id = result.rows[0].user_id;
+
+                if (user_id == admin_id) {
+
                     // insert db
                     sql = 'INSERT INTO notice (srv_id, user_id, notice_name, notice_memo)'
-                            + ' VALUES(?,?,?,?)';
+                        + ' VALUES(?,?,?,?)';
                     params = [srv_id, user_id, notice_name, notice_memo];
                     DB(sql, params).then(function (result) {
                         // return 
@@ -283,19 +185,22 @@ app.post("/server/notice/add", (req, res) => {
                             res.send({ "result": "ok" });
                         }
                     })
-                } 
-                res.send({"result": "fail"});
+                } else {
+                    res.send({ "result": "fail" });
+                }
             }
         }
     })
 })
 
+// 공지 목록
 app.post("/server/notice/list", (req, res) => {
 
 })
 
+// 공지 내용
 app.post("/server/notice/detail", (req, res) => {
-    
+
 })
 
 
