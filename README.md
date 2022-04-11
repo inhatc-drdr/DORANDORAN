@@ -3,9 +3,9 @@
 ### 프로젝트 구조
 ```
 DEMO-NODE
-⊢ react     // 리액트
 ⊢ public    // 클라이언트 폴더
 ∣   ⊢ js
+∣   ⊢ css
 ∣   ⊢ imgs
 ⊢ models    // DB 관련 스키마, 연결 코드
 ⊢ routes    // 라우터
