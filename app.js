@@ -30,7 +30,9 @@ app.get("/", (req, res) => res.render("home"));
 app.get("/login", (req, res) => res.render("login"));
 app.get("/join", (req, res) => res.render("join"));
 app.get("/server", (req, res) => res.render("server")); // 서버 생성, 초대
-app.get("/server/notice", (req, res) => res.render("notice"));  // 공지 추가 목록 상세
+app.get("/notice/add", (req, res) => res.render("notice_add"));  // 공지 추가
+app.get("/notice/list", (req, res) => res.render("notice_list"));  // 공지 목록 
+app.get("/notice/detail", (req, res) => res.render("notice_detail"));  // 공지 상세
 
 // post
 // 로그인
@@ -96,9 +98,9 @@ app.post("/join/email", (req, res) => {
     let params = [user_email];
     DB(sql, params).then(function (result) {
 
-        if(!result.state) {
+        if (!result.state) {
             console.log(result.err);
-            res.send({"result": "fail"});
+            res.send({ "result": "fail" });
 
         } else {
             let count = result.rows[0].count;
@@ -149,7 +151,7 @@ app.post("/server/create", (req, res) => {
                     res.send({ "result": "ok" });
                 }
             })
-           
+
         }
     })
 })
@@ -250,12 +252,55 @@ app.post("/server/notice/add", (req, res) => {
 
 // 공지 목록
 app.post("/server/notice/list", (req, res) => {
+    const server = req.body.params;
+    const srv_id = server.srv_id;
 
+    console.log(server);
+
+    // check if the user is the administrator of the server
+    let sql = 'SELECT notice_id, notice_name, notice_write '
+        + 'FROM notice n '
+        + 'WHERE srv_id=? AND notice_YN=\'N\'';
+    let params = [srv_id];
+    DB(sql, params).then(function (result) {
+
+        if (!result.state) {
+            console.log(result.err);
+            res.send({ "result": "fail" });
+
+        } else {
+            console.log(result.rows)
+            res.send({ "result": "ok", "list": result.rows })
+        }
+    })
 })
 
 // 공지 상세
 app.post("/server/notice/detail", (req, res) => {
+    const server = req.body.params;
+    const notice_id = server.notice_id;
 
+    console.log(server);
+
+    // check if the user is the administrator of the server
+    let sql = 'SELECT notice_name, ('
+        + 'SELECT user_name FROM user u WHERE u.user_id=n.user_id) AS user_name, '
+        + 'notice_write, notice_memo '
+        + 'FROM notice n '
+        + 'WHERE notice_id=?';
+    let params = [notice_id];
+
+    DB(sql, params).then(function (result) {
+
+        if (!result.state) {
+            console.log(result.err);
+            res.send({ "result": "fail" });
+
+        } else {
+            // console.log(result.rows)
+            res.send({ "result": "ok", "list": result.rows })
+        }
+    })
 })
 
 

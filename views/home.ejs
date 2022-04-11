@@ -58,25 +58,25 @@
           role="tab" aria-controls="login" aria-selected="true">로그인</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="join-tab" data-bs-toggle="tab" data-bs-target="#join" type="button"
-          role="tab" aria-controls="join" aria-selected="false">회원가입</button>
+        <button class="nav-link" id="join-tab" data-bs-toggle="tab" data-bs-target="#join" type="button" role="tab"
+          aria-controls="join" aria-selected="false">회원가입</button>
       </li>
       <li class="nav-item" role="presentation">
-      <button class="nav-link" id="createsrv-tab" data-bs-toggle="tab" data-bs-target="#createsrv" type="button"
-        role="tab" aria-controls="createsrv" aria-selected="false">서버생성</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="notice-tab" data-bs-toggle="tab" data-bs-target="#notice" type="button"
-        role="tab" aria-controls="notice" aria-selected="false">서버-공지</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar" type="button"
-        role="tab" aria-controls="calendar" aria-selected="false">서버-일정</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="chat-tab" data-bs-toggle="tab" data-bs-target="#chat" type="button"
-        role="tab" aria-controls="chat" aria-selected="false">서버-채팅</button>
-    </li>
+        <button class="nav-link" id="createsrv-tab" data-bs-toggle="tab" data-bs-target="#createsrv" type="button"
+          role="tab" aria-controls="createsrv" aria-selected="false">서버생성</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="notice-tab" data-bs-toggle="tab" data-bs-target="#notice" type="button" role="tab"
+          aria-controls="notice" aria-selected="false">서버-공지</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar" type="button"
+          role="tab" aria-controls="calendar" aria-selected="false">서버-일정</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="chat-tab" data-bs-toggle="tab" data-bs-target="#chat" type="button" role="tab"
+          aria-controls="chat" aria-selected="false">서버-채팅</button>
+      </li>
     </ul>
 
     <!-- 내용 -->
@@ -165,73 +165,73 @@
 
       <div class="tab-pane fade text-center" id="notice" role="tabpanel" aria-labelledby="notice-tab">
         <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
-        <div class="form-signin">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="notice_srv_id" placeholder="name">
-            <label for="notice_srv_id">서버ID</label>
-            <p></p>
-            <button class="w-100 btn btn-lg btn-primary list_notice">공지 확인</button>
-          </div>
+          <div class="form-signin">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="notice_srv_id" placeholder="name">
+              <label for="notice_srv_id">서버ID</label>
+              <p></p>
+              <button class="w-100 btn btn-lg btn-primary list_notice">공지 확인</button>
+            </div>
 
-          <h1 class="h3 mb-3 fw-normal mt-5">공지 추가</h1>
-          <div class="form-floating">
-            <input type="text" class="form-control" id="add_notice_name" placeholder="name">
-            <label for="add_notice_name">공지명</label>
+            <h1 class="h3 mb-3 fw-normal mt-5">공지 추가</h1>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="add_notice_name" placeholder="name">
+              <label for="add_notice_name">공지명</label>
+            </div>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="add_notice_memo" placeholder="name">
+              <label for="add_notice_memo">공지 내용</label>
+            </div>
+            <p></p>
+            <button class="w-100 btn btn-lg btn-primary add_notice">공지 추가</button>
           </div>
-          <div class="form-floating">
-            <input type="text" class="form-control" id="add_notice_memo" placeholder="name">
-            <label for="add_notice_memo">공지 내용</label>
-          </div>
-          <p></p>
-          <button class="w-100 btn btn-lg btn-primary add_notice">공지 추가</button>
         </div>
-      </div>
       </div>
 
       <div class="tab-pane fade text-center" id="calendar" role="tabpanel" aria-labelledby="calendar-tab">
         <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
-        <div class="form-signin">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="calendar_srv_id" placeholder="name">
-            <label for="calendar_srv_id">서버ID</label>
+          <div class="form-signin">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="calendar_srv_id" placeholder="name">
+              <label for="calendar_srv_id">서버ID</label>
+              <p></p>
+              <button class="w-100 btn btn-lg btn-primary list_calendar">일정 확인</button>
+            </div>
+            <h1 class="h3 mb-3 fw-normal mt-5">일정 추가</h1>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="add_calendar_date" placeholder="name">
+              <label for="add_calendar_date">일정 시간</label>
+            </div>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="add_calendar_memo" placeholder="name">
+              <label for="add_calendar_memo">일정 내용</label>
+            </div>
             <p></p>
-            <button class="w-100 btn btn-lg btn-primary list_calendar">일정 확인</button>
+            <button class="w-100 btn btn-lg btn-primary add_calendar">일정 추가</button>
           </div>
-          <h1 class="h3 mb-3 fw-normal mt-5">일정 추가</h1>
-          <div class="form-floating">
-            <input type="text" class="form-control" id="add_calendar_date" placeholder="name">
-            <label for="add_calendar_date">일정 시간</label>
-          </div>
-          <div class="form-floating">
-            <input type="text" class="form-control" id="add_calendar_memo" placeholder="name">
-            <label for="add_calendar_memo">일정 내용</label>
-          </div>
-          <p></p>
-          <button class="w-100 btn btn-lg btn-primary add_calendar">일정 추가</button>
-        </div>
 
-      </div>
+        </div>
       </div>
 
       <div class="tab-pane fade text-center" id="chat" role="tabpanel" aria-labelledby="chat-tab">
         <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
-        <div class="form-signin">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="chat_srv_id" placeholder="name">
-            <label for="chat_srv_id">서버ID</label>
+          <div class="form-signin">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="chat_srv_id" placeholder="name">
+              <label for="chat_srv_id">서버ID</label>
+            </div>
+            <h1 class="h3 mb-3 fw-normal mt-5">채팅 추가</h1>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="add_chat_name" placeholder="name">
+              <label for="add_chat_name">채팅방 이름</label>
+            </div>
+            <p></p>
+            <button class="w-100 btn btn-lg btn-primary add_chat">채팅 추가</button>
           </div>
-          <h1 class="h3 mb-3 fw-normal mt-5">채팅 추가</h1>
-          <div class="form-floating">
-            <input type="text" class="form-control" id="add_chat_name" placeholder="name">
-            <label for="add_chat_name">채팅방 이름</label>
-          </div>
-          <p></p>
-          <button class="w-100 btn btn-lg btn-primary add_chat">채팅 추가</button>
+
         </div>
 
       </div>
-      
-    </div>
 
     </div>
 
@@ -368,13 +368,13 @@
       $('.add_notice').click(() => {
         var srv_id = $('#notice_srv_id').val();
         //var user_id;
-        var  add_notice_name = $('#add_notice_name').val();
+        var add_notice_name = $('#add_notice_name').val();
         var add_notice_memo = $('#add_notice_memo').val();
 
         axios.post('/server/notice/add', {
           params: {
             'srv_id': srv_id,
-            'user_id' : 1,
+            'user_id': 1,
             'notice_name': add_notice_name,
             'notice_memo': add_notice_memo,
           }
@@ -391,8 +391,8 @@
           })
           .catch(e => console.log(e))
       })
-      
-     
+
+
     })
 
   </script>
