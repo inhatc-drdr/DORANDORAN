@@ -65,7 +65,10 @@
             </div>
             <p></p>
             <button class="w-100 btn btn-lg btn-primary submit">Login</button>
+            <p></p>
+            <button class="w-100 btn btn-lg btn-primary logout">Logout</button>
             <p class="mt-5 mb-3 text-muted">© 2022.04.03</p>
+
         </div>
 
     </main>
@@ -95,6 +98,31 @@
                             alert("로그인 성공")
                         } else {
                             alert("로그인 실패")
+                        }
+                    },
+                    error: function(error){
+                        console.log(error)
+                    },
+                    complete: function(data){
+                        
+                    }
+                })
+            })
+
+            $('.logout').click(() => {
+
+                $.ajax({
+                    url: '/auth/logout',
+                    type: 'post',
+                    data: {
+                    },
+                    success: function(res){
+                        let result = res.result;
+
+                        if (result == "ok") {
+                            alert("로그아웃 성공")
+                        } else {
+                            alert("로그아웃 실패")
                         }
                     },
                     error: function(error){

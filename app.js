@@ -7,6 +7,17 @@ const bodyParser = require('body-parser');
 
 const DB = require('./models/config');
 
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
+const options = {
+    host: process.env.DB_HOST,    
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,          
+    password: process.env.DB_PASS,      
+    database: process.env.DB_NAME       
+};
+const sessionStore = new MySQLStore(options);
+
 const app = express();
 const PORT = process.env.PORT;
 
@@ -27,6 +38,14 @@ app.use(bodyParser.json());
 // dircetory
 app.use("/public", express.static(__dirname + "/public"));
 // app.use(express.static(path.join(__dirname, 'react/build')));
+
+// session
+app.use(session({
+    secret: "asdfasffdas",
+    resave: false,
+    saveUninitialized: true,
+    store: sessionStore
+}))
 
 app.get("/", (req, res) => res.render("home"));
 
