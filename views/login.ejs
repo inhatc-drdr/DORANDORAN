@@ -81,23 +81,29 @@
 
                 // var parmas = {"user_email": email, "user_pwd":password}
 
-                axios.post('/login', {
-                    params: {
+                $.ajax({
+                    url: '/auth/login',
+                    type: 'post',
+                    data: {
                         'user_email': email,
-                        'user_pwd': password
-                    }
-                })
-                    .then(res => {
-                        let result = res.data.result;
+                        'user_pwd': password,
+                    },
+                    success: function(res){
+                        let result = res.result;
 
                         if (result == "ok") {
                             alert("로그인 성공")
                         } else {
                             alert("로그인 실패")
                         }
-
-                    })
-                    .catch(e => console.log(e))
+                    },
+                    error: function(error){
+                        console.log(error)
+                    },
+                    complete: function(data){
+                        
+                    }
+                })
             })
         })
 

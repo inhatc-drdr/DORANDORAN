@@ -10,6 +10,9 @@ const DB = require('./models/config');
 const app = express();
 const PORT = process.env.PORT;
 
+// routers
+const auth = require('./routes/auth');
+
 // cors 
 app.use(cors());
 
@@ -25,94 +28,21 @@ app.use(bodyParser.json());
 app.use("/public", express.static(__dirname + "/public"));
 // app.use(express.static(path.join(__dirname, 'react/build')));
 
-// get
 app.get("/", (req, res) => res.render("home"));
-app.get("/login", (req, res) => res.render("login"));
-app.get("/join", (req, res) => res.render("join"));
+
+// auth
+app.use('/auth', auth);
+
+
+
+// get
 app.get("/server", (req, res) => res.render("server")); // 서버 생성, 초대
 app.get("/notice/add", (req, res) => res.render("notice_add"));  // 공지 추가
 app.get("/notice/list", (req, res) => res.render("notice_list"));  // 공지 목록 
 app.get("/notice/detail", (req, res) => res.render("notice_detail"));  // 공지 상세
 
 // post
-// 로그인
-app.post("/login", (req, res) => {
-    const account = req.body.params;
-    const user_email = account.user_email;
-    const user_pwd = account.user_pwd;
 
-    // login check
-    let sql = 'SELECT count(*) AS count FROM user WHERE user_email=? and user_pwd=?';
-    let params = [user_email, user_pwd];
-    DB(sql, params).then((result) => {
-
-        // return 
-        if (!result.state) {
-            console.log(result.err);
-            res.send({ "result": "fail" });
-        } else {
-            let count = result.rows[0].count;
-            if (!count) {
-                res.send({ "result": "fail" });
-            } else {
-                res.send({ "result": "ok" });
-            }
-        }
-    })
-})
-
-// 회원가입
-app.post("/join", (req, res) => {
-    const account = req.body.params;
-    const user_name = account.user_name;
-    const user_email = account.user_email;
-    const user_pwd = account.user_pwd;
-    const user_tel = account.user_tel;
-
-    // insert db
-    console.log(account)
-
-    let sql = 'INSERT INTO user (user_name, user_email, user_pwd, user_tel) VALUES(?,?,?,?)';
-    let params = [user_name, user_email, user_pwd, user_tel];
-    DB(sql, params).then(function (result) {
-
-        // return 
-        if (!result.state) {
-            console.log(result.err);
-            res.send({ "result": "fail" });
-        } else {
-            res.send({ "result": "ok" });
-        }
-    })
-
-})
-
-// 회원가입 - 이메일 중복 확인
-app.post("/join/email", (req, res) => {
-    const account = req.body.params;
-    const user_email = account.user_email;
-
-    console.log(account)
-
-    let sql = 'SELECT count(*) as count FROM user WHERE user_email = ?';
-    let params = [user_email];
-    DB(sql, params).then(function (result) {
-
-        if (!result.state) {
-            console.log(result.err);
-            res.send({ "result": "fail" });
-
-        } else {
-            let count = result.rows[0].count;
-            if (!count) {
-                res.send({ "result": "ok" });
-            } else {
-                res.send({ "result": "fail" });
-            }
-
-        }
-    })
-})
 
 // 서버 생성
 app.post("/server/create", (req, res) => {
