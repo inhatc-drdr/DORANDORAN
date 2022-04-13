@@ -192,7 +192,7 @@ router.post('/signout', (req, res) => {
                     if (user_pwd == crypto_pwd) {
 
                         // db
-                        sql = 'UPDATE user SET user_YN=\'Y\' where user_id=?';
+                        sql = 'UPDATE user SET user_YN=\'Y\', user_leave=CURRENT_TIMESTAMP where user_id=?';
                         DB(sql, params).then((result) => {
                             if (!result.state) {
                                 console.log(result.err);
