@@ -79,8 +79,8 @@ router.post('/login', (req, res) => {
 });
 
 // 회원가입
-router.get('/join', (req, res) => res.render('join'));
-router.post('/join', (req, res) => {
+router.get('/signup', (req, res) => res.render('join'));
+router.post('/signup', (req, res) => {
     const account = req.body;
     const name = account.user_name;
     const email = account.user_email;
