@@ -34,8 +34,8 @@ function hashCheck(salt, password) {
 router.get('/login', (req, res) => res.render('login'));
 router.post('/login', (req, res) => {
     const account = req.body;
-    const email = account.user_email;
-    const pwd = account.user_pwd;
+    const email = account.email;
+    const pwd = account.pwd;
 
     // login check
     let sql = 'SELECT count(*) as count, user_id, user_pwd, user_salt FROM user WHERE user_email=? AND user_YN=\'N\'';
@@ -81,10 +81,10 @@ router.post('/login', (req, res) => {
 router.get('/signup', (req, res) => res.render('join'));
 router.post('/signup', (req, res) => {
     const account = req.body;
-    const name = account.user_name;
-    const email = account.user_email;
-    const pwd = account.user_pwd;
-    const tel = account.user_tel;
+    const name = account.name;
+    const email = account.email;
+    const pwd = account.pwd;
+    const tel = account.tel;
 
     // insert db
     console.log(account)
@@ -112,7 +112,7 @@ router.post('/signup', (req, res) => {
 // 이메일 중복확인
 router.post('/email', (req, res) => {
     const account = req.body;
-    const email = account.user_email;
+    const email = account.email;
 
     console.log(account)
 
@@ -166,7 +166,7 @@ router.post('/signout', (req, res) => {
 
     } else {
         const id = req.session.uid;
-        const pwd = req.body.user_pwd;
+        const pwd = req.body.pwd;
 
         let sql = 'SELECT count(*) as count, user_pwd, user_salt FROM user WHERE user_id=? AND user_YN=\'N\'';
         let params = [id];

@@ -95,8 +95,8 @@
                     url: '/auth/login',
                     type: 'post',
                     data: {
-                        'user_email': email,
-                        'user_pwd': password,
+                        'email': email,
+                        'pwd': password,
                     },
                     success: function(res){
                         let result = res.result;
@@ -149,7 +149,7 @@
                 url: '/auth/signout',
                 type: 'post',
                 data: {
-                    'user_pwd': out_pwd,
+                    'pwd': out_pwd,
                 },
                 success: function(res){
                     let result = res.result;

@@ -99,10 +99,10 @@
                     url: '/auth/signup',
                     type: 'post',
                     data: {
-                        'user_name': name,
-                        'user_email': email,
-                        'user_pwd': password,
-                        'user_tel': tel,
+                        'name': name,
+                        'email': email,
+                        'pwd': password,
+                        'tel': tel,
                     },
                     success: function(res){
                         let result = res.result;
@@ -131,7 +131,7 @@
                     url: '/auth/email',
                     type: 'post',
                     data: {
-                        'user_email': email,
+                        'email': email,
                     },
                     success: function(res){
                         let result = res.result;
