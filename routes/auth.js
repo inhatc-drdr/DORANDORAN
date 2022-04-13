@@ -15,7 +15,6 @@
 const router = require('express').Router();
 const DB = require('../models/config');
 const crypto = require('crypto');
-const { append } = require('express/lib/response');
 
 // 암호화
 function hashCreate(password) {
