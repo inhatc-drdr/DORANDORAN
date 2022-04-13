@@ -67,7 +67,14 @@
             <button class="w-100 btn btn-lg btn-primary submit">Login</button>
             <p></p>
             <button class="w-100 btn btn-lg btn-primary logout">Logout</button>
-            <p class="mt-5 mb-3 text-muted">© 2022.04.03</p>
+            <p></p>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="out_pwd" placeholder="Password">
+                <label for="out_pwd">계정을 삭제하려면 비밀번호를 입력</label>
+            </div>
+            <button class="w-100 btn btn-lg btn-primary signout">SingOut</button>
+
+            <p class="mt-5 mb-3 text-muted">© 2022.04.13</p>
 
         </div>
 
@@ -132,6 +139,33 @@
                         
                     }
                 })
+            })
+        })
+
+        $('.signout').click(() => {
+            var out_pwd =  $('#out_pwd').val();
+
+            $.ajax({
+                url: '/auth/signout',
+                type: 'post',
+                data: {
+                    'user_pwd': out_pwd,
+                },
+                success: function(res){
+                    let result = res.result;
+
+                    if (result == "ok") {
+                        alert("탈퇴 성공")
+                    } else {
+                        alert("탈퇴 실패")
+                    }
+                },
+                error: function(error){
+                    console.log(error)
+                },
+                complete: function(data){
+                    
+                }
             })
         })
 

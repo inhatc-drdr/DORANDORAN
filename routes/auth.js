@@ -1,3 +1,17 @@
+// ***********************************************************
+// AUTH API
+// ***********************************************************
+// @description : 유저 관련 라우터
+//  - 로그인, 회원가입, 이메일 중복확인, 로그아웃, 회원탈퇴
+// @date : 2022-04-13
+// @modifier : 노예원
+// @did
+//  - 세션 사용
+//  - 회원탈퇴
+// @todo
+//  - jwt 적용
+// ***********************************************************
+
 const router = require('express').Router();
 const DB = require('../models/config');
 const crypto = require('crypto');
@@ -25,7 +39,7 @@ router.post('/login', (req, res) => {
     const pwd = account.user_pwd;
 
     // login check
-    let sql = 'SELECT count(*) as count, user_id, user_pwd, user_salt FROM user WHERE user_email=?';
+    let sql = 'SELECT count(*) as count, user_id, user_pwd, user_salt FROM user WHERE user_email=? AND user_YN=\'N\'';
     let params = [email];
     DB(sql, params).then((result) => {
 
@@ -124,7 +138,7 @@ router.post('/email', (req, res) => {
 });
 
 // 로그아웃
-router.post('/logout', (req, res) => {
+router.use('/logout', (req, res) => {
 
     if (!req.session.isLogined) {
         // session이 존재하지 않은 경우, 로그인 하지 않은 경우
@@ -140,7 +154,67 @@ router.post('/logout', (req, res) => {
         })
 
         // session 완전히 삭제 
-        // req.session.destory(function(err){});
+        // req.session.destroy(function(){});
+
+    }
+})
+
+// 회원탈퇴
+router.post('/signout', (req, res) => {
+    if (!req.session.isLogined) {
+        // session이 존재하지 않은 경우, 로그인 하지 않은 경우
+        res.send({ "result": "fail" })
+
+    } else {
+        const id = req.session.uid;
+        const pwd = req.body.user_pwd;
+
+        let sql = 'SELECT count(*) as count, user_pwd, user_salt FROM user WHERE user_id=? AND user_YN=\'N\'';
+        let params = [id];
+        DB(sql, params).then((result) => {
+
+            // return 
+            if (!result.state) {
+                console.log(result.err);
+                res.send({ "result": "fail" });
+
+            } else {
+                let count = result.rows[0].count;
+                if (!count) {
+                    res.send({ "result": "fail" });
+
+                } else {
+                    const user_pwd = result.rows[0].user_pwd;
+                    const user_salt = result.rows[0].user_salt;
+
+                    // 복호화
+                    const crypto_pwd = hashCheck(user_salt, pwd);
+
+                    if (user_pwd == crypto_pwd) {
+
+                        // db
+                        sql = 'UPDATE user SET user_YN=\'Y\' where user_id=?';
+                        DB(sql, params).then((result) => {
+                            if (!result.state) {
+                                console.log(result.err);
+                                res.send({ "result": "fail" });
+                            } else {
+                                // session 완전히 삭제 
+                                req.session.destroy(function () {
+                                    req.session;
+                                });
+
+                                res.send({ "result": "ok" });
+                            }
+                        });
+
+                    } else {
+                        res.send({ "result": "fail" });
+                    }
+                }
+
+            }
+        })
 
     }
 })
