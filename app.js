@@ -43,7 +43,7 @@ app.use("/public", express.static(__dirname + "/public"));
 
 // session
 app.use(session({
-    secret: "asdfasffdas",
+    secret: process.env.SCRET_KEY,
     resave: false,
     saveUninitialized: true,
     store: sessionStore
