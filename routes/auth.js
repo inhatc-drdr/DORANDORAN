@@ -3,32 +3,19 @@
 // ***********************************************************
 // @description : 유저 관련 라우터
 //  - 로그인, 회원가입, 이메일 중복확인, 로그아웃, 회원탈퇴
-// @date : 2022-04-13
+// @date : 2022-04-22
 // @modifier : 노예원
 // @did
-//  - 세션 사용
-//  - 회원탈퇴
+//  - crypto 모듈 분리
 // @todo
+// - response 문구 수정
+// - passport
 //  - jwt 적용
 // ***********************************************************
 
 const router = require('express').Router();
 const DB = require('../models/config');
-const crypto = require('crypto');
-
-// 암호화
-function hashCreate(password) {
-    const salt = crypto.randomBytes(32).toString('hex')
-    const crypto_pwd = crypto.pbkdf2Sync(password, salt, 1, 32, 'sha512').toString('hex')
-    const result = { "salt": salt, "pwd": crypto_pwd }
-    return result
-}
-
-// 복호화
-function hashCheck(salt, password) {
-    const crypto_pwd = crypto.pbkdf2Sync(password, salt, 1, 32, 'sha512').toString('hex')
-    return crypto_pwd
-}
+const { hashCreate, hashCheck } = require('./crypto');
 
 // 로그인
 router.get('/login', (req, res) => res.render('login'));
