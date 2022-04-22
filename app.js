@@ -28,7 +28,9 @@ const auth = require('./routes/auth');
 app.use(cors());
 
 // view
-app.set("view engine", "ejs");
+// app.set("view engine", "ejs");
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
 app.set("views", __dirname + "/views");
 
 // body parser
