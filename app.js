@@ -52,9 +52,11 @@ app.use(session({
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const flash = require('connect-flash');
 
 app.use(passport.initialize());
-app.use(passport.session())
+app.use(passport.session());
+app.use(flash());
 
 passport.serializeUser(function (user, done) {
     done(null, user.id)
@@ -109,7 +111,7 @@ passport.use(
 
                 if (!login_result) {
                     console.log("로그인 실패")
-                    return done(null, false, { message: "failed" });
+                    return done(null, false, { message: '이메일 또는 비밀번호가 일치하지 않습니다.' });
                 } else {
                     console.log("로그인 성공")
                     return done(null, {id: login_id});
@@ -128,6 +130,7 @@ passport.use(
 
 //login
 app.get('/login', (req, res) => {
+    console.log(req.flash().error)
     res.render("login")
 })
 
@@ -140,6 +143,7 @@ app.post("/login",
     passport.authenticate("local", {
         successRedirect: "/",
         failureRedirect: "/login",
+        failureFlash: true,
     })
 )
 
