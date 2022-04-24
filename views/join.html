@@ -106,11 +106,12 @@
                     },
                     success: function(res){
                         let result = res.result;
+                        let msg = res.msg;
 
-                        if (result == "ok") {
-                            alert("회원가입 성공")
+                        if (result == 1) {
+                            alert(msg)
                         } else {
-                            alert("회원가입 실패")
+                            alert(msg)
                         }
                     },
                     error: function(error){
@@ -135,11 +136,12 @@
                     },
                     success: function(res){
                         let result = res.result;
+                        let msg = res.msg;
 
-                        if (result == "ok") {
-                            alert("사용가능한 이메일")
+                        if (result == 1) {
+                            alert(msg)
                         } else {
-                            alert("중복된 이메일")
+                            alert(msg)
                         }
                     },
                     error: function(error){

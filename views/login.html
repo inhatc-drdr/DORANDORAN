@@ -100,11 +100,12 @@
                     },
                     success: function(res){
                         let result = res.result;
+                        let msg = res.msg;
 
-                        if (result == "ok") {
-                            alert("로그인 성공")
+                        if (result == 1) {
+                            alert(msg)
                         } else {
-                            alert("로그인 실패")
+                            alert(msg)
                         }
                     },
                     error: function(error){
@@ -125,11 +126,12 @@
                     },
                     success: function(res){
                         let result = res.result;
+                        let msg = res.msg;
 
-                        if (result == "ok") {
-                            alert("로그아웃 성공")
+                        if (result == 1) {
+                            alert(msg)
                         } else {
-                            alert("로그아웃 실패")
+                            alert(msg)
                         }
                     },
                     error: function(error){
@@ -153,11 +155,12 @@
                 },
                 success: function(res){
                     let result = res.result;
+                    let msg = res.msg;
 
-                    if (result == "ok") {
-                        alert("탈퇴 성공")
+                    if (result == 1) {
+                        alert(msg)
                     } else {
-                        alert("탈퇴 실패")
+                        alert(msg)
                     }
                 },
                 error: function(error){
