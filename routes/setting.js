@@ -49,4 +49,20 @@ router.get('/', (req, res) => {
     }
 })
 
+
+router.post('/name', (req, res) => {
+    const user_id = req.user;
+
+    if(!user_id) {
+
+    } else {
+        const account = req.body;
+        const name = account.name;
+
+        console.log(user_id, name)
+    }
+    
+    res.send('a')
+})
+
 module.exports = router;

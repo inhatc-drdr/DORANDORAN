@@ -24,7 +24,6 @@ router.get('/', (req, res) => {
         // failed
         res.send({
             "result": -1,
-            "list": "",
         })
 
     } else {
@@ -48,7 +47,6 @@ router.get('/', (req, res) => {
                 console.log(result.err);
                 res.send({
                     "result": -1,
-                    "list": "",
                 })
 
             } else {
