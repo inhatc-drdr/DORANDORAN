@@ -14,7 +14,7 @@ exit
 
 ### Port Kill
 ```
-sudo fuser -k -n tcp 3000
+sudo fuser -k -n tcp 5000
 ```
 ***
 
