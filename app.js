@@ -21,6 +21,7 @@ const PORT = process.env.PORT;
 
 // routers
 const auth = require('./routes/auth');
+const home = require('./routes/home');
 
 // cors 
 app.use(cors());
@@ -56,8 +57,9 @@ require('./config/passport_local')(passport);
 
 app.get("/", (req, res) => res.send("hello"));
 
-// auth
+// routers
 app.use('/auth', auth);
+app.use('/home', home);
 
 // express server listen
 const handleListen = () =>
