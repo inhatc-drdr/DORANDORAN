@@ -8,6 +8,7 @@ DEMO-NODE
 ∣   ⊢ css
 ∣   ⊢ imgs
 ⊢ models    // DB 관련 스키마, 연결 코드
+⊢ config    // crypto, passport 등 모듈
 ⊢ routes    // 라우터
 ⊢ views     // 템플릿
 ⊢ app.js    // 서버
@@ -16,7 +17,7 @@ DEMO-NODE
 ⊢ babel.cofing.json
 ⊢ .env      // 환경변수, 비밀번호 등 보호되어야할 정보들이 담긴 파일
 ⊢ readme.md
-⊢ readmes   // 설명 파일 등
+⊢ readmes   // 추가 readme 파일
 ```
 
 ### How to use

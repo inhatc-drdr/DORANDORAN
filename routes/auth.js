@@ -3,78 +3,73 @@
 // ***********************************************************
 // @description : 유저 관련 라우터
 //  - 로그인, 회원가입, 이메일 중복확인, 로그아웃, 회원탈퇴
-// @date : 2022-04-22
+// @date : 2022-04-25
 // @modifier : 노예원
 // @did
-//  - crypto 모듈 분리
-// @todo
+//  - passport_local 모듈 작용
 // - response 문구 수정
-// - passport
+// @todo
 //  - jwt 적용
 // ***********************************************************
 
 const router = require('express').Router();
 const DB = require('../models/config');
-const { hashCreate, hashCheck } = require('./crypto');
+const { hashCreate, hashCheck } = require('../config/crypto');
+const passport = require('passport');
+require('../config/passport_local')(passport);
 
 // 로그인
-router.get('/login', (req, res) => res.render('login'));
-router.post('/login', (req, res) => {
-    const account = req.body;
-    const email = account.email;
-    const pwd = account.pwd;
+router.get('/login', (req, res) => {
+    let msg = req.flash().error;
+    if (msg) {
+        res.render("login", { msg: msg[0] })
+    } else {
+        res.render("login", { msg: "" })
+    }
 
-    // login check
-    let sql = 'SELECT count(*) as count, user_id, user_pwd, user_salt FROM user WHERE user_email=? AND user_YN=\'N\'';
-    let params = [email];
-    DB(sql, params).then((result) => {
-
-        // return 
-        if (!result.state) {
-            console.log(result.err);
-            res.send({
-                "result": -1,
-                "msg": "이메일 또는 비밀번호가 일치하지 않습니다."
-               });
-
-        } else {
-            let count = result.rows[0].count;
-            if (!count) {
-                res.send({
-                    "result": -1,
-                    "msg": "이메일 또는 비밀번호가 일치하지 않습니다."
-                   });
-
-            } else {
-                const user_pwd = result.rows[0].user_pwd;
-                const user_salt = result.rows[0].user_salt;
-
-                // 복호화
-                const crypto_pwd = hashCheck(user_salt, pwd);
-
-                if (user_pwd == crypto_pwd) {
-
-                    // session 저장
-                    req.session.uid = result.rows[0].user_id;
-                    req.session.isLogined = true;
-                    req.session.save(() => {
-                        res.send({ 
-                            "result": 1,
-                            "msg": "로그인 되었습니다."
-                        });
-                    })
-
-                } else {
-                    res.send({
-                         "result": -1,
-                         "msg": "이메일 또는 비밀번호가 일치하지 않습니다."
-                        });
-                }
-            }
-
-        }
-    })
 });
+
+router.post("/login",
+    passport.authenticate("local", {
+        successRedirect: "/auth/login",
+        failureRedirect: "/auth/login",
+        failureFlash: true,
+    })
+)
+
+// 로그아웃
+router.use('/logout', (req, res) => {
+
+    if (!req.user) {
+        // session이 존재하지 않은 경우, 로그인 하지 않은 경우
+
+        res.send({
+            "result": -1,
+            "msg": "로그인이 되어있지 않습니다."
+        })
+    } else {
+        // session 삭제(DB에는 반영X)
+        // delete req.session.uid;
+        // delete req.session.isLogined;
+
+        // req.session.save(() => {
+        //     res.send({ 
+        //         "result": 1,
+        //         "msg": "로그아웃 되었습니다."
+        //      })
+        // })
+
+        // session 완전히 삭제 
+        // req.session.destroy(function(){});
+
+        req.logout();
+        res.send({
+            "result": 1,
+            "msg": "로그아웃 되었습니다."
+        })
+        // })
+    }
+})
 
 // 회원가입
 router.get('/signup', (req, res) => res.render('join'));
@@ -101,15 +96,15 @@ router.post('/signup', (req, res) => {
         // return 
         if (!result.state) {
             console.log(result.err);
-            res.send({ 
+            res.send({
                 "result": -1,
-                "msg": "회원가입이 완료되었습니다."
+                "msg": "회원가입이 실패하였습니다."
             });
         } else {
-            res.send({ 
+            res.send({
                 "result": 1,
-                "msg": "회원가입에 실패하였습니다."
-             });
+                "msg": "회원가입에 완료되었습니다."
+            });
         }
     })
 });
@@ -127,65 +122,40 @@ router.post('/email', (req, res) => {
 
         if (!result.state) {
             console.log(result.err);
-            res.send({ 
+            res.send({
                 "result": -1,
                 "msg": "중복된 이메일입니다."
-             });
+            });
 
         } else {
             let count = result.rows[0].count;
             if (!count) {
-                res.send({ 
+                res.send({
                     "result": 1,
                     "msg": "사용가능한 이메일 입니다."
-                 });
+                });
             } else {
-                res.send({ 
+                res.send({
                     "result": -1,
                     "msg": "중복된 이메일입니다."
-                 });
+                });
             }
 
         }
     })
 });
 
-// 로그아웃
-router.use('/logout', (req, res) => {
-
-    if (!req.session.isLogined) {
-        // session이 존재하지 않은 경우, 로그인 하지 않은 경우
-
-        res.send({ 
-            "result": -1,
-            "msg": "로그인이 되어있지 않습니다."
-         })
-    } else {
-        // session 삭제(DB에는 반영X)
-        delete req.session.uid;
-        delete req.session.isLogined;
-
-        req.session.save(() => {
-            res.send({ 
-                "result": 1,
-                "msg": "로그아웃 되었습니다."
-             })
-        })
-
-        // session 완전히 삭제 
-        // req.session.destroy(function(){});
-
-    }
-})
-
 // 회원탈퇴
 router.post('/signout', (req, res) => {
-    if (!req.session.isLogined) {
+    if (!req.user) {
         // session이 존재하지 않은 경우, 로그인 하지 않은 경우
-        res.send({ "result": "fail" })
+        res.send({
+            "result": -1,
+            "msg": "로그인 되어있지않습니다."
+        });
 
     } else {
-        const id = req.session.uid;
+        const id = req.user;
         const pwd = req.body.pwd;
 
         let sql = 'SELECT count(*) as count, user_pwd, user_salt FROM user WHERE user_id=? AND user_YN=\'N\'';
@@ -195,18 +165,18 @@ router.post('/signout', (req, res) => {
             // return 
             if (!result.state) {
                 console.log(result.err);
-                res.send({ 
+                res.send({
                     "result": -1,
-                    msg: "탈퇴에 실패하였습니다."
-                 });
+                    "msg": "탈퇴에 실패하였습니다."
+                });
 
             } else {
                 let count = result.rows[0].count;
                 if (!count) {
-                    res.send({ 
+                    res.send({
                         "result": -1,
                         "msg": "탈퇴에 실패하였습니다."
-                     });
+                    });
 
                 } else {
                     const user_pwd = result.rows[0].user_pwd;
@@ -222,28 +192,31 @@ router.post('/signout', (req, res) => {
                         DB(sql, params).then((result) => {
                             if (!result.state) {
                                 console.log(result.err);
-                                res.send({ 
+                                res.send({
                                     "result": -1,
                                     "msg": "탈퇴에 실패하였습니다."
-                                 });
+                                });
                             } else {
                                 // session 완전히 삭제 
-                                req.session.destroy(function () {
-                                    req.session;
-                                });
+                                // req.session.destroy(function () {
+                                //     req.session;
+                                // });
 
-                                res.send({ 
+                                req.logout();
+
+
+                                res.send({
                                     "result": 1,
                                     "msg": "탈퇴가 완료되었습니다."
-                                 });
+                                });
                             }
                         });
 
                     } else {
-                        res.send({ 
+                        res.send({
                             "result": -1,
                             "msg": "탈퇴에 실패하였습니다."
-                         });
+                        });
                     }
                 }
 
