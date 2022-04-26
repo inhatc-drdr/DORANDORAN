@@ -23,6 +23,7 @@ const PORT = process.env.PORT;
 const auth = require('./routes/auth');
 const home = require('./routes/home');
 const setting = require('./routes/setting');
+const server = require('./routes/server');
 
 // cors 
 app.use(cors());
@@ -62,6 +63,7 @@ app.get("/", (req, res) => res.send("hello"));
 app.use('/auth', auth);
 app.use('/home', home);
 app.use('/setting', setting);
+app.use('/server', server);
 
 // express server listen
 const handleListen = () =>

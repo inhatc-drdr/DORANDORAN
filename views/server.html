@@ -54,10 +54,6 @@
             <h1 class="h3 mb-3 fw-normal">서버 생성</h1>
 
             <div class="form-floating">
-                <input type="text" class="form-control" id="srv_user_id" placeholder="name">
-                <label for="srv_user_id">회원ID(임시)</label>
-            </div>
-            <div class="form-floating">
                 <input type="text" class="form-control" id="srv_name" placeholder="name">
                 <label for="srv_name">서버명</label>
             </div>
@@ -89,26 +85,27 @@
         $(() => {
 
             $('.createsrv').click(() => {
-                var srv_user_id = $('#srv_user_id').val();
                 var srv_name = $('#srv_name').val();
 
-                axios.post('/server/create', {
-                    params: {
-                        'user_id': srv_user_id,
+                $.ajax({
+                    url: '/server/add',
+                    type: 'post',
+                    data: {
                         'srv_name': srv_name,
+                    },
+                    success: function(res){
+                        let result = res.result;
+                        let msg = res.msg;
+                        
+                        alert(msg)
+                    },
+                    error: function(error){
+                        console.log(error)
+                    },
+                    complete: function(data){
+                        
                     }
                 })
-                    .then(res => {
-                        let result = res.data.result;
-
-                        if (result == "ok") {
-                            alert("서버생성 성공")
-                        } else {
-                            alert("서버생성 실패")
-                        }
-
-                    })
-                    .catch(e => console.log(e))
             })
 
             $('.invent').click(() => {
