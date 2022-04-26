@@ -30,8 +30,7 @@ router.get('/', (req, res) => {
 
     } else {
 
-        const admin = req.session.admin;
-        if (!admin) {
+        if (!req.session.admin) {
             res.send({
                 "result": -1,
                 "msg": "접근 권한이 없습니다.",
@@ -81,8 +80,7 @@ router.post('/del', (req, res) => {
 
     } else {
 
-        const admin = req.session.admin;
-        if (!admin) {
+        if (!req.session.admin) {
             res.send({
                 "result": -1,
                 "msg": "접근 권한이 없습니다.",

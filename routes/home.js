@@ -18,7 +18,6 @@ router.get('/', (req, res) => {
 
     const user_id = req.user;
 
-
     if(!user_id){
 
         res.send({ 
@@ -27,6 +26,21 @@ router.get('/', (req, res) => {
         });
 
     } else {
+
+        if(req.session.sid){
+            // 서버에서 홈으로 돌아간 경우
+            // 세션 삭제
+
+            req.session.sid = 0;
+            req.session.admin = 0;
+            req.session.save(err => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).send("<h1>500 error</h1>");
+                }
+            })
+
+        }
         
         // 서버 목록 검색
         // - 서버명, 다음 미팅 날짜
