@@ -20,11 +20,11 @@ router.get('/', (req, res) => {
 
 
     if(!user_id){
-        // res.send()
-        // failed
-        res.send({
-            "result": -1,
-        })
+
+        res.send({ 
+            "result": 0,
+            "msg": "로그인 되어있지않습니다.",
+        });
 
     } else {
         

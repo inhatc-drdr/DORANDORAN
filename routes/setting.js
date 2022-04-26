@@ -22,9 +22,10 @@ router.get('/', (req, res) => {
     const user_id = req.user;
 
     if(!user_id) {
-        res.send({
-            "result": -1,
-        })
+        res.send({ 
+            "result": 0,
+            "msg": "로그인 되어있지않습니다.",
+        });
 
     } else {
 
@@ -55,10 +56,10 @@ router.post('/name', (req, res) => {
     const user_id = req.user;
 
     if(!user_id) {
-        res.send({
-            "result": -1,
-            "msg": "이름이 변경되지않았습니다.",
-        })
+        res.send({ 
+            "result": 0,
+            "msg": "로그인 되어있지않습니다.",
+        });
 
     } else {
         const account = req.body;
@@ -93,10 +94,10 @@ router.post('/msg', (req, res) => {
     const user_id = req.user;
 
     if(!user_id) {
-        res.send({
-            "result": -1,
-            "msg": "상태메시지가 변경되지않았습니다.",
-        })
+        res.send({ 
+            "result": 0,
+            "msg": "로그인 되어있지않습니다.",
+        });
 
     } else {
         const account = req.body;
