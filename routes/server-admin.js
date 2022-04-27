@@ -26,13 +26,13 @@ router.post('/add', (req, res) => {
 
     const user_id = req.user;
 
-    if (!user_id) {
-        res.send({ 
-            "result": 0,
-            "msg": "로그인 되어있지않습니다.",
-        });
+    // if (!user_id) {
+    //     res.send({ 
+    //         "result": 0,
+    //         "msg": "로그인 되어있지않습니다.",
+    //     });
 
-    } else {
+    // } else {
         const server = req.body;
         const srv_name = server.srv_name;
 
@@ -86,7 +86,7 @@ router.post('/add', (req, res) => {
 
             }
         })
-    }
+    // }
 })
 
 module.exports = router;

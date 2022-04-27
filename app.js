@@ -60,12 +60,68 @@ require('./config/passport_local')(passport);
 
 app.get("/", (req, res) => res.send("hello"));
 
+function loginRequired(req, res, next) {
+    // 미 로그인
+    if (!req.user) {
+        // res.redirect('/auth/login');
+
+        res.send({
+            result: 0,
+            msg: "로그인 되어있지않습니다.",
+        })
+        return;
+    }
+    next();
+}
+
+function adminRequired(req, res, next) {
+    // 미 로그인
+    if (!req.user) {
+        // res.redirect('/auth/login');
+
+        res.send({
+            result: 0,
+            msg: "로그인 되어있지않습니다.",
+        })
+        return;
+    }
+
+    // 서버 미선택
+    if (!req.session.sid) {
+        // res.redirect('/home');
+
+        res.send({
+            result: -1,
+            msg: "선택된 서버가 없습니다.",
+        })
+        return;
+    }
+
+    // 관리자 아님
+    if (!req.session.admin) {
+        // res.redirect('/home');
+
+        res.send({
+            result: -1,
+            msg: "접근 권한이 없습니다.",
+        })
+        return;
+    }
+
+    next();
+}
+
 // routers
 app.use('/auth', auth);
-app.use('/home', home);
-app.use('/setting', setting);
-app.use('/server', server);
-app.use('/server', server_admin);
+// app.use('/home', home);
+// app.use('/setting', setting);
+// app.use('/server', server);
+// app.use('/server', server_admin);
+
+app.use('/home', loginRequired, home);
+app.use('/setting', loginRequired, setting);
+app.use('/server', loginRequired, server);
+app.use('/server', adminRequired, server_admin);
 
 // express server listen
 const handleListen = () =>

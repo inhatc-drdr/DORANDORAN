@@ -22,21 +22,21 @@ router.get('/', (req, res) => {
 
     const user_id = req.user;
 
-    if (!user_id) {
-        res.send({
-            "result": 0,
-            "msg": "로그인 되어있지않습니다.",
-        });
+    // if (!user_id) {
+    //     res.send({
+    //         "result": 0,
+    //         "msg": "로그인 되어있지않습니다.",
+    //     });
 
-    } else {
+    // } else {
 
-        if (!req.session.admin) {
-            res.send({
-                "result": -1,
-                "msg": "접근 권한이 없습니다.",
-            });
+    //     if (!req.session.admin) {
+    //         res.send({
+    //             "result": -1,
+    //             "msg": "접근 권한이 없습니다.",
+    //         });
 
-        } else {
+    //     } else {
 
             // 회원목록 표시
             // - 아이디, 이름, 이메일, 연락처, 최근접속일
@@ -63,8 +63,8 @@ router.get('/', (req, res) => {
                     });
                 }
             })
-        }
-    }
+    //     }
+    // }
 })
 
 // 회원 삭제
@@ -72,21 +72,21 @@ router.post('/del', (req, res) => {
 
     const user_id = req.user;
 
-    if (!user_id) {
-        res.send({
-            "result": 0,
-            "msg": "로그인 되어있지않습니다.",
-        });
+    // if (!user_id) {
+    //     res.send({
+    //         "result": 0,
+    //         "msg": "로그인 되어있지않습니다.",
+    //     });
 
-    } else {
+    // } else {
 
-        if (!req.session.admin) {
-            res.send({
-                "result": -1,
-                "msg": "접근 권한이 없습니다.",
-            });
+    //     if (!req.session.admin) {
+    //         res.send({
+    //             "result": -1,
+    //             "msg": "접근 권한이 없습니다.",
+    //         });
 
-        } else {
+    //     } else {
 
             const del_user_id = req.body.user_id;
             const srv_id = req.session.sid;
@@ -94,8 +94,8 @@ router.post('/del', (req, res) => {
             // 관리자 자신은 삭제 불가능
             if (del_user_id == user_id) {
                 res.send({
-                    "result": -1,
-                    "msg": "관리자입니다.",
+                    result: -1,
+                    msg: "관리자는 삭제 불가능합니다.",
                 });
             } else {
 
@@ -107,14 +107,16 @@ router.post('/del', (req, res) => {
                     if (!result.state) {
                         console.log(result.err);
                         res.send({
-                            "result": -1,
+                            result: -1,
+                            msg: "삭제할 수 없는 멤버입니다.",
                         });
 
                     } else {
 
                         if (!result.rows[0]) {
                             res.send({
-                                "result": -1,
+                                result: -1,
+                                msg: "삭제할 수 없는 멤버입니다.",
                             });
 
                         } else {
@@ -130,7 +132,8 @@ router.post('/del', (req, res) => {
                                 if (!result.state) {
                                     console.log(result.err);
                                     res.send({
-                                        "result": -1,
+                                        result: -1,
+                                        msg: "삭제할 수 없는 멤버입니다.",
                                     });
 
                                 } else {
@@ -144,8 +147,8 @@ router.post('/del', (req, res) => {
                     }
                 })
             }
-        }
-    }
+    //     }
+    // }
 })
 
 

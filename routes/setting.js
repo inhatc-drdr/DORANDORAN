@@ -21,13 +21,13 @@ router.get('/set', (req, res) => res.render("setting"))
 router.get('/', (req, res) => {
     const user_id = req.user;
 
-    if(!user_id) {
-        res.send({ 
-            "result": 0,
-            "msg": "로그인 되어있지않습니다.",
-        });
+    // if(!user_id) {
+    //     res.send({ 
+    //         "result": 0,
+    //         "msg": "로그인 되어있지않습니다.",
+    //     });
 
-    } else {
+    // } else {
 
         let sql = 'SELECT user_name, user_msg FROM user WHERE user_id=(?) and user_YN  = \'N\''
         let params = [user_id];
@@ -49,19 +49,19 @@ router.get('/', (req, res) => {
                 })
             }
         })
-    }
+    // }
 })
 
 router.post('/name', (req, res) => {
     const user_id = req.user;
 
-    if(!user_id) {
-        res.send({ 
-            "result": 0,
-            "msg": "로그인 되어있지않습니다.",
-        });
+    // if(!user_id) {
+    //     res.send({ 
+    //         "result": 0,
+    //         "msg": "로그인 되어있지않습니다.",
+    //     });
 
-    } else {
+    // } else {
         const account = req.body;
         const name = account.name;
 
@@ -86,20 +86,20 @@ router.post('/name', (req, res) => {
             }
         })
 
-    }
+    // }
     
 })
 
 router.post('/msg', (req, res) => {
     const user_id = req.user;
 
-    if(!user_id) {
-        res.send({ 
-            "result": 0,
-            "msg": "로그인 되어있지않습니다.",
-        });
+    // if(!user_id) {
+    //     res.send({ 
+    //         "result": 0,
+    //         "msg": "로그인 되어있지않습니다.",
+    //     });
 
-    } else {
+    // } else {
         const account = req.body;
         const msg = account.msg;
 
@@ -123,7 +123,7 @@ router.post('/msg', (req, res) => {
             }
         })
 
-    }
+    // }
     
 })
 

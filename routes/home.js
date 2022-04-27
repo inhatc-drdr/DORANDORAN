@@ -18,14 +18,14 @@ router.get('/', (req, res) => {
 
     const user_id = req.user;
 
-    if(!user_id){
+    // if(!user_id){
 
-        res.send({ 
-            "result": 0,
-            "msg": "로그인 되어있지않습니다.",
-        });
+    //     res.send({ 
+    //         "result": 0,
+    //         "msg": "로그인 되어있지않습니다.",
+    //     });
 
-    } else {
+    // } else {
 
         if(req.session.sid){
             // 서버에서 홈으로 돌아간 경우
@@ -60,7 +60,8 @@ router.get('/', (req, res) => {
             if (!result.state) {
                 console.log(result.err);
                 res.send({
-                    "result": -1,
+                    result: -1,
+                    msg: "서버 목록을 불러올 수 없습니다."
                 })
 
             } else {
@@ -75,7 +76,7 @@ router.get('/', (req, res) => {
             }
         })
 
-    }
+    // }
 
 })
 

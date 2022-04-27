@@ -24,13 +24,13 @@ router.get('/test', (req, res) => {
 router.get('/', (req, res) => {
     const user_id = req.user;
 
-    if (!user_id) {
-        res.send({
-            "result": 0,
-            "msg": "로그인 되어있지않습니다.",
-        });
+    // if (!user_id) {
+    //     res.send({
+    //         "result": 0,
+    //         "msg": "로그인 되어있지않습니다.",
+    //     });
 
-    } else {
+    // } else {
 
         const server = req.query;
         const srv_id = server.srv_id;
@@ -43,14 +43,16 @@ router.get('/', (req, res) => {
             if (!result.state) {
                 console.log(result.err);
                 res.send({
-                    "result": -1,
+                    result: -1,
+                    msg: "서버에 접속할 수 없습니다."
                 });
 
             } else {
 
                 if (!result.rows[0]) {
                     res.send({
-                        "result": -1,
+                        result: -1,
+                        msg: "서버에 접속할 수 없습니다."
                     });
 
                 } else {
@@ -65,7 +67,8 @@ router.get('/', (req, res) => {
                         if (!result.state) {
                             console.log(result.err);
                             res.send({
-                                "result": -1,
+                                result: -1,
+                                msg: "서버에 접속할 수 없습니다."
                             });
 
                         } else {
@@ -96,7 +99,7 @@ router.get('/', (req, res) => {
                 }
             }
         })
-    }
+    // }
 })
 
 
