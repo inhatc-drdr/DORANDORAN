@@ -52,14 +52,15 @@ router.get('/', (req, res) => {
                 if (!result.state) {
                     console.log(result.err);
                     res.send({
-                        "result": -1,
+                        result: -1,
+                        msg: "회원 목록을 불러올 수 없습니다.",
                     });
 
                 } else {
 
                     res.send({
-                        "result": 1,
-                        "list": result.rows,
+                        result: 1,
+                        list: result.rows,
                     });
                 }
             })
@@ -133,7 +134,7 @@ router.post('/del', (req, res) => {
                                     console.log(result.err);
                                     res.send({
                                         result: -1,
-                                        msg: "삭제할 수 없는 멤버입니다.",
+                                        msg: "멤버 삭제에 실패하였습니다.",
                                     });
 
                                 } else {
