@@ -24,7 +24,7 @@ const auth = require('./routes/auth');
 const home = require('./routes/home');
 const setting = require('./routes/setting');
 const server = require('./routes/server');
-const server_admin = require('./routes/server-admin');
+const member = require('./routes/member');
 
 // cors 
 app.use(cors());
@@ -121,7 +121,7 @@ app.use('/auth', auth);
 app.use('/home', loginRequired, home);
 app.use('/setting', loginRequired, setting);
 app.use('/server', loginRequired, server);
-app.use('/server', adminRequired, server_admin);
+app.use('/server/member', adminRequired, member);
 
 // express server listen
 const handleListen = () =>

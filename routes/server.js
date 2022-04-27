@@ -15,9 +15,7 @@ const router = require('express').Router();
 const DB = require('../models/config');
 
 //test
-router.get('/test', (req, res) => {
-    res.send(req.session.sid)
-})
+router.get('/add', (req, res) => res.render('server'))
 
 // 서버 접속
 // 멤버 여부 확인 -> 접속 시간 저장 -> 세션 저장
@@ -99,6 +97,105 @@ router.get('/', (req, res) => {
                 }
             }
         })
+    // }
+})
+
+// 서버 생성
+router.post('/add', (req, res) => {
+
+    const user_id = req.user;
+
+    // if (!user_id) {
+    //     res.send({ 
+    //         "result": 0,
+    //         "msg": "로그인 되어있지않습니다.",
+    //     });
+
+    // } else {
+        const server = req.body;
+        const srv_name = server.srv_name;
+
+        // 자신이 만든 서버 중 해당 서버가 존재하는지 확인
+        let sql = 'SELECT count(*) as count FROM srv WHERE srv_name=? and user_id=?';
+        let params = [srv_name, user_id];
+        DB(sql, params).then(function (result) {
+
+            console.log(result)
+
+            if (!result.state) {
+                console.log(result.err);
+                res.send({ 
+                    result: -1,
+                    msg: "서버 생성에 실패하였습니다.",
+                });
+
+            } else {
+                console.log(result.rows[0].count)
+
+                if(result.rows[0].count){
+                    res.send({ 
+                        result: -1,
+                        msg: "이미 존재하는 서버입니다.",
+                    });
+
+                } else {
+                    // 서버 추가
+                    sql = 'INSERT INTO srv (srv_name, user_id) VALUES(?,?)';
+                    DB(sql, params).then(function (result) {
+
+                        if (!result.state) {
+                            console.log(result.err);
+                            res.send({ 
+                                result: -1,
+                                msg: "서버 생성에 실패하였습니다."
+                            });
+
+                        } else {
+
+                            // 관리자를 서버 회원 목록에 추가
+                            sql = 'INSERT INTO srvuser (srv_id, user_id) VALUES('
+                                + ' (SELECT srv_id FROM srv WHERE srv_name=? and user_id=?), ?)';
+                            params = [srv_name, user_id, user_id];
+                            DB(sql, params).then(function (result) {
+
+                                if (!result.state) {
+                                    console.log(result.err);
+
+                                    // 실패시 추가된 서버도 삭제
+                                    sql = 'UPDATE srv SET srv_YN=\'Y\', srv_delete=CURRENT_TIMESTAMP WHERE srv_id = (SELECT srv_id FROM srv WHERE srv_name=? and user_id=?)';
+                                    params = [srv_name, user_id];
+                                    DB(sql, params).then(function (result) {
+
+                                        if (!result.state) {
+                                            console.log(result.err);
+                                            res.send({ 
+                                                result: -1,
+                                                msg: "서버 생성에 실패하였습니다.",
+                                            });
+
+                                        } else {
+                                            res.send({ 
+                                                result: -1,
+                                                msg: "서버 생성에 실패하였습니다.",
+                                            });
+                                        }
+                                    })
+
+                                } else {
+                                    res.send({ 
+                                        result: 1,
+                                        msg: "서버가 생성되었습니다."
+                                    });
+                                }
+                            })
+
+                        }
+                    })
+                }
+            }
+        })
+            
+
     // }
 })
 
