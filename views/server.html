@@ -88,7 +88,7 @@
                 var srv_name = $('#srv_name').val();
 
                 $.ajax({
-                    url: 'http://localhost:5000/server/add',
+                    url: '/server/add',
                     type: 'post',
                     data: {
                         'srv_name': srv_name,
