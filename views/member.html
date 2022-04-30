@@ -15,16 +15,13 @@
 
 <body>
     <main class="container">
-
-        <header class="text-center">
-            <h1>Hello, world!</h1>
-            <p></p>
-        </header>
+        <p></p>
 
         <!-- 내용 -->
 
-        삭제하고자하는 회원 아이디 <input type="text" id="user_id">
-        <input type="button" id="del">
+        회원 아이디 <input type="text" id="user_id">
+        <input type="button" id="del" value="삭제">
+        <input type="button" id="add" value="초대">
 
         <p></p>
 
@@ -56,6 +53,30 @@
                     complete: function(data){
                         
                     }
+                })
+
+                $('#add').click(() => {
+                    var name = $('#user_id').val();
+    
+                    $.ajax({
+                        url: '/server/member/invent',
+                        type: 'post',
+                        data: {
+                            'user_id': name,
+                        },
+                        success: function(res){
+                           
+                            let msg = res.msg;
+                            alert(msg)
+                            
+                        },
+                        error: function(error){
+                            console.log(error)
+                        },
+                        complete: function(data){
+                            
+                        }
+                    })
                 })
             })
 
