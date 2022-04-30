@@ -15,8 +15,10 @@
 const router = require('express').Router();
 const DB = require('../models/config');
 const { hashCreate, hashCheck } = require('../config/crypto');
+const { resultMSG } = require('../app');
 const passport = require('passport');
 require('../config/passport_local')(passport);
+
 
 // 로그인
 router.get('/login', (req, res) => {
@@ -32,7 +34,7 @@ router.get('/login', (req, res) => {
 router.post("/login",
     passport.authenticate("local", {
         successRedirect: "/home",
-        failureRedirect: "/auth/login",
+        failureRedirect: "#",
         failureFlash: true,
     })
 )
@@ -40,34 +42,17 @@ router.post("/login",
 // 로그아웃
 router.use('/logout', (req, res) => {
 
+    console.log(`[uid ${req.user} /auth/logout] `);
+
+
     if (!req.user) {
         // session이 존재하지 않은 경우, 로그인 하지 않은 경우
+        resultMSG(res, -1, "로그인 되어있지 않습니다.");
 
-        res.send({
-            "result": -1,
-            "msg": "로그인이 되어있지 않습니다."
-        })
     } else {
-        // session 삭제(DB에는 반영X)
-        // delete req.session.uid;
-        // delete req.session.isLogined;
-
-        // req.session.save(() => {
-        //     res.send({ 
-        //         "result": 1,
-        //         "msg": "로그아웃 되었습니다."
-        //      })
-        // })
-
-        // session 완전히 삭제 
-        // req.session.destroy(function(){});
 
         req.logout();
-        res.send({
-            "result": 1,
-            "msg": "로그아웃 되었습니다."
-        })
-        // })
+        resultMSG(res, 1, "로그아웃 되었습니다.");
     }
 })
 
@@ -79,6 +64,8 @@ router.post('/signup', (req, res) => {
     const email = account.email;
     const pwd = account.pwd;
     const tel = account.tel;
+
+    console.log(`[uid - /auth/signup] name=${name}&email=${email}&pwd=${pwd}&tel=${tel}`);
 
     // insert db
     console.log(account)
@@ -96,15 +83,10 @@ router.post('/signup', (req, res) => {
         // return 
         if (!result.state) {
             console.log(result.err);
-            res.send({
-                "result": -1,
-                "msg": "회원가입이 실패하였습니다."
-            });
+            resultMSG(res, -1, "회원가입에 실패하였습니다.");
+
         } else {
-            res.send({
-                "result": 1,
-                "msg": "회원가입에 완료되었습니다."
-            });
+            resultMSG(res, 1, "회원가입이 완료되었습니다.");
         }
     })
 });
@@ -114,7 +96,7 @@ router.post('/email', (req, res) => {
     const account = req.body;
     const email = account.email;
 
-    console.log(account)
+    console.log(`[uid - /auth/email] email=${email}`);
 
     let sql = 'SELECT count(*) as count FROM user WHERE user_email = ?';
     let params = [email];
@@ -122,37 +104,28 @@ router.post('/email', (req, res) => {
 
         if (!result.state) {
             console.log(result.err);
-            res.send({
-                "result": -1,
-                "msg": "중복된 이메일입니다."
-            });
+            resultMSG(res, -1, "중복확인 실패하였습니다.");
 
         } else {
             let count = result.rows[0].count;
             if (!count) {
-                res.send({
-                    "result": 1,
-                    "msg": "사용가능한 이메일 입니다."
-                });
-            } else {
-                res.send({
-                    "result": -1,
-                    "msg": "중복된 이메일입니다."
-                });
-            }
+                resultMSG(res, 1, "사용가능한 이메일 입니다.");
 
+            } else {
+                resultMSG(res, -1, "중복된 이메일입니다.");
+            }
         }
     })
 });
 
 // 회원탈퇴
 router.post('/signout', (req, res) => {
+
+    console.log(`[uid ${req.user} /auth/signout] `);
+
     if (!req.user) {
         // session이 존재하지 않은 경우, 로그인 하지 않은 경우
-        res.send({
-            "result": -1,
-            "msg": "로그인 되어있지않습니다."
-        });
+        resultMSG(res, -1, "로그인 되어있지않습니다.");
 
     } else {
         const id = req.user;
@@ -165,18 +138,13 @@ router.post('/signout', (req, res) => {
             // return 
             if (!result.state) {
                 console.log(result.err);
-                res.send({
-                    "result": -1,
-                    "msg": "탈퇴에 실패하였습니다."
-                });
+                resultMSG(res, -1, "탈퇴에 실패하였습니다.");
+
 
             } else {
                 let count = result.rows[0].count;
                 if (!count) {
-                    res.send({
-                        "result": -1,
-                        "msg": "탈퇴에 실패하였습니다."
-                    });
+                    resultMSG(res, -1, "탈퇴에 실패하였습니다.");
 
                 } else {
                     const user_pwd = result.rows[0].user_pwd;
@@ -192,37 +160,20 @@ router.post('/signout', (req, res) => {
                         DB(sql, params).then((result) => {
                             if (!result.state) {
                                 console.log(result.err);
-                                res.send({
-                                    "result": -1,
-                                    "msg": "탈퇴에 실패하였습니다."
-                                });
+                                resultMSG(res, -1, "탈퇴에 실패하였습니다.");
+
                             } else {
-                                // session 완전히 삭제 
-                                // req.session.destroy(function () {
-                                //     req.session;
-                                // });
-
                                 req.logout();
-
-
-                                res.send({
-                                    "result": 1,
-                                    "msg": "탈퇴가 완료되었습니다."
-                                });
+                                resultMSG(res, 1, "탈퇴가 완료되었습니다.");
                             }
                         });
 
                     } else {
-                        res.send({
-                            "result": -1,
-                            "msg": "탈퇴에 실패하였습니다."
-                        });
+                        resultMSG(res, -1, "탈퇴에 실패하였습니다.");
                     }
                 }
-
             }
         })
-
     }
 })
 
