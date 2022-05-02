@@ -102,37 +102,37 @@ router.post('/delete', (req, res) => {
 // 회원 초대
 router.post('/invent', (req, res) => {
     const user_id = req.user;
-    const invent_id = req.body.user_id;
+    const invent_email = req.body.user_email;
     const srv_id = req.session.sid;
 
-    console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /server/member/invent] srv_id=${srv_id}&invent_id=${invent_id}`);
+    console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /server/member/invent] srv_id=${srv_id}&invent_email=${invent_email}`);
 
-    // 관리자 자신은 초대 불가능
-    if (invent_id == user_id) {
-        resultMSG(res, -1, "관리자는 초대 불가능합니다.");
+    let sql = 'SELECT user_id FROM user WHERE user_email=? AND user_yn=\'N\'';
+    let params = [invent_email]
+    DB(sql, params).then(function (result) {
 
-    } else {
+        if (!result.state) {
+            console.log(result.err);
+            resultMSG(res, -1, "멤버 초대에 실패하였습니다.");
 
-        // 초대하고자 하는 멤버가 이미 회원인지 확인
-        let sql = 'SELECT srvuser_id FROM srvuser WHERE srv_id=? AND user_id=? AND srvuser_YN=\'N\'';
-        let params = [srv_id, invent_id];
-        DB(sql, params).then(function (result) {
+        } else {
 
-            if (!result.state) {
-                console.log(result.err);
+            if (!result.rows[0]) {
                 resultMSG(res, -1, "멤버 초대에 실패하였습니다.");
 
             } else {
 
-                if (result.rows[0]) {
-                    resultMSG(res, -1, "이미 가입된 멤버입니다.");
+                const invent_id = result.rows[0].user_id;
+
+                // 관리자 자신은 초대 불가능
+                if (invent_id == user_id) {
+                    resultMSG(res, -1, "관리자는 초대 불가능합니다.");
 
                 } else {
 
-                    // 멤버 초대
-                    sql = 'INSERT INTO srvuser(srv_id, user_id) VALUES(?, ?)';
+                    // 초대하고자 하는 멤버가 이미 회원인지 확인
+                    sql = 'SELECT srvuser_id FROM srvuser WHERE srv_id=? AND user_id=? AND srvuser_YN=\'N\'';
                     params = [srv_id, invent_id];
-
                     DB(sql, params).then(function (result) {
 
                         if (!result.state) {
@@ -140,16 +140,36 @@ router.post('/invent', (req, res) => {
                             resultMSG(res, -1, "멤버 초대에 실패하였습니다.");
 
                         } else {
-                            res.send({
-                                result: 1,
-                                msg: "멤버가 초대되었습니다.",
-                            });
+
+                            if (result.rows[0]) {
+                                resultMSG(res, -1, "이미 가입된 멤버입니다.");
+
+                            } else {
+
+                                // 멤버 초대
+                                sql = 'INSERT INTO srvuser(srv_id, user_id) VALUES(?, ?)';
+                                params = [srv_id, invent_id];
+
+                                DB(sql, params).then(function (result) {
+
+                                    if (!result.state) {
+                                        console.log(result.err);
+                                        resultMSG(res, -1, "멤버 초대에 실패하였습니다.");
+
+                                    } else {
+                                        res.send({
+                                            result: 1,
+                                            msg: "멤버가 초대되었습니다.",
+                                        });
+                                    }
+                                })
+                            }
                         }
                     })
                 }
             }
-        })
-    }
+        }
+    })
 })
 
 module.exports = router;
