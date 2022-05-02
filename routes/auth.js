@@ -21,12 +21,12 @@ require('../config/passport_local')(passport);
 
 // 로그인
 router.get('/login', (req, res) => {
-    let msg = req.flash().error;
-    if (msg) {
-        res.render("login", { msg: msg[0] })
-    } else {
-        res.render("login", { msg: "" })
-    }
+    // let msg = req.flash().error;
+    // if (msg) {
+    //     res.render("login", { msg: msg[0] })
+    // } else {
+    //     res.render("login", { msg: "" })
+    // }
 
 });
 
@@ -39,7 +39,7 @@ router.get('/login', (req, res) => {
 // )
 
 router.post("/login", (req, res) => {
-    console.log(`[uid - /auth/login] email=${req.body.email}&pwd=${req.body.pwd}`);
+    console.log(`[${new Date().toLocaleString()}] [uid - /login] email=${req.body.email}&pwd=${req.body.pwd}`);
 
     passport.authenticate("local", (err, user, info) => {
         if (err) {
@@ -57,7 +57,7 @@ router.post("/login", (req, res) => {
 // 로그아웃
 router.use('/logout', (req, res) => {
 
-    console.log(`[uid ${req.user} /auth/logout] `);
+    console.log(`[${new Date().toLocaleString()}] [uid ${req.user} /logout] `);
 
     if (!req.user) {
         // session이 존재하지 않은 경우, 로그인 하지 않은 경우
@@ -79,7 +79,7 @@ router.post('/signup', (req, res) => {
     const pwd = account.pwd;
     const tel = account.tel;
 
-    console.log(`[uid - /auth/signup] name=${name}&email=${email}&pwd=${pwd}&tel=${tel}`);
+    console.log(`[${new Date().toLocaleString()}] [uid - /signup] name=${name}&email=${email}&pwd=${pwd}&tel=${tel}`);
 
     // insert db
     console.log(account)
@@ -106,11 +106,11 @@ router.post('/signup', (req, res) => {
 });
 
 // 이메일 중복확인
-router.post('/email', (req, res) => {
+router.post('/emailCheck', (req, res) => {
     const account = req.body;
     const email = account.email;
 
-    console.log(`[uid - /auth/email] email=${email}`);
+    console.log(`[${new Date().toLocaleString()}] [uid - /emailCheck] email=${email}`);
 
     let sql = 'SELECT count(*) as count FROM user WHERE user_email = ?';
     let params = [email];
@@ -135,7 +135,7 @@ router.post('/email', (req, res) => {
 // 회원탈퇴
 router.post('/signout', (req, res) => {
 
-    console.log(`[uid ${req.user} /auth/signout] `);
+    console.log(`[${new Date().toLocaleString()}] [uid ${req.user} /signout] `);
 
     if (!req.user) {
         // session이 존재하지 않은 경우, 로그인 하지 않은 경우

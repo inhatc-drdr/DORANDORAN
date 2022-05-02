@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
     const user_id = req.user;
     const srv_id = req.query.srv_id;
 
-    console.log(`[uid ${user_id} /server] srv_id=${srv_id}`);
+    console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /server] srv_id=${srv_id}`);
 
     // 서버의 멤버인지 확인
     let sql = 'SELECT srvuser_id, s.user_id as admin_id FROM srvuser su, srv s WHERE su.srv_id=? AND su.user_id=? AND su.srv_id = s.srv_id AND srvuser_YN=\'N\'';
@@ -88,7 +88,7 @@ router.post('/add', (req, res) => {
     const user_id = req.user;
     const srv_name = req.body.srv_name;
 
-    console.log(`[uid ${user_id} /server/add] srv_name=${srv_name}`);
+    console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /server/add] srv_name=${srv_name}`);
 
     // 자신이 만든 서버 중 해당 서버가 존재하는지 확인
     let sql = 'SELECT count(*) as count FROM srv WHERE srv_name=? and user_id=?';

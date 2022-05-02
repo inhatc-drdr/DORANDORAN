@@ -22,7 +22,7 @@ router.get('/set', (req, res) => res.render("setting"))
 router.get('/', (req, res) => {
     const user_id = req.user;
 
-    console.log(`[uid ${user_id} /setting] `);
+    console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /setting] `);
 
     let sql = 'SELECT user_name, user_msg FROM user WHERE user_id=(?) and user_YN  = \'N\''
     let params = [user_id];
@@ -49,7 +49,7 @@ router.post('/name', (req, res) => {
     const user_id = req.user;
     const name = req.body.name;
 
-    console.log(`[uid ${user_id} /setting/name] name=${name}`);
+    console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /setting/name] name=${name}`);
 
     let sql = 'UPDATE user SET user_name=? WHERE user_id=?'
     let params = [name, user_id];
@@ -70,7 +70,7 @@ router.post('/msg', (req, res) => {
     const user_id = req.user;
     const msg = req.body.msg;
 
-    console.log(`[uid ${user_id} /setting/msg] msg=${msg}`);
+    console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /setting/msg] msg=${msg}`);
 
     let sql = 'UPDATE user SET user_msg=? WHERE user_id=?'
     let params = [msg, user_id];

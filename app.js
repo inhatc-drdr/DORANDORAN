@@ -17,7 +17,7 @@ const options = {
 const sessionStore = new MySQLStore(options);
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 // routers
 const auth = require('./routes/auth');
@@ -100,7 +100,7 @@ function adminRequired(req, res, next) {
 }
 
 // routers
-app.use('/auth', auth);
+app.use('/', auth);
 app.use('/home', loginRequired, home);
 app.use('/setting', loginRequired, setting);
 app.use('/server', loginRequired, server);

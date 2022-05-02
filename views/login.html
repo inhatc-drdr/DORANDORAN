@@ -100,7 +100,7 @@
                 // var parmas = {"user_email": email, "user_pwd":password}
 
                 $.ajax({
-                    url: 'http://localhost:5000/auth/login',
+                    url: 'http://localhost:5000/login',
                     type: 'post',
                     data: {
                         'email': email,
@@ -132,7 +132,7 @@
             $('.logout').click(() => {
 
                 $.ajax({
-                    url: '/auth/logout',
+                    url: 'http://localhost:5000/logout',
                     type: 'post',
                     data: {
                     },
@@ -160,7 +160,7 @@
             var out_pwd =  $('#out_pwd').val();
 
             $.ajax({
-                url: '/auth/signout',
+                url: 'http://localhost:5000/signout',
                 type: 'post',
                 data: {
                     'pwd': out_pwd,

@@ -24,7 +24,7 @@ router.get('/', (req, res) => {
     const user_id = req.user;
     const srv_id = req.session.sid;
 
-    console.log(`[uid ${user_id} /server/member] srv_id=${srv_id}`);
+    console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /server/member] srv_id=${srv_id}`);
 
     let sql = 'SELECT su.user_id, user_name, user_email, user_tel, srvuser_lastaccess '
         + 'FROM srvuser su, user u '
@@ -54,7 +54,7 @@ router.post('/delete', (req, res) => {
     const delete_id = req.body.user_id;
     const srv_id = req.session.sid;
 
-    console.log(`[uid ${user_id} /server/member/delete] srv_id=${srv_id}&delete_id=${delete_id}`);
+    console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /server/member/delete] srv_id=${srv_id}&delete_id=${delete_id}`);
 
     // 관리자 자신은 삭제 불가능
     if (delete_id == user_id) {
@@ -108,7 +108,7 @@ router.post('/invent', (req, res) => {
     const invent_id = req.body.user_id;
     const srv_id = req.session.sid;
 
-    console.log(`[uid ${user_id} /server/member/invent] srv_id=${srv_id}&invent_id=${invent_id}`);
+    console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /server/member/invent] srv_id=${srv_id}&invent_id=${invent_id}`);
 
     // 관리자 자신은 초대 불가능
     if (invent_id == user_id) {

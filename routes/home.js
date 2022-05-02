@@ -19,7 +19,7 @@ router.get('/', (req, res) => {
 
     const user_id = req.user;
 
-    console.log(`[uid ${user_id} /home]`);
+    console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /home]`);
 
     if (req.session.sid) {
         // 서버에서 홈으로 돌아간 경우
