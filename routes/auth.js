@@ -3,13 +3,12 @@
 // ***********************************************************
 // @description : 유저 관련 라우터
 //  - 로그인, 회원가입, 이메일 중복확인, 로그아웃, 회원탈퇴
-// @date : 2022-04-25
+// @date : 2022-05-02
 // @modifier : 노예원
 // @did
-//  - passport_local 모듈 작용
-//  - response 문구 수정
+//  - passport_local API 모듈 작용
 // @todo
-//  - jwt 적용
+//  - 로그인 시 이메일 대소문자 구별 오류 해결 필요
 // ***********************************************************
 
 const router = require('express').Router();
@@ -31,19 +30,34 @@ router.get('/login', (req, res) => {
 
 });
 
-router.post("/login",
-    passport.authenticate("local", {
-        successRedirect: "/home",
-        failureRedirect: "#",
-        failureFlash: true,
-    })
-)
+// router.post("/login",
+//     passport.authenticate("local", {
+//         successRedirect: "/home",
+//         failureRedirect: "#",
+//         failureFlash: true,
+//     })
+// )
+
+router.post("/login", (req, res) => {
+    console.log(`[uid - /auth/login] email=${req.body.email}&pwd=${req.body.pwd}`);
+
+    passport.authenticate("local", (err, user, info) => {
+        if (err) {
+            return resultMSG(res, -1, "이메일 또는 비밀번호가 일치하지 않습니다.");
+        }
+        return req.login(user, (err) => {
+            if (err)
+                return resultMSG(res, -1, "이메일 또는 비밀번호가 일치하지 않습니다.");
+
+            return resultMSG(res, 1, "로그인 성공하였습니다.");
+        });
+    })(req, res);
+})
 
 // 로그아웃
 router.use('/logout', (req, res) => {
 
     console.log(`[uid ${req.user} /auth/logout] `);
-
 
     if (!req.user) {
         // session이 존재하지 않은 경우, 로그인 하지 않은 경우

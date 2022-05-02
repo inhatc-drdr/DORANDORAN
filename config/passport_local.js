@@ -15,9 +15,9 @@ module.exports = (passport) => {
         new LocalStrategy(
             {
                 usernameField: "email",
-                passwordField: "password",
+                passwordField: "pwd",
             }, function (username, password, done) {
-    
+
                 // login check
                 let sql = 'SELECT count(*) as count, user_id, user_pwd, user_salt FROM user WHERE user_email=? AND user_YN=\'N\'';
                 let params = [username];

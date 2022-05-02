@@ -55,7 +55,8 @@
             <img class="mb-4" src="/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
             <h1 class="h3 mb-3 fw-normal">Login</h1>
 
-            <form method="POST" action="/auth/login">
+            <!-- <form method="POST" action="/auth/login"> -->
+                <div>
                 <div class="form-floating">
                     <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com">
                     <label for="email">Email address</label>
@@ -65,8 +66,10 @@
                     <label for="password">Password</label>
                 </div>
                 <div id="msg"><%= msg %></div>
-                <input type="submit" class="w-100 btn btn-lg btn-primary">
-            </form>
+                <button class="w-100 btn btn-lg btn-primary submit" id="submit">Login</button>
+                <!-- <input type="submit" class="w-100 btn btn-lg btn-primary"> -->
+            <!-- </form> -->
+            </div>
             
             <p></p>
             <button class="w-100 btn btn-lg btn-primary logout">Logout</button>
@@ -88,25 +91,31 @@
     <script>
 
         $(() => {
-            $('.submit').click(() => {
+            $('#submit').click(() => {
                 var email = $('#email').val();
                 var password = $('#password').val();
+
+                //console.log(email, password)
 
                 // var parmas = {"user_email": email, "user_pwd":password}
 
                 $.ajax({
-                    url: '/auth/login',
+                    url: 'http://localhost:5000/auth/login',
                     type: 'post',
                     data: {
                         'email': email,
                         'pwd': password,
                     },
                     success: function(res){
+
+                        console.log(res)
                         let result = res.result;
                         let msg = res.msg;
 
                         if (result == 1) {
                             alert(msg)
+                            location.href ='./join.html';
+                            
                         } else {
                             alert(msg)
                         }
