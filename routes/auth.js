@@ -20,16 +20,6 @@ require('../config/passport_local')(passport);
 
 
 // 로그인
-router.get('/login', (req, res) => {
-    // let msg = req.flash().error;
-    // if (msg) {
-    //     res.render("login", { msg: msg[0] })
-    // } else {
-    //     res.render("login", { msg: "" })
-    // }
-
-});
-
 // router.post("/login",
 //     passport.authenticate("local", {
 //         successRedirect: "/home",
@@ -71,7 +61,6 @@ router.use('/logout', (req, res) => {
 })
 
 // 회원가입
-router.get('/signup', (req, res) => res.render('join'));
 router.post('/signup', (req, res) => {
     const account = req.body;
     const name = account.name;

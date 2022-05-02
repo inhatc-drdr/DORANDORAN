@@ -15,9 +15,6 @@ const router = require('express').Router();
 const DB = require('../models/config');
 const { resultMSG } = require('../app');
 
-// test
-router.get('/test', (req, res) => res.render("member"))
-
 // 회원 조회
 router.get('/', (req, res) => {
 

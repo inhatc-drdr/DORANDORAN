@@ -15,9 +15,6 @@ const router = require('express').Router();
 const DB = require('../models/config');
 const { resultMSG } = require('../app');
 
-//test
-router.get('/add', (req, res) => res.render('server'))
-
 // 서버 접속
 // 멤버 여부 확인 -> 접속 시간 저장 -> 세션 저장
 router.get('/', (req, res) => {

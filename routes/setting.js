@@ -16,9 +16,6 @@ const router = require('express').Router();
 const DB = require('../models/config');
 const { resultMSG } = require('../app');
 
-// test
-router.get('/set', (req, res) => res.render("setting"))
-
 router.get('/', (req, res) => {
     const user_id = req.user;
 
