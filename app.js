@@ -105,7 +105,7 @@ function adminRequired(req, res, next) {
     return;
   }
 
-  if (!req.body.srv_id) {
+  if (!req.body.srv_id || !req.query.srv_id) {
     resultMSG(res, -1, "서버가 선택되지 않았습니다.");
     return;
   }
