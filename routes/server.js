@@ -125,7 +125,7 @@ router.post("/add", (req, res) => {
                   }
                 });
               } else {
-                resultMSG(res, -1, "서버가 생성되었습니다.");
+                resultMSG(res, 1, "서버가 생성되었습니다.");
               }
             });
           }
