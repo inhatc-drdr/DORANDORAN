@@ -50,8 +50,7 @@ router.get("/", (req, res) => {
     // return
     if (!result.state) {
       console.log(result.err);
-      //   resultMSG(res, -1, "서버 목록을 불러올 수 없습니다.");
-      errorMSG(res, 500);
+      resultMSG(res, -1, "오류가 발생하였습니다.");
     } else {
       res.send({
         result: 1,

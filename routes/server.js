@@ -13,7 +13,7 @@
 
 const router = require("express").Router();
 const DB = require("../models/config");
-const { resultMSG, errorMSG } = require("../app");
+const { resultMSG } = require("../app");
 
 // 서버 접속
 // 멤버 여부 확인 -> 접속 시간 저장 -> 세션 저장
@@ -32,8 +32,7 @@ router.get("/", (req, res) => {
   DB(sql, params).then(function (result) {
     if (!result.state) {
       console.log(result.err);
-      //   resultMSG(res, -1, "서버에 접속할 수 없습니다.");
-      errorMSG(res, 500);
+      resultMSG(res, -1, "오류가 발생하였습니다.");
     } else {
       if (!result.rows[0]) {
         resultMSG(res, -1, "서버에 접속할 수 없습니다.");
@@ -48,8 +47,7 @@ router.get("/", (req, res) => {
         DB(sql, params).then(function (result) {
           if (!result.state) {
             console.log(result.err);
-            // resultMSG(res, -1, "서버에 접속할 수 없습니다.");
-            errorMSG(res, 500);
+            resultMSG(res, -1, "오류가 발생하였습니다.");
           } else {
             // 접속한 서버 정보 세션 저장
             // req.session.sid = srv_id;
@@ -65,7 +63,6 @@ router.get("/", (req, res) => {
             //   if (err) {
             //     console.log(err);
             //     // return res.status(500).send("<h1>500 error</h1>");
-            //     errorMSG(res, 500);
             //   }
 
             resultMSG(res, 1, "서버에 접속되었습니다.");
@@ -94,8 +91,7 @@ router.post("/add", (req, res) => {
 
     if (!result.state) {
       console.log(result.err);
-      //   resultMSG(res, -1, "서버 생성에 실패하였습니다.");
-      errorMSG(res, 500);
+      resultMSG(res, -1, "오류가 발생하였습니다.");
     } else {
       if (result.rows[0].count) {
         resultMSG(res, -1, "이미 존재하는 서버입니다.");
@@ -105,8 +101,7 @@ router.post("/add", (req, res) => {
         DB(sql, params).then(function (result) {
           if (!result.state) {
             console.log(result.err);
-            // resultMSG(res, -1, "서버 생성에 실패하였습니다.");
-            errorMSG(res, 500);
+            resultMSG(res, -1, "오류가 발생하였습니다.");
           } else {
             // 관리자를 서버 회원 목록에 추가
             sql =
@@ -124,8 +119,7 @@ router.post("/add", (req, res) => {
                 DB(sql, params).then(function (result) {
                   if (!result.state) {
                     console.log(result.err);
-                    // resultMSG(res, -1, "서버 생성에 실패하였습니다.");
-                    errorMSG(res, 500);
+                    resultMSG(res, -1, "오류가 발생하였습니다.");
                   } else {
                     resultMSG(res, -1, "서버 생성에 실패하였습니다.");
                   }

@@ -14,7 +14,7 @@
 const router = require("express").Router();
 const DB = require("../models/config");
 const { hashCreate, hashCheck } = require("../config/crypto");
-const { resultMSG, errorMSG } = require("../app");
+const { resultMSG } = require("../app");
 const passport = require("passport");
 require("../config/passport_local")(passport);
 
@@ -36,8 +36,7 @@ router.post("/login", (req, res) => {
 
   passport.authenticate("local", (err, user, info) => {
     if (err) {
-      // return resultMSG(res, -1, "이메일 또는 비밀번호가 일치하지 않습니다.");
-      return errorMSG(res, 500);
+      return resultMSG(res, -1, "오류가 발생하였습니다.");
     }
     return req.login(user, (err) => {
       if (err)
@@ -89,8 +88,7 @@ router.post("/signup", (req, res) => {
     // return
     if (!result.state) {
       console.log(result.err);
-      // resultMSG(res, -1, "회원가입에 실패하였습니다.");
-      errorMSG(res, 500);
+      resultMSG(res, -1, "오류가 발생하였습니다.");
     } else {
       resultMSG(res, 1, "회원가입이 완료되었습니다.");
     }
@@ -111,8 +109,7 @@ router.post("/emailCheck", (req, res) => {
   DB(sql, params).then(function (result) {
     if (!result.state) {
       console.log(result.err);
-      //   resultMSG(res, -1, "중복확인 실패하였습니다.");
-      errorMSG(res, 500);
+      resultMSG(res, -1, "오류가 발생하였습니다.");
     } else {
       let count = result.rows[0].count;
       if (!count) {
@@ -142,13 +139,11 @@ router.post("/signout", (req, res) => {
       // return
       if (!result.state) {
         console.log(result.err);
-        // resultMSG(res, -1, "탈퇴에 실패하였습니다.");
-        errorMSG(res, 500);
+        resultMSG(res, -1, "오류가 발생하였습니다.");
       } else {
         let count = result.rows[0].count;
         if (!count) {
           resultMSG(res, -1, "탈퇴에 실패하였습니다.");
-          //   errorMSG(res, 500);
         } else {
           const user_pwd = result.rows[0].user_pwd;
           const user_salt = result.rows[0].user_salt;
@@ -163,8 +158,7 @@ router.post("/signout", (req, res) => {
             DB(sql, params).then((result) => {
               if (!result.state) {
                 console.log(result.err);
-                // resultMSG(res, -1, "탈퇴에 실패하였습니다.");
-                errorMSG(res, 500);
+                resultMSG(res, -1, "오류가 발생하였습니다.");
               } else {
                 req.logout();
                 resultMSG(res, 1, "탈퇴가 완료되었습니다.");

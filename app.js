@@ -26,6 +26,9 @@ const setting = require("./routes/setting");
 const server = require("./routes/server");
 const member = require("./routes/member");
 
+// DB
+const DB = require('./models/config');
+
 // cors
 app.use(cors());
 
@@ -70,11 +73,6 @@ export function resultMSG(res, result, msg) {
   });
 }
 
-// error 전송
-export function errorMSG(res, code) {
-  res.status(code).send({ error: "오류가 발생하였습니다." });
-}
-
 function loginRequired(req, res, next) {
   // 미 로그인
   if (!req.user) {
@@ -91,7 +89,8 @@ function srvRequired(req, res, next) {
     return;
   }
 
-  if (!req.body.srv_id) {
+  const srv_id = req.body.srv_id || req.query.srv_id;
+  if (!srv_id) {
     resultMSG(res, -1, "서버가 선택되지 않았습니다.");
     return;
   }
@@ -105,32 +104,36 @@ function adminRequired(req, res, next) {
     return;
   }
 
-  if (!req.body.srv_id || !req.query.srv_id) {
+  const srv_id = req.body.srv_id || req.query.srv_id;
+  console.log(srv_id);
+  if (!srv_id) {
     resultMSG(res, -1, "서버가 선택되지 않았습니다.");
     return;
   }
 
-  let sql = "SELECT admin_id FROM srv WHERE srv_id=? AND srv_YN='N'";
+  let sql = "SELECT user_id FROM srv WHERE srv_id=? AND srv_YN='N'";
   DB(sql, [srv_id]).then(function (result) {
     if (!result.state) {
       console.log(result.err);
-      // res.status(500).send({ error: "오류가 발생하였습니다."});
-      errorMSG(res, 500);
+      resultMSG(res, -1, "오류가 발생하였습니다.");
       return;
     } else {
       if (!result.rows[0]) {
-        resultMSG(res, -1, "접근 권한이 없습니다.");
+        console.log("ewrewrwwrw")
+        resultMSG(res, -1, "오류가 발생하였습니다.");
         return;
       } else {
-        const admin_id = result.rows[0].admin_id;
+        const admin_id = result.rows[0].user_id;
+        console.log("dsfdsfs =====" + admin_id)
         if (req.user != admin_id) {
           resultMSG(res, -1, "접근 권한이 없습니다.");
           return;
+        } else {
+          next();
         }
       }
     }
   });
-  next();
 }
 
 // function adminRequired(req, res, next) {

@@ -9,79 +9,76 @@
 //  - 이름 변경
 //  - 상태메시지 변경
 // @todo
-//  - 
+//  -
 // ***********************************************************
 
-const router = require('express').Router();
-const DB = require('../models/config');
-const { resultMSG } = require('../app');
+const router = require("express").Router();
+const DB = require("../models/config");
+const { resultMSG } = require("../app");
 
-router.get('/', (req, res) => {
-    const user_id = req.user;
+router.get("/", (req, res) => {
+  const user_id = req.user;
 
-    console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /setting] `);
+  console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /setting] `);
 
-    let sql = 'SELECT user_name, user_msg FROM user WHERE user_id=(?) and user_YN  = \'N\''
-    let params = [user_id];
-    DB(sql, params).then(function (result) {
+  let sql =
+    "SELECT user_name, user_msg FROM user WHERE user_id=(?) and user_YN  = 'N'";
+  let params = [user_id];
+  DB(sql, params).then(function (result) {
+    // return
+    if (!result.state) {
+      console.log(result.err);
+      resultMSG(res, -1, "오류가 발생하였습니다.");
+    } else {
+      res.send({
+        result: 1,
+        name: result.rows[0].user_name,
+        msg: result.rows[0].user_msg,
+      });
+    }
+  });
+});
 
-        // return 
-        if (!result.state) {
-            console.log(result.err);
-            resultMSG(res, -1, "");
+router.post("/name", (req, res) => {
+  const user_id = req.user;
+  const name = req.body.name;
 
-        } else {
+  console.log(
+    `[${new Date().toLocaleString()}] [uid ${user_id} /setting/name] name=${name}`
+  );
 
-            res.send({
-                "result": 1,
-                "name": result.rows[0].user_name,
-                "msg": result.rows[0].user_msg,
-            })
+  let sql = "UPDATE user SET user_name=? WHERE user_id=?";
+  let params = [name, user_id];
+  DB(sql, params).then(function (result) {
+    // return
+    if (!result.state) {
+      console.log(result.err);
+      resultMSG(res, -1, "오류가 발생하였습니다.");
+    } else {
+      resultMSG(res, 1, "이름이 변경되었습니다.");
+    }
+  });
+});
 
-        }
-    })
-})
+router.post("/msg", (req, res) => {
+  const user_id = req.user;
+  const msg = req.body.msg;
 
-router.post('/name', (req, res) => {
-    const user_id = req.user;
-    const name = req.body.name;
+  console.log(
+    `[${new Date().toLocaleString()}] [uid ${user_id} /setting/msg] msg=${msg}`
+  );
 
-    console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /setting/name] name=${name}`);
-
-    let sql = 'UPDATE user SET user_name=? WHERE user_id=?'
-    let params = [name, user_id];
-    DB(sql, params).then(function (result) {
-
-        // return 
-        if (!result.state) {
-            console.log(result.err);
-            resultMSG(res, -1, "이름이 변경되지않았습니다.");
-
-        } else {
-            resultMSG(res, 1, "이름이 변경되었습니다.");
-        }
-    })
-})
-
-router.post('/msg', (req, res) => {
-    const user_id = req.user;
-    const msg = req.body.msg;
-
-    console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /setting/msg] msg=${msg}`);
-
-    let sql = 'UPDATE user SET user_msg=? WHERE user_id=?'
-    let params = [msg, user_id];
-    DB(sql, params).then(function (result) {
-
-        // return 
-        if (!result.state) {
-            console.log(result.err);
-            resultMSG(res, -1, "상태메시지가 변경되지않았습니다.");
-
-        } else {
-            resultMSG(res, 1, "상태메시지가 변경되었습니다.");
-        }
-    })
-})
+  let sql = "UPDATE user SET user_msg=? WHERE user_id=?";
+  let params = [msg, user_id];
+  DB(sql, params).then(function (result) {
+    // return
+    if (!result.state) {
+      console.log(result.err);
+      resultMSG(res, -1, "오류가 발생하였습니다.");
+    } else {
+      resultMSG(res, 1, "상태메시지가 변경되었습니다.");
+    }
+  });
+});
 
 module.exports = router;

@@ -13,7 +13,7 @@
 
 const router = require("express").Router();
 const DB = require("../models/config");
-const { resultMSG, errorMSG } = require("../app");
+const { resultMSG } = require("../app");
 
 // 회원 조회
 router.get("/", (req, res) => {
@@ -34,8 +34,7 @@ router.get("/", (req, res) => {
   DB(sql, params).then(function (result) {
     if (!result.state) {
       console.log(result.err);
-      //   resultMSG(res, -1, "회원 목록을 불러올 수 없습니다.");
-      errorMSG(res, 500);
+      resultMSG(res, -1, "오류가 발생하였습니다.");
     } else {
       res.send({
         result: 1,
@@ -67,8 +66,7 @@ router.post("/delete", (req, res) => {
     DB(sql, params).then(function (result) {
       if (!result.state) {
         console.log(result.err);
-        // resultMSG(res, -1, "멤버 삭제에 실패하였습니다.");
-        errorMSG(res, 500);
+        resultMSG(res, -1, "오류가 발생하였습니다.");
       } else {
         if (!result.rows[0]) {
           resultMSG(res, -1, "서버에 존재하지 않은 멤버입니다.");
@@ -83,8 +81,7 @@ router.post("/delete", (req, res) => {
           DB(sql, params).then(function (result) {
             if (!result.state) {
               console.log(result.err);
-              //   resultMSG(res, -1, "멤버 삭제에 실패하였습니다.");
-              errorMSG(res, 500);
+              resultMSG(res, -1, "오류가 발생하였습니다.");
             } else {
               resultMSG(res, -1, "멤버가 삭제되었습니다.");
             }
@@ -111,11 +108,10 @@ router.post("/invent", (req, res) => {
   DB(sql, params).then(function (result) {
     if (!result.state) {
       console.log(result.err);
-      //   resultMSG(res, -1, "멤버 초대에 실패하였습니다.");
-      errorMSG(res, 500);
+      resultMSG(res, -1, "오류가 발생하였습니다.");
     } else {
       if (!result.rows[0]) {
-        resultMSG(res, -1, "멤버 초대에 실패하였습니다.");
+        resultMSG(res, -1, "오류가 발생하였습니다.");
       } else {
         const invent_id = result.rows[0].user_id;
 
@@ -130,8 +126,7 @@ router.post("/invent", (req, res) => {
           DB(sql, params).then(function (result) {
             if (!result.state) {
               console.log(result.err);
-              //   resultMSG(res, -1, "멤버 초대에 실패하였습니다.");
-              errorMSG(res, 500);
+              resultMSG(res, -1, "오류가 발생하였습니다.");
             } else {
               if (result.rows[0]) {
                 resultMSG(res, -1, "이미 가입된 멤버입니다.");
@@ -143,8 +138,7 @@ router.post("/invent", (req, res) => {
                 DB(sql, params).then(function (result) {
                   if (!result.state) {
                     console.log(result.err);
-                    // resultMSG(res, -1, "멤버 초대에 실패하였습니다.");
-                    errorMSG(res, 500);
+                    resultMSG(res, -1, "오류가 발생하였습니다.");
                   } else {
                     res.send({
                       result: 1,
