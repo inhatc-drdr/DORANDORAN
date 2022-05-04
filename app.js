@@ -4,7 +4,6 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
 
 const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
@@ -29,9 +28,6 @@ const member = require("./routes/member");
 
 // DB
 const DB = require('./models/config');
-
-// cookie
-app.use(cookieParser())
 
 // cors
 // app.use(cors());
