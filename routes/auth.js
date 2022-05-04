@@ -54,7 +54,7 @@ router.post("/login", (req, res) => {
 
 // 로그아웃
 router.use("/logout", (req, res) => {
-  console.log(`[${new Date().toLocaleString()}] [uid ${req.user.id} /logout] `);
+  console.log(`[${new Date().toLocaleString()}] [uid ${req.headers.id} /logout] `);
 
   if (!req.headers.id) {
     // session이 존재하지 않은 경우, 로그인 하지 않은 경우
@@ -128,7 +128,7 @@ router.post("/emailCheck", (req, res) => {
 
 // 회원탈퇴
 router.post("/signout", (req, res) => {
-  console.log(`[${new Date().toLocaleString()}] [uid ${req.user.id} /signout] `);
+  console.log(`[${new Date().toLocaleString()}] [uid ${req.headers.id} /signout] `);
 
   if (!req.headers.id) {
     // session이 존재하지 않은 경우, 로그인 하지 않은 경우
