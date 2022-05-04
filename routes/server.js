@@ -28,7 +28,8 @@ router.get("/", (req, res) => {
 
   // 서버의 멤버인지 확인
   let sql =
-    "SELECT srvuser_id FROM srvuser WHERE srv_id=? AND user_id=? AND srvuser_YN='N'";
+    // "SELECT srvuser_id, s.user_id as admin_id FROM srvuser WHERE srv_id=? AND user_id=? AND srvuser_YN='N'";
+    'SELECT srvuser_id, s.user_id as admin_id FROM srvuser su, srv s WHERE su.srv_id=? AND su.user_id=? AND su.srv_id = s.srv_id AND srvuser_YN=\'N\'';
   let params = [srv_id, user_id];
   DB(sql, params).then(function (result) {
     if (!result.state) {
@@ -39,7 +40,7 @@ router.get("/", (req, res) => {
         resultMSG(res, -1, "서버에 접속할 수 없습니다.");
       } else {
         const srvuser_id = result.rows[0].srvuser_id;
-        // const admin_id = result.rows[0].admin_id;
+        const admin_id = result.rows[0].admin_id;
 
         // 접속 시간 저장
         sql =
@@ -66,7 +67,19 @@ router.get("/", (req, res) => {
             //     // return res.status(500).send("<h1>500 error</h1>");
             //   }
 
-            resultMSG(res, 1, "서버에 접속되었습니다.");
+            if (admin_id == user_id) {
+              res.send({
+                result: 1,
+                admin_yn: 'y',
+              });
+              return;
+            }
+
+            res.send({
+              result: 1,
+              admin_yn: 'n',
+            });
+            // resultMSG(res, 1, "서버에 접속되었습니다.");
             // });
           }
         });

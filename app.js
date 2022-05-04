@@ -123,7 +123,6 @@ function adminRequired(req, res, next) {
       return;
     } else {
       if (!result.rows[0]) {
-        console.log("ewrewrwwrw")
         resultMSG(res, -1, "오류가 발생하였습니다.");
         return;
       } else {
