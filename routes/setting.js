@@ -17,7 +17,8 @@ const DB = require("../models/config");
 const { resultMSG } = require("../app");
 
 router.get("/", (req, res) => {
-  const user_id = req.user.id;
+  // const user_id = req.user.id;
+  const user_id = req.headers.id;
 
   console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /setting] `);
 
@@ -40,7 +41,8 @@ router.get("/", (req, res) => {
 });
 
 router.post("/name", (req, res) => {
-  const user_id = req.user.id;
+  // const user_id = req.user.id;
+  const user_id = req.headers.id;
   const name = req.body.name;
 
   console.log(
@@ -61,7 +63,8 @@ router.post("/name", (req, res) => {
 });
 
 router.post("/msg", (req, res) => {
-  const user_id = req.user.id;
+  // const user_id = req.user.id;
+  const user_id = req.headers.id;
   const msg = req.body.msg;
 
   console.log(

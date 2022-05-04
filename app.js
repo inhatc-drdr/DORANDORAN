@@ -4,6 +4,7 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 
 const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
@@ -29,8 +30,15 @@ const member = require("./routes/member");
 // DB
 const DB = require('./models/config');
 
+// cookie
+app.use(cookieParser())
+
 // cors
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 
 // view
 // app.set("view engine", "ejs");
@@ -75,7 +83,7 @@ export function resultMSG(res, result, msg) {
 
 function loginRequired(req, res, next) {
   // 미 로그인
-  if (!req.user) {
+  if (!req.headers.id) {
     resultMSG(res, 0, "로그인 되어있지않습니다.");
     return;
   }
@@ -84,7 +92,7 @@ function loginRequired(req, res, next) {
 
 function srvRequired(req, res, next) {
   // 미 로그인
-  if (!req.user) {
+  if (!req.headers.id) {
     resultMSG(res, 0, "로그인 되어있지않습니다.");
     return;
   }
@@ -99,7 +107,7 @@ function srvRequired(req, res, next) {
 
 function adminRequired(req, res, next) {
   // 미 로그인
-  if (!req.user) {
+  if (!req.headers.id) {
     resultMSG(res, 0, "로그인 되어있지않습니다.");
     return;
   }
@@ -124,8 +132,7 @@ function adminRequired(req, res, next) {
         return;
       } else {
         const admin_id = result.rows[0].user_id;
-        console.log("dsfdsfs =====" + admin_id)
-        if (req.user.id != admin_id) {
+        if (req.headers.id != admin_id) {
           resultMSG(res, -1, "접근 권한이 없습니다.");
           return;
         } else {

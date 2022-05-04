@@ -16,7 +16,8 @@ const DB = require("../models/config");
 const { resultMSG } = require("../app");
 
 router.get("/", (req, res) => {
-  const user_id = req.user.id;
+  // const user_id = req.user.id;
+  const user_id = req.headers.id;
 
   console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /home]`);
 

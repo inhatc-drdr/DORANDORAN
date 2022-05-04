@@ -18,7 +18,8 @@ const { resultMSG } = require("../app");
 // 서버 접속
 // 멤버 여부 확인 -> 접속 시간 저장 -> 세션 저장
 router.get("/", (req, res) => {
-  const user_id = req.user.id;
+  // const user_id = req.user.id;
+  const user_id = req.headers.id;
   const srv_id = req.query.srv_id;
 
   console.log(
@@ -76,7 +77,8 @@ router.get("/", (req, res) => {
 
 // 서버 생성
 router.post("/add", (req, res) => {
-  const user_id = req.user.id;
+  // const user_id = req.user.id;
+  const user_id = req.headers.id;
   const srv_name = req.body.srv_name;
 
   console.log(

@@ -28,6 +28,7 @@ require("../config/passport_local")(passport);
 // )
 
 router.post("/login", (req, res) => {
+
   console.log(`[${new Date().toLocaleString()}] [uid - /login] email=${req.body.email}&pwd=${req.body.pwd}`);
 
   passport.authenticate("local", (err, user, info) => {
@@ -35,11 +36,18 @@ router.post("/login", (req, res) => {
       return resultMSG(res, -1, "오류가 발생하였습니다.");
     }
     return req.login(user, (err) => {
-      if (err)
+      if (err) {
+        console.log(err)
         return resultMSG(res, -1, "이메일 또는 비밀번호가 일치하지 않습니다.");
 
+      }
+
       console.log(`[${new Date().toLocaleString()}] [uid ${req.user.id} /login] Success : ${req.user.name}`);
-      return resultMSG(res, 1, "로그인 성공하였습니다.");
+      res.send({
+        "result": 1,
+        "id": req.user.id,
+        "name": req.user.name,
+      })
     });
   })(req, res);
 });
@@ -48,12 +56,17 @@ router.post("/login", (req, res) => {
 router.use("/logout", (req, res) => {
   console.log(`[${new Date().toLocaleString()}] [uid ${req.user.id} /logout] `);
 
-  if (!req.user) {
+  if (!req.headers.id) {
     // session이 존재하지 않은 경우, 로그인 하지 않은 경우
     resultMSG(res, -1, "로그인 되어있지 않습니다.");
   } else {
     req.logout();
-    resultMSG(res, 1, "로그아웃 되었습니다.");
+    // resultMSG(res, 1, "로그아웃 되었습니다.");
+    res.send({
+      "result": 1,
+      "id": null,
+      "name": null,
+    })
   }
 });
 
@@ -68,9 +81,6 @@ router.post("/signup", (req, res) => {
   console.log(
     `[${new Date().toLocaleString()}] [uid - /signup] name=${name}&email=${email}&pwd=${pwd}&tel=${tel}`
   );
-
-  // insert db
-  console.log(account);
 
   // 암호화
   const hashed = hashCreate(pwd);
@@ -120,11 +130,11 @@ router.post("/emailCheck", (req, res) => {
 router.post("/signout", (req, res) => {
   console.log(`[${new Date().toLocaleString()}] [uid ${req.user.id} /signout] `);
 
-  if (!req.user) {
+  if (!req.headers.id) {
     // session이 존재하지 않은 경우, 로그인 하지 않은 경우
     resultMSG(res, -1, "로그인 되어있지않습니다.");
   } else {
-    const id = req.user.id;
+    const id = req.headers.id;
     const pwd = req.body.pwd;
 
     let sql =
@@ -156,7 +166,12 @@ router.post("/signout", (req, res) => {
                 resultMSG(res, -1, "오류가 발생하였습니다.");
               } else {
                 req.logout();
-                resultMSG(res, 1, "탈퇴가 완료되었습니다.");
+                // resultMSG(res, 1, "탈퇴가 완료되었습니다.");
+                res.send({
+                  "result": 1,
+                  "id": null,
+                  "name": null,
+                })
               }
             });
           } else {

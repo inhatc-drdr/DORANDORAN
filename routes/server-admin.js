@@ -21,7 +21,8 @@ router.use('/member', member);
 // 서버 생성
 router.post('/add', (req, res) => {
 
-    const user_id = req.user.id;
+    // const user_id = req.user.id;
+    const user_id = req.headers.id;
 
     const server = req.body;
     const srv_name = server.srv_name;
