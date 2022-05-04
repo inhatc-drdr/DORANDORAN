@@ -46,7 +46,7 @@ router.get("/", (req, res) => {
 
 // 회원 삭제
 router.post("/delete", (req, res) => {
-  const user_id = req.user;
+  const user_id = req.user.id;
   const delete_id = req.body.user_id;
   // const srv_id = req.session.sid;
   const srv_id = req.body.srv_id;
@@ -94,7 +94,7 @@ router.post("/delete", (req, res) => {
 
 // 회원 초대
 router.post("/invent", (req, res) => {
-  const user_id = req.user;
+  const user_id = req.user.id;
   const invent_email = req.body.user_email;
   // const srv_id = req.session.sid;
   const srv_id = req.body.srv_id;

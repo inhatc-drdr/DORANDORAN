@@ -125,7 +125,7 @@ function adminRequired(req, res, next) {
       } else {
         const admin_id = result.rows[0].user_id;
         console.log("dsfdsfs =====" + admin_id)
-        if (req.user != admin_id) {
+        if (req.user.id != admin_id) {
           resultMSG(res, -1, "접근 권한이 없습니다.");
           return;
         } else {

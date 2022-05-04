@@ -28,11 +28,7 @@ require("../config/passport_local")(passport);
 // )
 
 router.post("/login", (req, res) => {
-  console.log(
-    `[${new Date().toLocaleString()}] [uid - /login] email=${
-      req.body.email
-    }&pwd=${req.body.pwd}`
-  );
+  console.log(`[${new Date().toLocaleString()}] [uid - /login] email=${req.body.email}&pwd=${req.body.pwd}`);
 
   passport.authenticate("local", (err, user, info) => {
     if (err) {
@@ -42,6 +38,7 @@ router.post("/login", (req, res) => {
       if (err)
         return resultMSG(res, -1, "이메일 또는 비밀번호가 일치하지 않습니다.");
 
+      console.log(`[${new Date().toLocaleString()}] [uid ${req.user.id} /login] Success : ${req.user.name}`);
       return resultMSG(res, 1, "로그인 성공하였습니다.");
     });
   })(req, res);
@@ -49,7 +46,7 @@ router.post("/login", (req, res) => {
 
 // 로그아웃
 router.use("/logout", (req, res) => {
-  console.log(`[${new Date().toLocaleString()}] [uid ${req.user} /logout] `);
+  console.log(`[${new Date().toLocaleString()}] [uid ${req.user.id} /logout] `);
 
   if (!req.user) {
     // session이 존재하지 않은 경우, 로그인 하지 않은 경우
@@ -100,9 +97,7 @@ router.post("/emailCheck", (req, res) => {
   const account = req.body;
   const email = account.email;
 
-  console.log(
-    `[${new Date().toLocaleString()}] [uid - /emailCheck] email=${email}`
-  );
+  console.log(`[${new Date().toLocaleString()}] [uid - /emailCheck] email=${email}`);
 
   let sql = "SELECT count(*) as count FROM user WHERE user_email = ?";
   let params = [email];
@@ -123,13 +118,13 @@ router.post("/emailCheck", (req, res) => {
 
 // 회원탈퇴
 router.post("/signout", (req, res) => {
-  console.log(`[${new Date().toLocaleString()}] [uid ${req.user} /signout] `);
+  console.log(`[${new Date().toLocaleString()}] [uid ${req.user.id} /signout] `);
 
   if (!req.user) {
     // session이 존재하지 않은 경우, 로그인 하지 않은 경우
     resultMSG(res, -1, "로그인 되어있지않습니다.");
   } else {
-    const id = req.user;
+    const id = req.user.id;
     const pwd = req.body.pwd;
 
     let sql =
