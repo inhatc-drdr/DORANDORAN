@@ -14,9 +14,11 @@
 const router = require("express").Router();
 const DB = require("../models/config");
 const { resultMSG } = require("../app");
+const { srvRequired } = require("./required");
 
 // 회원 조회
-router.get("/", (req, res) => {
+router.get("/", srvRequired, (req, res) => {
+
   // const user_id = req.user;
   const user_id = req.headers.id;
   // const srv_id = req.session.sid;
@@ -25,6 +27,11 @@ router.get("/", (req, res) => {
   console.log(
     `[${new Date().toLocaleString()}] [uid ${user_id} /server/member] srv_id=${srv_id}`
   );
+
+  const admin_yn = req.data.admin_yn;
+  if (admin_yn == "n") {
+    return resultMSG(res, -1, "접근 권한이 없습니다.");
+  }
 
   let sql =
     "SELECT su.user_id, user_name, user_email, user_tel, srvuser_lastaccess " +
@@ -46,7 +53,8 @@ router.get("/", (req, res) => {
 });
 
 // 회원 삭제
-router.post("/delete", (req, res) => {
+router.post("/delete", srvRequired, (req, res) => {
+
   // const user_id = req.user.id;
   const user_id = req.headers.id;
   const delete_id = req.body.user_id;
@@ -56,6 +64,11 @@ router.post("/delete", (req, res) => {
   console.log(
     `[${new Date().toLocaleString()}] [uid ${user_id} /server/member/delete] srv_id=${srv_id}&delete_id=${delete_id}`
   );
+
+  const admin_yn = req.data.admin_yn;
+  if (admin_yn == "n") {
+    return resultMSG(res, -1, "접근 권한이 없습니다.");
+  }
 
   // 관리자 자신은 삭제 불가능
   if (delete_id == user_id) {
@@ -95,7 +108,8 @@ router.post("/delete", (req, res) => {
 });
 
 // 회원 초대
-router.post("/invent", (req, res) => {
+router.post("/invent", srvRequired, (req, res) => {
+
   // const user_id = req.user.id;
   const user_id = req.headers.id;
   const invent_email = req.body.user_email;
@@ -105,6 +119,11 @@ router.post("/invent", (req, res) => {
   console.log(
     `[${new Date().toLocaleString()}] [uid ${user_id} /server/member/invent] srv_id=${srv_id}&invent_email=${invent_email}`
   );
+
+  const admin_yn = req.data.admin_yn;
+  if (admin_yn == "n") {
+    return resultMSG(res, -1, "접근 권한이 없습니다.");
+  }
 
   let sql = "SELECT user_id FROM user WHERE user_email=? AND user_yn='N'";
   let params = [invent_email];

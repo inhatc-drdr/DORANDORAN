@@ -14,10 +14,11 @@
 const router = require("express").Router();
 const DB = require("../models/config");
 const { resultMSG } = require("../app");
+const { srvRequired } = require("./required");
 
 // 서버 접속
 // 멤버 여부 확인 -> 접속 시간 저장 -> 세션 저장
-router.get("/", (req, res) => {
+router.get("/", srvRequired, (req, res) => {
   // const user_id = req.user.id;
   const user_id = req.headers.id;
   const srv_id = req.query.srv_id;
@@ -26,64 +27,24 @@ router.get("/", (req, res) => {
     `[${new Date().toLocaleString()}] [uid ${user_id} /server] srv_id=${srv_id}`
   );
 
-  // 서버의 멤버인지 확인
+  const srvuser_id = req.data.srvuser_id;
+  const admin_yn = req.data.admin_yn;
+
+  // 접속 시간 저장
   let sql =
-    // "SELECT srvuser_id, s.user_id as admin_id FROM srvuser WHERE srv_id=? AND user_id=? AND srvuser_YN='N'";
-    'SELECT srvuser_id, s.user_id as admin_id FROM srvuser su, srv s WHERE su.srv_id=? AND su.user_id=? AND su.srv_id = s.srv_id AND srvuser_YN=\'N\'';
-  let params = [srv_id, user_id];
+    "UPDATE srvuser SET srvuser_lastaccess=CURRENT_TIMESTAMP WHERE srvuser_id=?";
+  let params = [srvuser_id];
   DB(sql, params).then(function (result) {
     if (!result.state) {
       console.log(result.err);
       resultMSG(res, -1, "오류가 발생하였습니다.");
     } else {
-      if (!result.rows[0]) {
-        resultMSG(res, -1, "서버에 접속할 수 없습니다.");
-      } else {
-        const srvuser_id = result.rows[0].srvuser_id;
-        const admin_id = result.rows[0].admin_id;
 
-        // 접속 시간 저장
-        sql =
-          "UPDATE srvuser SET srvuser_lastaccess=CURRENT_TIMESTAMP WHERE srvuser_id=?";
-        params = [srvuser_id];
-        DB(sql, params).then(function (result) {
-          if (!result.state) {
-            console.log(result.err);
-            resultMSG(res, -1, "오류가 발생하였습니다.");
-          } else {
-            // 접속한 서버 정보 세션 저장
-            // req.session.sid = srv_id;
-
-            // // 관리자여부 세션 저장
-            // if (admin_id == user_id) {
-            //   req.session.admin = 1;
-            // } else {
-            //   req.session.admin = 0;
-            // }
-
-            // req.session.save((err) => {
-            //   if (err) {
-            //     console.log(err);
-            //     // return res.status(500).send("<h1>500 error</h1>");
-            //   }
-
-            if (admin_id == user_id) {
-              res.send({
-                result: 1,
-                admin_yn: 'y',
-              });
-              return;
-            }
-
-            res.send({
-              result: 1,
-              admin_yn: 'n',
-            });
-            // resultMSG(res, 1, "서버에 접속되었습니다.");
-            // });
-          }
-        });
-      }
+      res.send({
+        result: 1,
+        admin_yn: admin_yn,
+      });
+      return;
     }
   });
 });
