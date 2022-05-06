@@ -18,57 +18,73 @@ const { resultMSG } = require("../app");
 const passport = require("passport");
 require("../config/passport_local")(passport);
 
+const { generateAccessToken, generateRefreshToken, authenticateAccessToken } = require('./jwt');
+
 // 로그인
-// router.post("/login",
-//     passport.authenticate("local", {
-//         successRedirect: "/home",
-//         failureRedirect: "#",
-//         failureFlash: true,
-//     })
-// )
-
 router.post("/login", (req, res) => {
+  let email = req.body.email;
+  let pwd = req.body.pwd;
 
-  console.log(`[${new Date().toLocaleString()}] [uid - /login] email=${req.body.email}&pwd=${req.body.pwd}`);
+  // login check
+  let sql = 'SELECT count(*) as count, user_id, user_name, user_pwd, user_salt FROM user WHERE user_email=? AND user_YN=\'N\'';
+  let params = [email];
+  DB(sql, params).then((result) => {
 
-  passport.authenticate("local", (err, user, info) => {
-    if (err) {
-      return resultMSG(res, -1, "오류가 발생하였습니다.");
-    }
-    return req.login(user, (err) => {
-      if (err) {
-        console.log(err)
-        return resultMSG(res, -1, "이메일 또는 비밀번호가 일치하지 않습니다.");
+    if (!result.state) {
+      console.log(result.err);
 
+    } else {
+      if (!result.rows[0]) {
+
+      } else {
+        const user_pwd = result.rows[0].user_pwd;
+        const user_salt = result.rows[0].user_salt;
+
+        // 복호화
+        const crypto_pwd = hashCheck(user_salt, pwd);
+
+        if (user_pwd == crypto_pwd) {
+
+          const user_id = result.rows[0].user_id;
+
+          let accessToken = generateAccessToken(user_id);
+          let refreshToken = generateRefreshToken(user_id);
+
+          // 성공 시 토큰 전송
+          return res.send({
+            "reuslt": 1,
+            "msg": "로그인 되었습니다.",
+            accessToken,
+            refreshToken
+          });
+
+        } else {
+          return resultMSG(res, -1, "이메일 또는 비밀번호가 일치하지 않습니다.");
+        }
       }
+    }
+  })
+})
 
-      console.log(`[${new Date().toLocaleString()}] [uid ${req.user.id} /login] Success : ${req.user.name}`);
-      res.send({
-        "result": 1,
-        "id": req.user.id,
-        "name": req.user.name,
-      })
-    });
-  })(req, res);
+// access token을 refresh token 기반으로 재발급
+router.post("/refresh", (req, res) => {
+  let refreshToken = req.body.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+
+  jwt.verify(
+    refreshToken,
+    process.env.REFRESH_TOKEN_SECRET,
+    (error, user) => {
+      if (error) return res.sendStatus(403);
+
+      const accessToken = generateAccessToken(user.id);
+
+      res.json({ accessToken });
+    }
+  );
 });
 
-// 로그아웃
-router.use("/logout", (req, res) => {
-  console.log(`[${new Date().toLocaleString()}] [uid ${req.headers.id} /logout] `);
-
-  if (!req.headers.id) {
-    // session이 존재하지 않은 경우, 로그인 하지 않은 경우
-    resultMSG(res, -1, "로그인 되어있지 않습니다.");
-  } else {
-    req.logout();
-    // resultMSG(res, 1, "로그아웃 되었습니다.");
-    res.send({
-      "result": 1,
-      "id": null,
-      "name": null,
-    })
-  }
-});
+// 로그아웃 -> 클라이언트에서 토큰 삭제
 
 // 회원가입
 router.post("/signup", (req, res) => {
@@ -127,60 +143,51 @@ router.post("/emailCheck", (req, res) => {
 });
 
 // 회원탈퇴
-router.post("/signout", (req, res) => {
-  console.log(`[${new Date().toLocaleString()}] [uid ${req.headers.id} /signout] `);
+router.post("/signout", authenticateAccessToken, (req, res) => {
 
-  if (!req.headers.id) {
-    // session이 존재하지 않은 경우, 로그인 하지 않은 경우
-    resultMSG(res, -1, "로그인 되어있지않습니다.");
-  } else {
-    const id = req.headers.id;
-    const pwd = req.body.pwd;
+  const user_id = req.user.id;
 
-    let sql =
-      "SELECT count(*) as count, user_pwd, user_salt FROM user WHERE user_id=? AND user_YN='N'";
-    let params = [id];
-    DB(sql, params).then((result) => {
-      // return
-      if (!result.state) {
-        console.log(result.err);
-        resultMSG(res, -1, "오류가 발생하였습니다.");
+  console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /signout] `);
+
+  const pwd = req.body.pwd;
+
+  let sql =
+    "SELECT count(*) as count, user_pwd, user_salt FROM user WHERE user_id=? AND user_YN='N'";
+  let params = [user_id];
+  DB(sql, params).then((result) => {
+    // return
+    if (!result.state) {
+      console.log(result.err);
+      resultMSG(res, -1, "오류가 발생하였습니다.");
+    } else {
+      let count = result.rows[0].count;
+      if (!count) {
+        resultMSG(res, -1, "탈퇴에 실패하였습니다.");
       } else {
-        let count = result.rows[0].count;
-        if (!count) {
-          resultMSG(res, -1, "탈퇴에 실패하였습니다.");
+        const user_pwd = result.rows[0].user_pwd;
+        const user_salt = result.rows[0].user_salt;
+
+        // 복호화
+        const crypto_pwd = hashCheck(user_salt, pwd);
+
+        if (user_pwd == crypto_pwd) {
+          // db
+          sql =
+            "UPDATE user SET user_YN='Y', user_leave=CURRENT_TIMESTAMP where user_id=?";
+          DB(sql, params).then((result) => {
+            if (!result.state) {
+              console.log(result.err);
+              resultMSG(res, -1, "오류가 발생하였습니다.");
+            } else {
+              resultMSG(res, 1, "탈퇴가 완료되었습니다.");
+            }
+          });
         } else {
-          const user_pwd = result.rows[0].user_pwd;
-          const user_salt = result.rows[0].user_salt;
-
-          // 복호화
-          const crypto_pwd = hashCheck(user_salt, pwd);
-
-          if (user_pwd == crypto_pwd) {
-            // db
-            sql =
-              "UPDATE user SET user_YN='Y', user_leave=CURRENT_TIMESTAMP where user_id=?";
-            DB(sql, params).then((result) => {
-              if (!result.state) {
-                console.log(result.err);
-                resultMSG(res, -1, "오류가 발생하였습니다.");
-              } else {
-                req.logout();
-                // resultMSG(res, 1, "탈퇴가 완료되었습니다.");
-                res.send({
-                  "result": 1,
-                  "id": null,
-                  "name": null,
-                })
-              }
-            });
-          } else {
-            resultMSG(res, -1, "탈퇴에 실패하였습니다.");
-          }
+          resultMSG(res, -1, "탈퇴에 실패하였습니다.");
         }
       }
-    });
-  }
+    }
+  });
 });
 
 module.exports = router;

@@ -19,9 +19,7 @@ const { srvRequired } = require("./required");
 // 회원 조회
 router.get("/", srvRequired, (req, res) => {
 
-  // const user_id = req.user;
-  const user_id = req.headers.id;
-  // const srv_id = req.session.sid;
+  const user_id = req.user.id;
   const srv_id = req.query.srv_id;
 
   console.log(
@@ -55,10 +53,8 @@ router.get("/", srvRequired, (req, res) => {
 // 회원 삭제
 router.post("/delete", srvRequired, (req, res) => {
 
-  // const user_id = req.user.id;
-  const user_id = req.headers.id;
+  const user_id = req.user.id;
   const delete_id = req.body.user_id;
-  // const srv_id = req.session.sid;
   const srv_id = req.body.srv_id;
 
   console.log(
@@ -110,10 +106,8 @@ router.post("/delete", srvRequired, (req, res) => {
 // 회원 초대
 router.post("/invent", srvRequired, (req, res) => {
 
-  // const user_id = req.user.id;
-  const user_id = req.headers.id;
+  const user_id = req.user.id;
   const invent_email = req.body.user_email;
-  // const srv_id = req.session.sid;
   const srv_id = req.body.srv_id;
 
   console.log(

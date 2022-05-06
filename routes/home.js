@@ -16,23 +16,10 @@ const DB = require("../models/config");
 const { resultMSG } = require("../app");
 
 router.get("/", (req, res) => {
-  // const user_id = req.user.id;
-  const user_id = req.headers.id;
+
+  const user_id = req.user.id;
 
   console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /home]`);
-
-  // if (req.session.sid) {
-  //     // 서버에서 홈으로 돌아간 경우
-  //     // 세션 삭제
-  //     delete req.session.sid;
-  //     delete req.session.admin;
-  //     req.session.save(err => {
-  //         if (err) {
-  //             console.log(err);
-  //             return res.status(500).send("<h1>500 error</h1>");
-  //         }
-  //     })
-  // }
 
   // 서버 목록 검색
   // - 서버명, 다음 미팅 날짜
@@ -40,7 +27,6 @@ router.get("/", (req, res) => {
 
   let sql =
     "SELECT s.srv_id, s.srv_name, " +
-    // + '(SELECT calendar_id FROM calendar c WHERE c.srv_id=s.srv_id and calendar_YN = \'N\' and calendar_date >= now() order by calendar_date asc limit 1) as calendar_id, '
     "(SELECT calendar_start FROM calendar c WHERE c.srv_id=s.srv_id and calendar_YN = 'N' and calendar_start >= now() order by calendar_start asc limit 1) as calendar_start " +
     "FROM srvuser su, srv s " +
     "WHERE su.user_id=(?) and su.srv_id = s.srv_id and su.srvuser_YN = 'N' " +

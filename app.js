@@ -5,22 +5,11 @@ const path = require("path");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
-const session = require("express-session");
-const MySQLStore = require("express-mysql-session")(session);
-const options = {
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
-};
-const sessionStore = new MySQLStore(options);
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // routers
-const { loginRequired, srvRequired, adminRequired } = require("./routes/required");
+const { authenticateAccessToken } = require("./routes/jwt");
 const auth = require("./routes/auth");
 const home = require("./routes/home");
 const setting = require("./routes/setting");
@@ -49,24 +38,6 @@ app.use(bodyParser.json());
 // dircetory
 app.use("/public", express.static(__dirname + "/public"));
 
-// session
-app.use(
-  session({
-    secret: process.env.SECRET_KEY,
-    resave: false,
-    saveUninitialized: true,
-    store: sessionStore,
-  })
-);
-
-const passport = require("passport");
-const flash = require("connect-flash");
-
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(flash());
-require("./config/passport_local")(passport);
-
 // response 전송
 export function resultMSG(res, result, msg) {
   res.send({
@@ -78,13 +49,12 @@ export function resultMSG(res, result, msg) {
 // routers
 app.get("/", (req, res) => res.send("hello"));
 app.use("/", auth);
-app.use("/home", loginRequired, home);
-app.use("/setting", loginRequired, setting);
-app.use("/server", loginRequired, server);
-app.use("/server/calendar", loginRequired, calendar);
-app.use("/server/notice", loginRequired, notice);
-// app.use("/server/member", adminRequired, member);
-app.use("/server/member", loginRequired, member);
+app.use("/home", authenticateAccessToken, home);
+app.use("/setting", authenticateAccessToken, setting);
+app.use("/server", authenticateAccessToken, server);
+app.use("/server/calendar", authenticateAccessToken, calendar);
+app.use("/server/notice", authenticateAccessToken, notice);
+app.use("/server/member", authenticateAccessToken, member);
 
 // express server listen
 const handleListen = () => console.log(`Listening on http://localhost:${PORT}`);

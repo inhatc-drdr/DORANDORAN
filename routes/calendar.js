@@ -14,11 +14,11 @@
 const router = require("express").Router();
 const DB = require("../models/config");
 const { resultMSG } = require("../app");
-const { loginRequired, srvRequired, adminRequired } = require("./required");
+const { srvRequired } = require("./required");
 
 router.get("/", srvRequired, (req, res) => {
 
-    const user_id = req.headers.id;
+    const user_id = req.user.id;
     const srv_id = req.query.srv_id;
     const calendar_id = req.query.c_id || 0;
 
@@ -86,7 +86,7 @@ function calendarDetail(calendar_id, res) {
 // 일정 추가
 router.post("/add", srvRequired, (req, res) => {
 
-    const user_id = req.headers.id;
+    const user_id = req.user.id;
     const srv_id = req.body.srv_id;
 
     console.log(
