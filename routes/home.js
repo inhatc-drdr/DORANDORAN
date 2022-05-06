@@ -41,7 +41,7 @@ router.get("/", (req, res) => {
   let sql =
     "SELECT s.srv_id, s.srv_name, " +
     // + '(SELECT calendar_id FROM calendar c WHERE c.srv_id=s.srv_id and calendar_YN = \'N\' and calendar_date >= now() order by calendar_date asc limit 1) as calendar_id, '
-    "(SELECT calendar_date FROM calendar c WHERE c.srv_id=s.srv_id and calendar_YN = 'N' and calendar_date >= now() order by calendar_date asc limit 1) as calendar_date " +
+    "(SELECT calendar_start FROM calendar c WHERE c.srv_id=s.srv_id and calendar_YN = 'N' and calendar_start >= now() order by calendar_start asc limit 1) as calendar_start " +
     "FROM srvuser su, srv s " +
     "WHERE su.user_id=(?) and su.srv_id = s.srv_id and su.srvuser_YN = 'N' " +
     "order by srvuser_lastaccess desc";

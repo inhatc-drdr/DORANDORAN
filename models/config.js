@@ -2,17 +2,17 @@ require("dotenv").config();
 
 const mysql = require('mysql2/promise');
 const info = {
-    host: process.env.DB_HOST,    
-    user: process.env.DB_USER,          
-    password: process.env.DB_PASS,      
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
     database: process.env.DB_NAME,
-    dateStrings: 'date',       
+    dateStrings: 'date',
 };
 
 const pool = mysql.createPool(info);
 
-const DB = async(sql, params) => {
-    try{
+const DB = async (sql, params) => {
+    try {
         let result = {};
         const connection = await pool.getConnection(async conn => conn);
         try {

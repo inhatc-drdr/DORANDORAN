@@ -27,6 +27,7 @@ const setting = require("./routes/setting");
 const server = require("./routes/server");
 const member = require("./routes/member");
 const calendar = require("./routes/calendar");
+const notice = require("./routes/notice");
 
 // cors
 // app.use(cors());
@@ -81,6 +82,7 @@ app.use("/home", loginRequired, home);
 app.use("/setting", loginRequired, setting);
 app.use("/server", loginRequired, server);
 app.use("/server/calendar", loginRequired, calendar);
+app.use("/server/notice", loginRequired, notice);
 // app.use("/server/member", adminRequired, member);
 app.use("/server/member", loginRequired, member);
 
