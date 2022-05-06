@@ -33,8 +33,7 @@ router.get("/", (req, res) => {
     } else {
       res.send({
         result: 1,
-        name: result.rows[0].user_name,
-        msg: result.rows[0].user_msg,
+        list: result.rows,
       });
     }
   });
