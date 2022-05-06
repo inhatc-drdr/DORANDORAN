@@ -31,6 +31,11 @@ router.get("/", (req, res) => {
       console.log(result.err);
       resultMSG(res, -1, "오류가 발생하였습니다.");
     } else {
+
+      if (!result.rows.length) {
+        return resultMSG(res, -1, "불러올 수 없습니다.");
+      }
+
       res.send({
         result: 1,
         list: result.rows,
