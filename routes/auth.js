@@ -15,9 +15,8 @@ const router = require("express").Router();
 const DB = require("../models/config");
 const { hashCreate, hashCheck } = require("../config/crypto");
 const { resultMSG } = require("../app");
-const passport = require("passport");
-require("../config/passport_local")(passport);
 
+const jwt = require("jsonwebtoken");
 const { generateAccessToken, generateRefreshToken, authenticateAccessToken } = require('./jwt');
 
 // 로그인
