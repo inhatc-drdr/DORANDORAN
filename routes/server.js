@@ -13,7 +13,7 @@
 
 const router = require("express").Router();
 const DB = require("../models/config");
-const { resultMSG } = require("../app");
+const { resultMSG, resultList } = require("../app");
 const { srvRequired } = require("./required");
 
 // 서버 접속
@@ -37,6 +37,10 @@ router.get("/", srvRequired, (req, res) => {
       console.log(result.err);
       resultMSG(res, -1, "오류가 발생하였습니다.");
     } else {
+
+      console.log(
+        `[${new Date().toLocaleString()}] [retrun ] {result:1, admin_yn:${admin_yn}}`
+      );
 
       res.send({
         result: 1,

@@ -13,7 +13,7 @@
 
 const router = require("express").Router();
 const DB = require("../models/config");
-const { resultMSG } = require("../app");
+const { resultMSG, resultList } = require("../app");
 const { srvRequired } = require("./required");
 
 router.get("/", srvRequired, (req, res) => {
@@ -48,11 +48,11 @@ function noticeList(srv_id, res) {
             console.log(result.err);
             resultMSG(res, -1, "오류가 발생하였습니다.");
         } else {
-
-            res.send({
-                result: 1,
-                list: result.rows,
-            });
+            resultList(res, 1, result.rows);
+            // res.send({
+            //     result: 1,
+            //     list: result.rows,
+            // });
             return;
         }
     });
@@ -75,10 +75,11 @@ function noticeDetail(notice_id, res) {
                 return resultMSG(res, -1, "존재하지 않는 공지입니다.");
             }
 
-            res.send({
-                result: 1,
-                list: result.rows[0],
-            });
+            resultList(res, 1, result.rows[0]);
+            // res.send({
+            //     result: 1,
+            //     list: result.rows[0],
+            // });
             return;
         }
     });

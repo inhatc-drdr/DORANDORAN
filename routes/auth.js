@@ -59,6 +59,10 @@ router.post("/login", (req, res) => {
             let refreshToken = generateRefreshToken(user_id);
 
             // 성공 시 토큰 전송
+            console.log(
+              `[${new Date().toLocaleString()}] [retrun ] {result:1, msg:"로그인 되었습니다", accessToken:${accessToken}, refreshToken:${refreshToken}}`
+            );
+
             return res.send({
               "reuslt": 1,
               "msg": "로그인 되었습니다.",

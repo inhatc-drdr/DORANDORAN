@@ -40,9 +40,26 @@ app.use("/public", express.static(__dirname + "/public"));
 
 // response 전송
 export function resultMSG(res, result, msg) {
+
+  console.log(
+    `[${new Date().toLocaleString()}] [retrun ] {result:${result}, msg:${msg}}`
+  );
+
   res.send({
     result: result,
     msg: msg,
+  });
+}
+
+export function resultList(res, result, list) {
+
+  console.log(
+    `[${new Date().toLocaleString()}] [retrun ] {result:${result}, msg:${list}}`
+  );
+
+  res.send({
+    result: result,
+    list: list,
   });
 }
 

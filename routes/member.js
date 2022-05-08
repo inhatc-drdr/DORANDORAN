@@ -13,7 +13,7 @@
 
 const router = require("express").Router();
 const DB = require("../models/config");
-const { resultMSG } = require("../app");
+const { resultMSG, resultList } = require("../app");
 const { srvRequired } = require("./required");
 
 // 회원 조회
@@ -42,10 +42,11 @@ router.get("/", srvRequired, (req, res) => {
       console.log(result.err);
       resultMSG(res, -1, "오류가 발생하였습니다.");
     } else {
-      res.send({
-        result: 1,
-        list: result.rows,
-      });
+      resultList(res, 1, result.rows);
+      // res.send({
+      //   result: 1,
+      //   list: result.rows,
+      // });
     }
   });
 });
@@ -156,10 +157,11 @@ router.post("/invent", srvRequired, (req, res) => {
                     console.log(result.err);
                     resultMSG(res, -1, "오류가 발생하였습니다.");
                   } else {
-                    res.send({
-                      result: 1,
-                      msg: "멤버가 초대되었습니다.",
-                    });
+                    resultMSG(res, 1, "멤버가 초대되었습니다.");
+                    // res.send({
+                    //   result: 1,
+                    //   msg: "멤버가 초대되었습니다.",
+                    // });
                   }
                 });
               }
