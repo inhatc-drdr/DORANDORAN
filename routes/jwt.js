@@ -16,8 +16,13 @@ export const generateRefreshToken = (id) => {
 
 // access token의 유효성 검사
 export const authenticateAccessToken = (req, res, next) => {
+
     let authHeader = req.headers["authorization"];
     let token = authHeader && authHeader.split(" ")[1];
+
+    console.log(
+        `[${new Date().toLocaleString()}] [token] authHeader=${authHeader}`
+    );
 
     if (!token) {
         console.log("올바르지 않은 토큰 전송");
