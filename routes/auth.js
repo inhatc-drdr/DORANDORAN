@@ -28,55 +28,60 @@ router.post("/login", (req, res) => {
     `[${new Date().toLocaleString()}] [uid - /login] email=${email}&pwd=${pwd}`
   );
 
-  // login check
-  let sql = 'SELECT count(*) as count, user_id, user_name, user_pwd, user_salt FROM user WHERE user_email=? AND user_YN=\'N\'';
-  let params = [email];
-  DB(sql, params).then((result) => {
+  if (!email || !pwd) {
+    return resultMSG(res, -1, "이메일 또는 비밀번호가 일치하지 않습니다.");
 
-    if (!result.state) {
-      console.log(result.err);
+  } else {
+    // login check
+    let sql = 'SELECT count(*) as count, user_id, user_name, user_pwd, user_salt FROM user WHERE user_email=? AND user_YN=\'N\'';
+    let params = [email];
+    DB(sql, params).then((result) => {
 
-    } else {
-      if (!result.rows[0]) {
+      if (!result.state) {
+        console.log(result.err);
 
       } else {
-        const user_pwd = result.rows[0].user_pwd;
-        const user_salt = result.rows[0].user_salt;
-
-        if (!user_pwd || !user_salt) {
-          return resultMSG(res, -1, "이메일 또는 비밀번호가 일치하지 않습니다.");
+        if (!result.rows[0]) {
 
         } else {
+          const user_pwd = result.rows[0].user_pwd;
+          const user_salt = result.rows[0].user_salt;
 
-          // 복호화
-          const crypto_pwd = hashCheck(user_salt, pwd);
-
-          if (user_pwd == crypto_pwd) {
-
-            const user_id = result.rows[0].user_id;
-
-            let accessToken = generateAccessToken(user_id);
-            let refreshToken = generateRefreshToken(user_id);
-
-            // 성공 시 토큰 전송
-            console.log(
-              `[${new Date().toLocaleString()}] [retrun ] {result:1, msg:"로그인 되었습니다", accessToken:${accessToken}, refreshToken:${refreshToken}}`
-            );
-
-            return res.send({
-              "reuslt": 1,
-              "msg": "로그인 되었습니다.",
-              accessToken,
-              refreshToken
-            });
+          if (!user_pwd || !user_salt) {
+            return resultMSG(res, -1, "이메일 또는 비밀번호가 일치하지 않습니다.");
 
           } else {
-            return resultMSG(res, -1, "이메일 또는 비밀번호가 일치하지 않습니다.");
+
+            // 복호화
+            const crypto_pwd = hashCheck(user_salt, pwd);
+
+            if (user_pwd == crypto_pwd) {
+
+              const user_id = result.rows[0].user_id;
+
+              let accessToken = generateAccessToken(user_id);
+              let refreshToken = generateRefreshToken(user_id);
+
+              // 성공 시 토큰 전송
+              console.log(
+                `[${new Date().toLocaleString()}] [retrun ] {result:1, msg:"로그인 되었습니다", accessToken:${accessToken}, refreshToken:${refreshToken}}`
+              );
+
+              return res.send({
+                "reuslt": 1,
+                "msg": "로그인 되었습니다.",
+                accessToken,
+                refreshToken
+              });
+
+            } else {
+              return resultMSG(res, -1, "이메일 또는 비밀번호가 일치하지 않습니다.");
+            }
           }
         }
       }
-    }
-  })
+    })
+  }
 })
 
 // access token을 refresh token 기반으로 재발급
