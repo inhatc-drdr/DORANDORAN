@@ -21,6 +21,7 @@ router.get("/", srvRequired, (req, res) => {
     const user_id = req.user.id;
     const srv_id = req.query.srv_id;
     const calendar_id = req.query.c_id || 0;
+    const admin_yn = req.data.admin_yn;
 
     console.log(
         `[${new Date().toLocaleString()}] [uid ${user_id} /server/calendar] srv_id=${srv_id}&c_id=${calendar_id}`
@@ -28,15 +29,15 @@ router.get("/", srvRequired, (req, res) => {
 
     // 상세 조회
     if (calendar_id) {
-        return calendarDetail(calendar_id, res);
+        return calendarDetail(calendar_id, admin_yn, res);
     }
 
     // 목록 조회
-    return calendarList(srv_id, res);
+    return calendarList(srv_id, admin_yn, res);
 })
 
 // 목록 조회
-function calendarList(srv_id, res) {
+function calendarList(srv_id, admin_yn, res) {
 
     let sql =
         'SELECT calendar_id as c_id, calendar_start as c_start, calendar_end as c_end, calendar_memo as c_memo '
@@ -45,20 +46,15 @@ function calendarList(srv_id, res) {
     DB(sql, params).then(function (result) {
         if (!result.state) {
             console.log(result.err);
-            resultMSG(res, -1, "오류가 발생하였습니다.");
+            resultMSG(res, -1, admin_yn, "오류가 발생하였습니다.");
         } else {
-            resultList(res, 1, result.rows);
-            // res.send({
-            //     result: 1,
-            //     list: result.rows,
-            // });
-            return;
+            return resultList(res, 1, admin_yn, result.rows);
         }
     });
 }
 
 // 상세 조회
-function calendarDetail(calendar_id, res) {
+function calendarDetail(calendar_id, admin_yn, res) {
 
     let sql =
         'SELECT calendar_start c_start, calendar_end c_end, calendar_memo c_memo, video_id '
@@ -67,19 +63,12 @@ function calendarDetail(calendar_id, res) {
     DB(sql, params).then(function (result) {
         if (!result.state) {
             console.log(result.err);
-            resultMSG(res, -1, "오류가 발생하였습니다.");
+            resultList(res, -1, admin_yn, "오류가 발생하였습니다.");
         } else {
-
             if (!result.rows[0]) {
-                return resultMSG(res, -1, "존재하지 않는 일정입니다.");
+                return resultList(res, -1, admin_yn, "존재하지 않는 일정입니다.");
             }
-
-            resultList(res, 1, result.rows[0]);
-            // res.send({
-            //     result: 1,
-            //     list: result.rows[0],
-            // });
-            return;
+            return resultList(res, 1, admin_yn, result.rows[0]);
         }
     });
 }

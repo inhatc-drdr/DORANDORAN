@@ -21,6 +21,7 @@ router.get("/", srvRequired, (req, res) => {
     const user_id = req.body.id;
     const srv_id = req.query.srv_id;
     const notice_id = req.query.n_id || 0;
+    const admin_yn = req.data.admin_yn;
 
     console.log(
         `[${new Date().toLocaleString()}] [uid ${user_id} /server/notice] srv_id=${srv_id}&n_id=${notice_id}`
@@ -28,15 +29,15 @@ router.get("/", srvRequired, (req, res) => {
 
     // 상세 조회
     if (notice_id) {
-        return noticeDetail(notice_id, res);
+        return noticeDetail(notice_id, admin_yn, res);
     }
 
     // 목록 조회
-    return noticeList(srv_id, res);
+    return noticeList(srv_id, admin_yn, res);
 })
 
 // 목록 조회
-function noticeList(srv_id, res) {
+function noticeList(srv_id, admin_yn, res) {
 
     let sql =
         'SELECT notice_id as n_id, notice_name as n_name, notice_write as n_write '
@@ -46,20 +47,15 @@ function noticeList(srv_id, res) {
     DB(sql, params).then(function (result) {
         if (!result.state) {
             console.log(result.err);
-            resultMSG(res, -1, "오류가 발생하였습니다.");
+            resultList(res, -1, admin_yn, "오류가 발생하였습니다.");
         } else {
-            resultList(res, 1, result.rows);
-            // res.send({
-            //     result: 1,
-            //     list: result.rows,
-            // });
-            return;
+            return resultList(res, 1, admin_yn, result.rows);
         }
     });
 }
 
 // 상세 조회
-function noticeDetail(notice_id, res) {
+function noticeDetail(notice_id, admin_yn, res) {
 
     let sql =
         'select user_name, notice_name, notice_memo, notice_write '
@@ -68,24 +64,17 @@ function noticeDetail(notice_id, res) {
     DB(sql, params).then(function (result) {
         if (!result.state) {
             console.log(result.err);
-            resultMSG(res, -1, "오류가 발생하였습니다.");
+            resultList(res, -1, admin_yn, "오류가 발생하였습니다.");
         } else {
-
             if (!result.rows[0]) {
-                return resultMSG(res, -1, "존재하지 않는 공지입니다.");
+                return resultList(res, -1, admin_yn, "존재하지 않는 공지입니다.");
             }
-
-            resultList(res, 1, result.rows[0]);
-            // res.send({
-            //     result: 1,
-            //     list: result.rows[0],
-            // });
-            return;
+            return resultList(res, 1, admin_yn, result.rows[0]);
         }
     });
 }
 
-// 일정 추가
+// 공지 추가
 router.post("/add", srvRequired, (req, res) => {
 
     const user_id = req.user.id;
