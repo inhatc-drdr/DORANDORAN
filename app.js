@@ -38,34 +38,6 @@ app.use(bodyParser.json());
 // dircetory
 app.use("/public", express.static(__dirname + "/public"));
 
-// response 전송
-export function resultMSG(res, result, msg) {
-
-  console.log(
-    `[${new Date().toLocaleString()}] [retrun ] {result:${result}, msg:${msg}}`
-  );
-
-  res.send({
-    result: result,
-    msg: msg,
-  });
-}
-
-export function resultList(res, result, admin_yn, list) {
-
-  let admin_yn = admin_yn || null;
-
-  console.log(
-    `[${new Date().toLocaleString()}] [retrun ] {result:${result}, admin_yn:${admin_yn}, list:${list}}`
-  );
-
-  res.send({
-    result: result,
-    admin_yn: admin_yn,
-    list: list,
-  });
-}
-
 // routers
 app.get("/", (req, res) => res.send("hello"));
 app.use("/", auth);

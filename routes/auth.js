@@ -14,7 +14,7 @@
 const router = require("express").Router();
 const DB = require("../models/config");
 const { hashCreate, hashCheck } = require("../config/crypto");
-const { resultMSG } = require("../app");
+const { resultMSG } = require("./send");
 
 const jwt = require("jsonwebtoken");
 const { generateAccessToken, generateRefreshToken, authenticateAccessToken } = require('./jwt');
@@ -29,7 +29,7 @@ router.post("/login", (req, res) => {
   );
 
   if (!email || !pwd) {
-    return resultMSG(res, -1, "이메일 또는 비밀번호가 일치하지 않습니다.");
+    return resultMSG(res, -1, "이메일 또는 비밀번호가 입력되지 않았습니다.");
 
   } else {
     // login check

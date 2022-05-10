@@ -25,15 +25,18 @@ export const authenticateAccessToken = (req, res, next) => {
     );
 
     if (!token) {
-        console.log("올바르지 않은 토큰 전송");
-        return res.sendStatus(400);
+        console.log(
+            `[${new Date().toLocaleString()}] [retrun ] 토큰 값이 존재하지 않음(400)`
+        );
+        return res.status(400).send({ 'error': 400 });
     }
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, user) => {
         if (error) {
-            console.log(error);
-            // 토큰 만료
-            return res.sendStatus(403);
+            console.log(
+                `[${new Date().toLocaleString()}] [retrun ] 토큰 값이 유효하지 않음(403)`
+            );
+            return res.status(403).send({ 'error': 403 });
         }
 
         req.user = user;

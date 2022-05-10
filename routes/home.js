@@ -13,7 +13,7 @@
 
 const router = require("express").Router();
 const DB = require("../models/config");
-const { resultMSG } = require("../app");
+const { resultMSG } = require("./send");
 
 router.get("/", (req, res) => {
 

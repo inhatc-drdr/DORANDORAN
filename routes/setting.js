@@ -14,7 +14,7 @@
 
 const router = require("express").Router();
 const DB = require("../models/config");
-const { resultMSG, resultList } = require("../app");
+const { resultMSG, resultList } = require("./send");
 
 router.get("/", (req, res) => {
 
@@ -36,7 +36,7 @@ router.get("/", (req, res) => {
         return resultMSG(res, -1, "불러올 수 없습니다.");
       }
 
-      resultList(res, 1, result.rows);
+      resultList(res, 1, null, result.rows);
       // res.send({
       //   result: 1,
       //   list: result.rows,

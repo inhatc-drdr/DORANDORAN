@@ -1,5 +1,5 @@
 const DB = require('../models/config');
-const { resultMSG } = require("../app");
+const { resultMSG } = require("./send");
 
 // 서버 접근 가능 여부 확인
 export function srvRequired(req, res, next) {

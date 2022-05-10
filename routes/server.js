@@ -13,7 +13,7 @@
 
 const router = require("express").Router();
 const DB = require("../models/config");
-const { resultMSG, resultList } = require("../app");
+const { resultMSG, resultList } = require("./send");
 const { srvRequired } = require("./required");
 
 // 서버 접속
