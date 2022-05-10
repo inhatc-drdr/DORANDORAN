@@ -68,8 +68,8 @@ router.post("/login", (req, res) => {
               );
 
               return res.send({
-                "reuslt": 1,
-                "msg": "로그인 되었습니다.",
+                result: 1,
+                msg: "로그인 되었습니다.",
                 accessToken,
                 refreshToken
               });
