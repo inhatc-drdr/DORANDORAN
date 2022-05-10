@@ -13,7 +13,7 @@
 
 const router = require("express").Router();
 const DB = require("../models/config");
-const { resultMSG } = require("./send");
+const { resultMSG, resultList } = require("./send");
 
 router.get("/", (req, res) => {
 
@@ -39,10 +39,7 @@ router.get("/", (req, res) => {
       console.log(result.err);
       resultMSG(res, -1, "오류가 발생하였습니다.");
     } else {
-      res.send({
-        result: 1,
-        list: result.rows,
-      });
+      resultList(res, 1, null, result.rows);
     }
   });
 });
