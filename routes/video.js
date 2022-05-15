@@ -28,9 +28,9 @@ router.get('/', (req, res) => {
         */
         let roomName = req.query.room;
         let peerName = req.query.name;
-        // let peerAudio = req.query.audio;
-        // let peerVideo = req.query.video;
-        // let notify = req.query.notify;
+        let peerAudio = req.query.audio;
+        let peerVideo = req.query.video;
+        let notify = req.query.notify;
         // all the params are mandatory for the direct room join
         if (roomName && peerName && peerAudio && peerVideo && notify) {
             res.setHeader('Access-Control-Allow-origin', '*');
