@@ -29,7 +29,7 @@ router.get("/", (req, res) => {
     "SELECT s.srv_id, s.srv_name, " +
     "(SELECT calendar_start FROM calendar c WHERE c.srv_id=s.srv_id and calendar_YN = 'N' and calendar_start >= now() order by calendar_start asc limit 1) as calendar_start " +
     "FROM srvuser su, srv s " +
-    "WHERE su.user_id=(?) and su.srv_id = s.srv_id and su.srvuser_YN = 'N' " +
+    "WHERE su.user_id=(?) and su.srv_id = s.srv_id and su.srvuser_YN = 'N' and s.srv_YN=\'N\' " +
     "order by srvuser_lastaccess desc";
 
   let params = [user_id];

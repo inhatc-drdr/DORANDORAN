@@ -12,7 +12,7 @@
 // ***********************************************************
 
 const router = require("express").Router();
-const DB = require("../models/config");
+const { DB, pool } = require("../models/config");
 const { hashCreate, hashCheck } = require("../config/crypto");
 const { resultMSG } = require("./send");
 
@@ -167,7 +167,7 @@ router.post("/emailCheck", (req, res) => {
 });
 
 // 회원탈퇴
-router.post("/signout", authenticateAccessToken, (req, res) => {
+router.post("/signout", authenticateAccessToken, async (req, res) => {
 
   const user_id = req.user.id;
 
@@ -175,43 +175,57 @@ router.post("/signout", authenticateAccessToken, (req, res) => {
 
   const pwd = req.body.pwd;
 
-  let sql =
-    "SELECT count(*) as count, user_pwd, user_salt FROM user WHERE user_id=? AND user_YN='N'";
-  let params = [user_id];
-  DB(sql, params).then((result) => {
-    // return
-    if (!result.state) {
-      console.log(result.err);
-      resultMSG(res, -1, "오류가 발생하였습니다.");
-    } else {
-      let count = result.rows[0].count;
-      if (!count) {
-        resultMSG(res, -1, "탈퇴에 실패하였습니다.");
-      } else {
-        const user_pwd = result.rows[0].user_pwd;
-        const user_salt = result.rows[0].user_salt;
+  const conn = await pool.getConnection();
+  try {
+    await conn.beginTransaction() // 트랜잭션 적용 시작
 
-        // 복호화
-        const crypto_pwd = hashCheck(user_salt, pwd);
+    const sel = await conn.query(
+      "SELECT count(*) as count, user_pwd, user_salt FROM user WHERE user_id=? AND user_YN='N'"
+      , [user_id])
 
-        if (user_pwd == crypto_pwd) {
-          // db
-          sql =
-            "UPDATE user SET user_YN='Y', user_leave=CURRENT_TIMESTAMP where user_id=?";
-          DB(sql, params).then((result) => {
-            if (!result.state) {
-              console.log(result.err);
-              resultMSG(res, -1, "오류가 발생하였습니다.");
-            } else {
-              resultMSG(res, 1, "탈퇴가 완료되었습니다.");
-            }
-          });
-        } else {
-          resultMSG(res, -1, "탈퇴에 실패하였습니다.");
-        }
-      }
+    if (!sel[0][0].count) {
+      throw new SyntaxError("데이터 없음");
     }
-  });
+
+    const user_pwd = sel[0][0].user_pwd;
+    const user_salt = sel[0][0].user_salt;
+
+    // 복호화
+    const crypto_pwd = hashCheck(user_salt, pwd);
+
+    if (user_pwd != crypto_pwd) {
+      throw new Error("비밀번호가 일치하지 않음");
+    }
+
+    // user 목록 삭제
+    let delUser = await conn.query(
+      "UPDATE user SET user_YN='Y', user_leave=CURRENT_TIMESTAMP where user_id=?"
+      , [user_id])
+
+    // srv 목록 삭제
+    let delSrv = await conn.query(
+      "UPDATE srv SET srv_YN='Y', srv_delete=CURRENT_TIMESTAMP where user_id=?"
+      , [user_id])
+
+    // srvuser 목록 삭제
+    let delSrvuser = await conn.query(
+      "UPDATE srvuser SET srvuser_YN='Y', srvuser_leave=CURRENT_TIMESTAMP where user_id=?"
+      , [user_id])
+
+    await conn.commit() // 커밋
+    // return res.json(ins)
+    resultMSG(res, 1, "탈퇴가 완료되었습니다.");
+
+
+  } catch (err) {
+    console.log(err)
+    await conn.rollback() // 롤백
+    // return res.status(500).json(err)
+    resultMSG(res, -1, "탈퇴에 실패하였습니다.");
+
+  } finally {
+    conn.release() // conn 회수
+  }
 });
 
 module.exports = router;
