@@ -95,7 +95,7 @@ router.post("/changePassword", (req, res) => {
 
 
   if (!pwd || !changePwd) {
-    return resultMSG(res, -1, "모두 입력되지 않았습니다.");
+    return resultMSG(res, -1, "오류가 발생하였습니다.");
 
   } else {
     // login check
@@ -114,7 +114,7 @@ router.post("/changePassword", (req, res) => {
           const user_salt = result.rows[0].user_salt;
 
           if (!user_pwd || !user_salt) {
-            return resultMSG(res, -1, "이메일 또는 비밀번호가 일치하지 않습니다.");
+            return resultMSG(res, -1, "오류가 발생하였습니다.");
 
           } else {
 
