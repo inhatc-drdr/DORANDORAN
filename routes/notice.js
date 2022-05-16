@@ -18,7 +18,7 @@ const { srvRequired } = require("./required");
 
 router.get("/", srvRequired, (req, res) => {
 
-    const user_id = req.body.id;
+    const user_id = req.user.id;
     const srv_id = req.query.srv_id;
     const notice_id = req.query.n_id || 0;
     const admin_yn = req.data.admin_yn;
