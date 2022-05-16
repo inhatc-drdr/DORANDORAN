@@ -1,7 +1,7 @@
 require("dotenv").config();
 
-const { Server } = require('socket.io');
 let { server } = require("../app");
+const { Server } = require('socket.io');
 const Logger = require('./Logger');
 const log = new Logger('server');
 let io;
@@ -9,6 +9,7 @@ let io;
 
 io = new Server({
     maxHttpBufferSize: 1e7,
+    cors: { origin: "*" }
 }).listen(server);
 
 let channels = {}; // collect channels
