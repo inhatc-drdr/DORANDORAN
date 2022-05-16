@@ -79,20 +79,20 @@ router.post("/add", srvRequired, (req, res) => {
     const user_id = req.user.id;
     const srv_id = req.body.srv_id;
 
+    const calendar_start = req.body.c_start;    // 2022-06-01T10:50:00
+    const calendar_end = req.body.c_end;        // 2022-06-01T12:35:00
+    const calendar_memo = req.body.c_memo;
+    const video_id = new Date().getTime().toString(36);
+
     console.log(
-        `[${new Date().toLocaleString()}] [uid ${user_id} /server/calendar/add] srv_id=${srv_id}`
+        `[${new Date().toLocaleString()}] [uid ${user_id} /server/calendar/add] srv_id=${srv_id}&
+            calendar_start=${calendar_start}&calendar_end=${calendar_end}&calendar_memo=${calendar_memo}&video_id=${video_id}`
     );
 
     const admin_yn = req.data.admin_yn;
     if (admin_yn == "n") {
         return resultMSG(res, -1, "접근 권한이 없습니다.");
     }
-
-    const calendar_start = req.body.c_start;    // 2022-06-01T10:50:00
-    const calendar_end = req.body.c_end;        // 2022-06-01T12:35:00
-    const calendar_memo = req.body.c_memo;
-    // const video_id = `S${srv_id}U${user_id}V${calendar_start.split()[0].slice(-2)}${calendar_end.split()[0].slice(-2)}`;
-    const video_id = new Date().getTime().toString(36);
 
     let sql =
         'INSERT INTO calendar '
