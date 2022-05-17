@@ -9,9 +9,9 @@ const info = {
     dateStrings: 'date',
 };
 
-export const pool = mysql.createPool(info);
+const pool = mysql.createPool(info);
 
-export const DB = async (sql, params) => {
+const DB = async (sql, params) => {
     try {
         let result = {};
         const connection = await pool.getConnection(async conn => conn);
@@ -37,3 +37,4 @@ export const DB = async (sql, params) => {
 }
 
 // module.exports = DB;
+export { pool, DB }
