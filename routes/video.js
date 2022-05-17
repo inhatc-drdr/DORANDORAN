@@ -10,34 +10,43 @@
 // ***********************************************************
 
 const router = require("express").Router();
-const { DB } = require("../models/config");
+const { pool } = require("../models/config");
 const { resultMSG, resultList } = require("./send");
 const { authenticateAccessToken } = require("./jwt");
 
 
-router.get('/getname', authenticateAccessToken, (req, res) => {
+router.get('/getname', authenticateAccessToken, async (req, res) => {
 
     const user_id = req.user.id;
 
-    console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /video/getname] `);
+    console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /video/getname] `)
 
-    let sql =
-        "SELECT user_name FROM user WHERE user_id=(?) and user_YN  = 'N'";
-    let params = [user_id];
-    DB(sql, params).then(function (result) {
-        // return
-        if (!result.state) {
-            console.log(result.err);
-            resultMSG(res, -1, "오류가 발생하였습니다.");
-        } else {
+    const conn = await pool.getConnection();
+    try {
+        // await conn.beginTransaction() // 트랜잭션 적용 시작
 
-            if (!result.rows.length) {
-                return resultMSG(res, -1, "불러올 수 없습니다.");
-            }
+        const sel = await conn.query(
+            "SELECT user_name FROM user WHERE user_id=(?) and user_YN  = 'N'"
+            , [user_id])
 
-            resultList(res, 1, null, result.rows);
+        if (!sel[0][0]) {
+            throw new Error("존재하지 않은 정보");
         }
-    });
+
+        // await conn.commit() // 커밋
+
+        console.log(sel[0])
+        return resultList(res, 1, null, sel[0]);
+
+    } catch (err) {
+        console.log(err)
+        // await conn.rollback() // 롤백
+        // return res.status(500).json(err)
+        resultMSG(res, -1, "오류가 발생하였습니다.");
+
+    } finally {
+        conn.release() // conn 회수
+    }
 
 });
 

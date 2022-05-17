@@ -9,32 +9,32 @@ const info = {
     dateStrings: 'date',
 };
 
-const pool = mysql.createPool(info);
+export const pool = mysql.createPool(info);
 
-const DB = async (sql, params) => {
-    try {
-        let result = {};
-        const connection = await pool.getConnection(async conn => conn);
-        try {
-            const [rows] = await connection.query(sql, params);
-            result.rows = rows;
-            result.state = true;
-            connection.release();
-            return result;
-        } catch (err) {
-            console.log('Query Error');
-            result.state = false;
-            result.error = err;
-            connection.release();
-            return result;
-        }
-    } catch (err) {
-        console.log('DB Error');
-        result.state = false;
-        result.error = err;
-        return result;
-    }
-}
+// const DB = async (sql, params) => {
+//     try {
+//         let result = {};
+//         const connection = await pool.getConnection(async conn => conn);
+//         try {
+//             const [rows] = await connection.query(sql, params);
+//             result.rows = rows;
+//             result.state = true;
+//             connection.release();
+//             return result;
+//         } catch (err) {
+//             console.log('Query Error');
+//             result.state = false;
+//             result.error = err;
+//             connection.release();
+//             return result;
+//         }
+//     } catch (err) {
+//         console.log('DB Error');
+//         result.state = false;
+//         result.error = err;
+//         return result;
+//     }
+// }
 
 // module.exports = DB;
-export { pool, DB }
+// export { pool, DB }
