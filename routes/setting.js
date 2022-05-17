@@ -12,7 +12,7 @@
 // ***********************************************************
 
 const router = require("express").Router();
-const DB = require("../models/config");
+const { DB } = require("../models/config");
 const { resultMSG, resultList } = require("./send");
 const { hashCreate, hashCheck } = require("../config/crypto");
 
