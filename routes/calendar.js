@@ -51,11 +51,11 @@ async function calendarList(srv_id, admin_yn, res) {
 
         console.log(sel)
 
-        if (!sel[0][0]) {
-            return resultList(res, 1, admin_yn, "일정이 존재하지 않습니다.");
-        }
+        // if (!sel[0][0]) {
+        //     return resultList(res, 1, admin_yn, "일정이 존재하지 않습니다.");
+        // }
 
-        return resultList(res, 1, admin_yn, sel[0][0]);
+        return resultList(res, 1, admin_yn, sel[0]);
 
     } catch (err) {
         console.log(err)
