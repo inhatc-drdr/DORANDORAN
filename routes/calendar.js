@@ -49,11 +49,13 @@ async function calendarList(srv_id, admin_yn, res) {
             sql
             , [srv_id])
 
-        if (!sel[0][0].count) {
-            return resultList(res, -1, admin_yn, "일정이 없습니다.");
+        console.log(sel)
+
+        if (!sel[0][0]) {
+            return resultList(res, 1, admin_yn, "일정이 존재하지 않습니다.");
         }
 
-        return resultList(res, 1, admin_yn, sel[0][0].rows);
+        return resultList(res, 1, admin_yn, sel[0][0]);
 
     } catch (err) {
         console.log(err)
@@ -83,7 +85,7 @@ async function calendarDetail(calendar_id, admin_yn, res) {
             return resultList(res, -1, admin_yn, "존재하지 않는 일정입니다.");
         }
 
-        return resultList(res, 1, admin_yn, sel[0][0].rows[0]);
+        return resultList(res, 1, admin_yn, sel[0][0]);
 
     } catch (err) {
         console.log(err)

@@ -40,7 +40,7 @@ router.post("/login", async (req, res) => {
       "SELECT count(*) as count, user_id, user_name, user_pwd, user_salt FROM user WHERE user_email=? AND user_YN=\'N\'"
       , [email])
 
-    if (!sel[0][0].count) {
+    if (!sel[0][0]) {
       throw new SyntaxError("데이터 없음");
     }
 
@@ -78,7 +78,7 @@ router.post("/login", async (req, res) => {
     console.log(err)
     // await conn.rollback() // 롤백
     // return res.status(500).json(err)
-    resultMSG(res, -1, "탈퇴에 실패하였습니다.");
+    resultMSG(res, -1, "이메일 또는 비밀번호가 일치하지 않습니다.");
 
   } finally {
     conn.release() // conn 회수
@@ -237,7 +237,7 @@ router.post("/signout", authenticateAccessToken, async (req, res) => {
     console.log(err)
     await conn.rollback() // 롤백
     // return res.status(500).json(err)
-    resultMSG(res, -1, "탈퇴에 실패하였습니다.");
+    resultMSG(res, -1, "오류가 발생하였습니다.");
 
   } finally {
     conn.release() // conn 회수
