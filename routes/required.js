@@ -19,9 +19,9 @@ export async function srvRequired(req, res, next) {
             return resultMSG(res, -1, "접근 권한이 없습니다.");
         }
 
-        let admin_id = result.rows[0].admin_id;
+        let admin_id = sel[0][0].admin_id;
         req.data = {
-            srvuser_id: result.rows[0].srvuser_id,
+            srvuser_id: sel[0][0].srvuser_id,
             admin_yn: (admin_id == user_id ? "y" : "n"),
         };
 
