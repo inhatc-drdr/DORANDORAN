@@ -73,7 +73,7 @@ router.get("/info", srvRequired, async (req, res) => {
     // await conn.beginTransaction() // 트랜잭션 적용 시작
 
     const sel = await conn.query(
-      "SELECT user_name, srv_name FROM user, srv WHERE user_id=? AND srv_id=? AND srv_YN=\'N\' AND user_YN=\'N\'"
+      "SELECT user_name, srv_name FROM user u, srv WHERE u.user_id=? AND srv_id=? AND srv_YN=\'N\' AND user_YN=\'N\'"
       , [user_id, srv_id])
 
     if (!sel[0][0]) {
