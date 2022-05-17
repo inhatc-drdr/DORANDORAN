@@ -75,6 +75,6 @@ app.use("/server/member", authenticateAccessToken, memberApi);
 app.use("/video", videoApi);
 
 const handleListen =
-  () => console.log(`Listening on http://localhost:${PORT}`);
+  () => console.log(`Listening on ${host}`);
 
 server.listen(PORT, null, handleListen);

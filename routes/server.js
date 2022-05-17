@@ -51,6 +51,33 @@ router.get("/", srvRequired, (req, res) => {
   });
 });
 
+// 서버 접속
+router.get("/info", srvRequired, (req, res) => {
+  const user_id = req.user.id;
+  const srv_id = req.query.srv_id;
+
+  console.log(
+    `[${new Date().toLocaleString()}] [uid ${user_id} /server/info] srv_id=${srv_id}`
+  );
+
+  const admin_yn = req.data.admin_yn;
+
+  // 서버 이름 조회
+  let sql =
+    "SELECT srv_name FROM srv WHERE srv_id=? AND srv_YN=\'N\'";
+  let params = [srv_id];
+  DB(sql, params).then(function (result) {
+    if (!result.state) {
+      console.log(result.err);
+      resultMSG(res, -1, "오류가 발생하였습니다.");
+    } else {
+
+      return resultList(res, 1, admin_yn, result.rows);
+
+    }
+  });
+});
+
 // 서버 생성
 router.post("/add", (req, res) => {
   const user_id = req.user.id;
