@@ -22,10 +22,7 @@ const calendarApi = require("./routes/calendar");
 const noticeApi = require("./routes/notice");
 const videoApi = require("./routes/video");
 
-const Logger = require('./routes/Logger');
-const log = new Logger('server');
-
-const isHttps = false; // must be the same on client.js
+const isHttps = false;
 
 let server, host;
 export { server };
@@ -45,13 +42,11 @@ if (isHttps) {
 require('./routes/socket');
 
 // cors
-// app.use(cors());
 app.use(cors({
   origin: "*",
 }));
 
 // view
-// app.set("view engine", "ejs");
 app.engine("html", require("ejs").renderFile);
 app.set("view engine", "html");
 app.set("views", __dirname + "/views");
