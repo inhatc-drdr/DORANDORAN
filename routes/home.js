@@ -38,12 +38,7 @@ router.get("/", async (req, res) => {
       sql
       , [user_id])
 
-    console.log(sel)
-
-    // if (!sel[0]) {
-    //   return resultList(res, 1, null, "가입된 서버가 없습니다.");
-    // }
-
+    console.log(sel[0])
     return resultList(res, 1, null, sel[0]);
 
   } catch (err) {

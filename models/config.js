@@ -37,4 +37,4 @@ const DB = async (sql, params) => {
 }
 
 // module.exports = DB;
-export { pool, DB }
+export { pool }

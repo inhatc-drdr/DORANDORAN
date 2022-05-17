@@ -49,19 +49,14 @@ async function calendarList(srv_id, admin_yn, res) {
             sql
             , [srv_id])
 
-        console.log(sel)
-
-        // if (!sel[0][0]) {
-        //     return resultList(res, 1, admin_yn, "일정이 존재하지 않습니다.");
-        // }
-
+        console.log(sel[0])
         return resultList(res, 1, admin_yn, sel[0]);
 
     } catch (err) {
         console.log(err)
         // await conn.rollback() // 롤백
         // return res.status(500).json(err)
-        resultMSG(res, -1, admin_yn, "오류가 발생하였습니다.");
+        resultMSG(res, -1, "오류가 발생하였습니다.");
 
     } finally {
         conn.release() // conn 회수
@@ -81,17 +76,18 @@ async function calendarDetail(calendar_id, admin_yn, res) {
             sql
             , [calendar_id])
 
-        if (!sel[0][0].count) {
+        if (!sel[0][0]) {
             return resultList(res, -1, admin_yn, "존재하지 않는 일정입니다.");
         }
 
-        return resultList(res, 1, admin_yn, sel[0][0]);
+        console.log(sel[0])
+        return resultList(res, 1, admin_yn, sel[0]);
 
     } catch (err) {
         console.log(err)
         // await conn.rollback() // 롤백
         // return res.status(500).json(err)
-        resultMSG(res, -1, admin_yn, "오류가 발생하였습니다.");
+        resultMSG(res, -1, "오류가 발생하였습니다.");
 
     } finally {
         conn.release() // conn 회수

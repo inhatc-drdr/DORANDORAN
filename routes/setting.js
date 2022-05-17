@@ -12,36 +12,45 @@
 // ***********************************************************
 
 const router = require("express").Router();
-const { DB } = require("../models/config");
+const { pool } = require("../models/config");
 const { resultMSG, resultList } = require("./send");
 const { hashCreate, hashCheck } = require("../config/crypto");
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
 
   const user_id = req.user.id;
 
   console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /setting] `);
 
-  let sql =
-    "SELECT user_email, user_name FROM user WHERE user_id=(?) and user_YN  = 'N'";
-  let params = [user_id];
-  DB(sql, params).then(function (result) {
-    // return
-    if (!result.state) {
-      console.log(result.err);
-      resultMSG(res, -1, "오류가 발생하였습니다.");
-    } else {
+  const conn = await pool.getConnection();
+  try {
+    // await conn.beginTransaction() // 트랜잭션 적용 시작
 
-      if (!result.rows.length) {
-        return resultMSG(res, -1, "불러올 수 없습니다.");
-      }
+    const sel = await conn.query(
+      "SELECT user_email, user_name FROM user WHERE user_id=(?) and user_YN  = 'N'"
+      , [user_id])
 
-      resultList(res, 1, null, result.rows);
+    if (!sel[0][0]) {
+      throw new Error("존재하지 않은 정보");
     }
-  });
+
+    // await conn.commit() // 커밋
+
+    console.log(sel[0])
+    return resultList(res, 1, null, sel[0]);
+
+  } catch (err) {
+    console.log(err)
+    // await conn.rollback() // 롤백
+    // return res.status(500).json(err)
+    resultMSG(res, -1, "오류가 발생하였습니다.");
+
+  } finally {
+    conn.release() // conn 회수
+  }
 });
 
-router.post("/name", (req, res) => {
+router.post("/name", async (req, res) => {
   const user_id = req.user.id;
   const name = req.body.name;
 
@@ -49,20 +58,30 @@ router.post("/name", (req, res) => {
     `[${new Date().toLocaleString()}] [uid ${user_id} /setting/name] name=${name}`
   );
 
-  let sql = "UPDATE user SET user_name=? WHERE user_id=?";
-  let params = [name, user_id];
-  DB(sql, params).then(function (result) {
-    // return
-    if (!result.state) {
-      console.log(result.err);
-      resultMSG(res, -1, "오류가 발생하였습니다.");
-    } else {
-      resultMSG(res, 1, "이름이 변경되었습니다.");
-    }
-  });
+  const conn = await pool.getConnection();
+  try {
+    // await conn.beginTransaction() // 트랜잭션 적용 시작
+
+    const upd = await conn.query(
+      "UPDATE user SET user_name=? WHERE user_id=?"
+      , [name, user_id])
+
+    // await conn.commit() // 커밋
+
+    return resultMSG(res, 1, "이름이 변경되었습니다.");
+
+  } catch (err) {
+    console.log(err)
+    // await conn.rollback() // 롤백
+    // return res.status(500).json(err)
+    resultMSG(res, -1, "오류가 발생하였습니다.");
+
+  } finally {
+    conn.release() // conn 회수
+  }
 });
 
-router.post("/msg", (req, res) => {
+router.post("/msg", async (req, res) => {
   const user_id = req.user.id;
   const msg = req.body.msg;
 
@@ -70,21 +89,31 @@ router.post("/msg", (req, res) => {
     `[${new Date().toLocaleString()}] [uid ${user_id} /setting/msg] msg=${msg}`
   );
 
-  let sql = "UPDATE user SET user_msg=? WHERE user_id=?";
-  let params = [msg, user_id];
-  DB(sql, params).then(function (result) {
-    // return
-    if (!result.state) {
-      console.log(result.err);
-      resultMSG(res, -1, "오류가 발생하였습니다.");
-    } else {
-      resultMSG(res, 1, "상태메시지가 변경되었습니다.");
-    }
-  });
+  const conn = await pool.getConnection();
+  try {
+    // await conn.beginTransaction() // 트랜잭션 적용 시작
+
+    const upd = await conn.query(
+      "UPDATE user SET user_msg=? WHERE user_id=?"
+      , [msg, user_id])
+
+    // await conn.commit() // 커밋
+
+    return resultMSG(res, 1, "상태메시지가 변경되었습니다.");
+
+  } catch (err) {
+    console.log(err)
+    // await conn.rollback() // 롤백
+    // return res.status(500).json(err)
+    resultMSG(res, -1, "오류가 발생하였습니다.");
+
+  } finally {
+    conn.release() // conn 회수
+  }
 });
 
 // 비밀번호 변경
-router.post("/changePassword", (req, res) => {
+router.post("/changePassword", async (req, res) => {
   const user_id = req.user.id;
   let pwd = req.body.pwd;
   let changePwd = req.body.changePwd;
@@ -97,58 +126,55 @@ router.post("/changePassword", (req, res) => {
   if (!pwd || !changePwd) {
     return resultMSG(res, -1, "오류가 발생하였습니다.");
 
-  } else {
-    // login check
-    let sql = 'SELECT count(*) as count, user_pwd, user_salt FROM user WHERE user_id=? AND user_YN=\'N\'';
-    let params = [user_id];
-    DB(sql, params).then((result) => {
+  }
 
-      if (!result.state) {
-        console.log(result.err);
+  const conn = await pool.getConnection();
+  try {
+    // await conn.beginTransaction() // 트랜잭션 적용 시작
 
-      } else {
-        if (!result.rows[0]) {
+    const sel = await conn.query(
+      "SELECT user_pwd, user_salt FROM user WHERE user_id=? AND user_YN=\'N\'"
+      , [user_id])
 
-        } else {
-          const user_pwd = result.rows[0].user_pwd;
-          const user_salt = result.rows[0].user_salt;
+    if (!sel[0][0]) {
+      throw new Error("존재하지 않은 멤버");
+    }
 
-          if (!user_pwd || !user_salt) {
-            return resultMSG(res, -1, "오류가 발생하였습니다.");
+    const user_pwd = sel[0][0].user_pwd;
+    const user_salt = sel[0][0].user_salt;
 
-          } else {
+    if (!user_pwd || !user_salt) {
+      throw new Error("존재하지 않은 정보");
+    }
 
-            // 복호화
-            const crypto_pwd = hashCheck(user_salt, pwd);
+    // 복호화
+    const crypto_pwd = hashCheck(user_salt, pwd);
 
-            if (user_pwd == crypto_pwd) {
+    if (user_pwd != crypto_pwd) {
+      throw new Error("유효하지 않은 정보");
+    }
 
-              // 암호화
-              const hashed = hashCreate(changePwd);
+    // 암호화
+    const hashed = hashCreate(changePwd);
+    const salt = hashed.salt;
+    const hashed_pwd = hashed.pwd;
 
-              const salt = hashed.salt;
-              const crypto_pwd = hashed.pwd;
+    const upd = await conn.query(
+      "UPDATE user SET user_pwd=?, user_salt=? WHERE user_id=? AND user_YN=\'N\'"
+      , [hashed_pwd, salt, user_id])
 
-              let sql =
-                "UPDATE user SET user_pwd=?, user_salt=? WHERE user_id=? AND user_YN=\'N\'";
-              let params = [crypto_pwd, salt, user_id];
-              DB(sql, params).then(function (result) {
-                // return
-                if (!result.state) {
-                  console.log(result.err);
-                  resultMSG(res, -1, "오류가 발생하였습니다.");
-                } else {
-                  resultMSG(res, 1, "비밀번호가 변경되었습니다.");
-                }
-              });
+    // await conn.commit() // 커밋
 
-            } else {
-              return resultMSG(res, -1, "기존 비밀번호가 일치하지 않습니다.");
-            }
-          }
-        }
-      }
-    })
+    return resultMSG(res, 1, "비밀번호가 변경되었습니다.");
+
+  } catch (err) {
+    console.log(err)
+    // await conn.rollback() // 롤백
+    // return res.status(500).json(err)
+    resultMSG(res, -1, "오류가 발생하였습니다.");
+
+  } finally {
+    conn.release() // conn 회수
   }
 })
 
