@@ -12,7 +12,7 @@
 // ***********************************************************
 
 const router = require("express").Router();
-const { DB } = require("../models/config");
+const { pool } = require("../models/config");
 const { resultMSG, resultList } = require("./send");
 const { srvRequired } = require("./required");
 
@@ -37,44 +37,67 @@ router.get("/", srvRequired, (req, res) => {
 })
 
 // 목록 조회
-function calendarList(srv_id, admin_yn, res) {
+async function calendarList(srv_id, admin_yn, res) {
+    const conn = await pool.getConnection();
+    try {
+        // await conn.beginTransaction() // 트랜잭션 적용 시작
 
-    let sql =
-        'SELECT calendar_id as c_id, calendar_start as c_start, calendar_end as c_end, calendar_memo as c_memo '
-        + 'FROM calendar WHERE srv_id=? and calendar_YN =\'N\'';
-    let params = [srv_id];
-    DB(sql, params).then(function (result) {
-        if (!result.state) {
-            console.log(result.err);
-            resultMSG(res, -1, admin_yn, "오류가 발생하였습니다.");
-        } else {
-            return resultList(res, 1, admin_yn, result.rows);
+        let sql =
+            'SELECT calendar_id as c_id, calendar_start as c_start, calendar_end as c_end, calendar_memo as c_memo '
+            + 'FROM calendar WHERE srv_id=? and calendar_YN =\'N\'';
+        const sel = await conn.query(
+            sql
+            , [srv_id])
+
+        if (!sel[0][0].count) {
+            return resultList(res, -1, admin_yn, "일정이 없습니다.");
         }
-    });
+
+        return resultList(res, 1, admin_yn, sel[0][0].rows);
+
+    } catch (err) {
+        console.log(err)
+        // await conn.rollback() // 롤백
+        // return res.status(500).json(err)
+        resultMSG(res, -1, admin_yn, "오류가 발생하였습니다.");
+
+    } finally {
+        conn.release() // conn 회수
+    }
 }
 
 // 상세 조회
-function calendarDetail(calendar_id, admin_yn, res) {
+async function calendarDetail(calendar_id, admin_yn, res) {
+    const conn = await pool.getConnection();
+    try {
+        // await conn.beginTransaction() // 트랜잭션 적용 시작
 
-    let sql =
-        'SELECT calendar_start c_start, calendar_end c_end, calendar_memo c_memo, video_id '
-        + 'FROM calendar WHERE calendar_id=? and calendar_YN =\'N\'';
-    let params = [calendar_id];
-    DB(sql, params).then(function (result) {
-        if (!result.state) {
-            console.log(result.err);
-            resultList(res, -1, admin_yn, "오류가 발생하였습니다.");
-        } else {
-            if (!result.rows[0]) {
-                return resultList(res, -1, admin_yn, "존재하지 않는 일정입니다.");
-            }
-            return resultList(res, 1, admin_yn, result.rows[0]);
+        let sql =
+            'SELECT calendar_start c_start, calendar_end c_end, calendar_memo c_memo, video_id '
+            + 'FROM calendar WHERE calendar_id=? and calendar_YN =\'N\'';
+        const sel = await conn.query(
+            sql
+            , [calendar_id])
+
+        if (!sel[0][0].count) {
+            return resultList(res, -1, admin_yn, "존재하지 않는 일정입니다.");
         }
-    });
+
+        return resultList(res, 1, admin_yn, sel[0][0].rows[0]);
+
+    } catch (err) {
+        console.log(err)
+        // await conn.rollback() // 롤백
+        // return res.status(500).json(err)
+        resultMSG(res, -1, admin_yn, "오류가 발생하였습니다.");
+
+    } finally {
+        conn.release() // conn 회수
+    }
 }
 
 // 일정 추가
-router.post("/add", srvRequired, (req, res) => {
+router.post("/add", srvRequired, async (req, res) => {
 
     const user_id = req.user.id;
     const srv_id = req.body.srv_id;
@@ -94,20 +117,29 @@ router.post("/add", srvRequired, (req, res) => {
         return resultMSG(res, -1, "접근 권한이 없습니다.");
     }
 
-    let sql =
-        'INSERT INTO calendar '
-        + '(srv_id, user_id, calendar_start, calendar_end, calendar_memo, video_id) '
-        + 'VALUES(?,?,?,?,?,?)';
-    let params = [srv_id, user_id, calendar_start, calendar_end, calendar_memo, video_id];
-    DB(sql, params).then(function (result) {
-        if (!result.state) {
-            console.log(result.err);
-            resultMSG(res, -1, "오류가 발생하였습니다.");
-        } else {
-            resultMSG(res, 1, "추가되었습니다.");
-        }
-    });
+    const conn = await pool.getConnection();
+    try {
+        // await conn.beginTransaction() // 트랜잭션 적용 시작
 
+        let sql =
+            'INSERT INTO calendar '
+            + '(srv_id, user_id, calendar_start, calendar_end, calendar_memo, video_id) '
+            + 'VALUES(?,?,?,?,?,?)';
+        const ins = await conn.query(
+            sql
+            , [srv_id, user_id, calendar_start, calendar_end, calendar_memo, video_id])
+
+        return resultMSG(res, 1, "추가되었습니다.");
+
+    } catch (err) {
+        console.log(err)
+        // await conn.rollback() // 롤백
+        // return res.status(500).json(err)
+        return resultMSG(res, -1, "오류가 발생하였습니다.");
+
+    } finally {
+        conn.release() // conn 회수
+    }
 })
 
 module.exports = router;
