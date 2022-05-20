@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
 
   const user_id = req.user.id;
 
-  console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /setting] `);
+  console.log(`[${new Date().toLocaleString()}] [uid ${user_id} GET /setting] `);
 
   const conn = await pool.getConnection();
   try {
@@ -50,12 +50,12 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/name", async (req, res) => {
+router.put("/name", async (req, res) => {
   const user_id = req.user.id;
   const name = req.body.name;
 
   console.log(
-    `[${new Date().toLocaleString()}] [uid ${user_id} /setting/name] name=${name}`
+    `[${new Date().toLocaleString()}] [uid ${user_id} PUT /setting/name] name=${name}`
   );
 
   const conn = await pool.getConnection();
@@ -81,12 +81,12 @@ router.post("/name", async (req, res) => {
   }
 });
 
-router.post("/msg", async (req, res) => {
+router.put("/msg", async (req, res) => {
   const user_id = req.user.id;
   const msg = req.body.msg;
 
   console.log(
-    `[${new Date().toLocaleString()}] [uid ${user_id} /setting/msg] msg=${msg}`
+    `[${new Date().toLocaleString()}] [uid ${user_id} PUT /setting/msg] msg=${msg}`
   );
 
   const conn = await pool.getConnection();
@@ -113,13 +113,13 @@ router.post("/msg", async (req, res) => {
 });
 
 // 비밀번호 변경
-router.post("/changePassword", async (req, res) => {
+router.put("/pwd", async (req, res) => {
   const user_id = req.user.id;
   let pwd = req.body.pwd;
   let changePwd = req.body.changePwd;
 
   console.log(
-    `[${new Date().toLocaleString()}] [uid ${user_id} /setting/changePassword] pwd=${pwd}&changePwd=${changePwd}`
+    `[${new Date().toLocaleString()}] [uid ${user_id} PUT /setting/pwd] pwd=${pwd}&changePwd=${changePwd}`
   );
 
 

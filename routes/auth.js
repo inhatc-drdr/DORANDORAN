@@ -25,7 +25,7 @@ router.post("/login", async (req, res) => {
   let pwd = req.body.pwd;
 
   console.log(
-    `[${new Date().toLocaleString()}] [uid - /login] email=${email}&pwd=${pwd}`
+    `[${new Date().toLocaleString()}] [uid - POST /login] email=${email}&pwd=${pwd}`
   );
 
   if (!email || !pwd) {
@@ -91,7 +91,7 @@ router.post("/refresh", async (req, res) => {
   let refreshToken = req.body.refreshToken;
 
   console.log(
-    `[${new Date().toLocaleString()}] [uid - /refresh] refreshToken=${refreshToken}`
+    `[${new Date().toLocaleString()}] [uid - POST /refresh] refreshToken=${refreshToken}`
   );
 
   if (!refreshToken) return res.sendStatus(401);
@@ -120,7 +120,7 @@ router.post("/signup", async (req, res) => {
   const tel = account.tel;
 
   console.log(
-    `[${new Date().toLocaleString()}] [uid - /signup] name=${name}&email=${email}&pwd=${pwd}&tel=${tel}`
+    `[${new Date().toLocaleString()}] [uid - POST /signup] name=${name}&email=${email}&pwd=${pwd}&tel=${tel}`
   );
 
   // 암호화
@@ -151,11 +151,10 @@ router.post("/signup", async (req, res) => {
 });
 
 // 이메일 중복확인
-router.post("/emailCheck", async (req, res) => {
-  const account = req.body;
-  const email = account.email;
+router.get("/emailCheck", async (req, res) => {
+  const email = req.query.email;
 
-  console.log(`[${new Date().toLocaleString()}] [uid - /emailCheck] email=${email}`);
+  console.log(`[${new Date().toLocaleString()}] [uid - GET /emailCheck] email=${email}`);
 
   const conn = await pool.getConnection();
   try {
@@ -166,7 +165,7 @@ router.post("/emailCheck", async (req, res) => {
       , [email])
 
     if (!sel[0][0].count) {
-      resultMSG(res, 1, "사용가능한 이메일 입니다.");
+      return resultMSG(res, 1, "사용가능한 이메일 입니다.");
     }
 
     resultMSG(res, -1, "중복된 이메일입니다.");
@@ -183,11 +182,11 @@ router.post("/emailCheck", async (req, res) => {
 });
 
 // 회원탈퇴
-router.post("/signout", authenticateAccessToken, async (req, res) => {
+router.put("/signout", authenticateAccessToken, async (req, res) => {
 
   const user_id = req.user.id;
 
-  console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /signout] `);
+  console.log(`[${new Date().toLocaleString()}] [uid ${user_id} PUT /signout] `);
 
   const pwd = req.body.pwd;
 

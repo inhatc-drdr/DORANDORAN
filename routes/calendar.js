@@ -24,7 +24,7 @@ router.get("/", srvRequired, (req, res) => {
     const admin_yn = req.data.admin_yn;
 
     console.log(
-        `[${new Date().toLocaleString()}] [uid ${user_id} /server/calendar] srv_id=${srv_id}&c_id=${calendar_id}`
+        `[${new Date().toLocaleString()}] [uid ${user_id} GET /server/calendar] srv_id=${srv_id}&c_id=${calendar_id}`
     );
 
     // 상세 조회
@@ -95,7 +95,7 @@ async function calendarDetail(calendar_id, admin_yn, res) {
 }
 
 // 일정 추가
-router.post("/add", srvRequired, async (req, res) => {
+router.post("/", srvRequired, async (req, res) => {
 
     const user_id = req.user.id;
     const srv_id = req.body.srv_id;
@@ -106,7 +106,7 @@ router.post("/add", srvRequired, async (req, res) => {
     const video_id = new Date().getTime().toString(36);
 
     console.log(
-        `[${new Date().toLocaleString()}] [uid ${user_id} /server/calendar/add] srv_id=${srv_id}&
+        `[${new Date().toLocaleString()}] [uid ${user_id} POST /server/calendar] srv_id=${srv_id}&
             calendar_start=${calendar_start}&calendar_end=${calendar_end}&calendar_memo=${calendar_memo}&video_id=${video_id}`
     );
 

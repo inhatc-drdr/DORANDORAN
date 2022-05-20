@@ -23,7 +23,7 @@ router.get("/", srvRequired, async (req, res) => {
   const srv_id = req.query.srv_id;
 
   console.log(
-    `[${new Date().toLocaleString()}] [uid ${user_id} /server/member] srv_id=${srv_id}`
+    `[${new Date().toLocaleString()}] [uid ${user_id} GET /server/member] srv_id=${srv_id}`
   );
 
   const admin_yn = req.data.admin_yn;
@@ -59,14 +59,14 @@ router.get("/", srvRequired, async (req, res) => {
 });
 
 // 회원 삭제
-router.post("/delete", srvRequired, async (req, res) => {
+router.put("/", srvRequired, async (req, res) => {
 
   const user_id = req.user.id;
   const delete_id = req.body.user_id;
   const srv_id = req.body.srv_id;
 
   console.log(
-    `[${new Date().toLocaleString()}] [uid ${user_id} /server/member/delete] srv_id=${srv_id}&delete_id=${delete_id}`
+    `[${new Date().toLocaleString()}] [uid ${user_id} PUT /server/member] srv_id=${srv_id}&delete_id=${delete_id}`
   );
 
   const admin_yn = req.data.admin_yn;
@@ -114,14 +114,14 @@ router.post("/delete", srvRequired, async (req, res) => {
 });
 
 // 회원 초대
-router.post("/invent", srvRequired, async (req, res) => {
+router.post("/", srvRequired, async (req, res) => {
 
   const user_id = req.user.id;
   const invent_email = req.body.user_email;
   const srv_id = req.body.srv_id;
 
   console.log(
-    `[${new Date().toLocaleString()}] [uid ${user_id} /server/member/invent] srv_id=${srv_id}&invent_email=${invent_email}`
+    `[${new Date().toLocaleString()}] [uid ${user_id} POST /server/member] srv_id=${srv_id}&invent_email=${invent_email}`
   );
 
   const admin_yn = req.data.admin_yn;
@@ -153,7 +153,7 @@ router.post("/invent", srvRequired, async (req, res) => {
       "SELECT srvuser_id FROM srvuser WHERE srv_id=? AND user_id=? AND srvuser_YN='N'"
       , [srv_id, invent_id])
 
-    if (!sel2[0][0]) {
+    if (sel2[0][0]) {
       return resultMSG(res, -1, "이미 가입된 멤버입니다.");
     }
 

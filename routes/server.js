@@ -22,7 +22,7 @@ router.get("/", srvRequired, async (req, res) => {
   const srv_id = req.query.srv_id;
 
   console.log(
-    `[${new Date().toLocaleString()}] [uid ${user_id} /server] srv_id=${srv_id}`
+    `[${new Date().toLocaleString()}] [uid ${user_id} GET /server] srv_id=${srv_id}`
   );
 
   const srvuser_id = req.data.srvuser_id;
@@ -63,7 +63,7 @@ router.get("/info", srvRequired, async (req, res) => {
   const srv_id = req.query.srv_id;
 
   console.log(
-    `[${new Date().toLocaleString()}] [uid ${user_id} /server/info] srv_id=${srv_id}`
+    `[${new Date().toLocaleString()}] [uid ${user_id} GET /server/info] srv_id=${srv_id}`
   );
 
   const admin_yn = req.data.admin_yn;
@@ -95,12 +95,12 @@ router.get("/info", srvRequired, async (req, res) => {
 });
 
 // 서버 생성
-router.post("/add", async (req, res) => {
+router.post("/", async (req, res) => {
   const user_id = req.user.id;
   const srv_name = req.body.srv_name;
 
   console.log(
-    `[${new Date().toLocaleString()}] [uid ${user_id} /server/add] srv_name=${srv_name}`
+    `[${new Date().toLocaleString()}] [uid ${user_id} POST /server] srv_name=${srv_name}`
   );
 
   const conn = await pool.getConnection();
@@ -112,7 +112,9 @@ router.post("/add", async (req, res) => {
       "SELECT count(*) as count FROM srv WHERE srv_name=? and user_id=?"
       , [srv_name, user_id])
 
-    if (sel[0][0]) {
+    console.log(sel[0][0].count)
+
+    if (sel[0][0].count != 0) {
       return resultMSG(res, -1, "이미 존재하는 서버입니다.");
     }
 
@@ -126,7 +128,7 @@ router.post("/add", async (req, res) => {
     const ins2 = await conn.query(
       "INSERT INTO srvuser (srv_id, user_id) VALUES("
       + " (SELECT srv_id FROM srv WHERE srv_name=? and user_id=?), ?)"
-      , [srv_name, user_id])
+      , [srv_name, user_id, user_id])
 
     await conn.commit() // 커밋
 

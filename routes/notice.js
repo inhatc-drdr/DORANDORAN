@@ -24,7 +24,7 @@ router.get("/", srvRequired, (req, res) => {
     const admin_yn = req.data.admin_yn;
 
     console.log(
-        `[${new Date().toLocaleString()}] [uid ${user_id} /server/notice] srv_id=${srv_id}&n_id=${notice_id}`
+        `[${new Date().toLocaleString()}] [uid ${user_id} GET /server/notice] srv_id=${srv_id}&n_id=${notice_id}`
     );
 
     // 상세 조회
@@ -96,13 +96,13 @@ async function noticeDetail(notice_id, admin_yn, res) {
 }
 
 // 공지 추가
-router.post("/add", srvRequired, async (req, res) => {
+router.post("/", srvRequired, async (req, res) => {
 
     const user_id = req.user.id;
     const srv_id = req.body.srv_id;
 
     console.log(
-        `[${new Date().toLocaleString()}] [uid ${user_id} /server/notice/add] srv_id=${srv_id}`
+        `[${new Date().toLocaleString()}] [uid ${user_id} POST /server/notice] srv_id=${srv_id}`
     );
 
     const admin_yn = req.data.admin_yn;

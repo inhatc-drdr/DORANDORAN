@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
 
   const user_id = req.user.id;
 
-  console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /home]`);
+  console.log(`[${new Date().toLocaleString()}] [uid ${user_id} GET /home]`);
 
   // 서버 목록 검색
   // - 서버명, 다음 미팅 날짜

@@ -19,7 +19,7 @@ router.get('/getname', authenticateAccessToken, async (req, res) => {
 
     const user_id = req.user.id;
 
-    console.log(`[${new Date().toLocaleString()}] [uid ${user_id} /video/getname] `)
+    console.log(`[${new Date().toLocaleString()}] [uid ${user_id} GET /video/getname] `)
 
     const conn = await pool.getConnection();
     try {
