@@ -18,8 +18,15 @@ const { resultMSG, resultList } = require("./send");
 router.get("/", async (req, res) => {
 
   const user_id = req.user.id;
+  let keyword = '';
 
-  console.log(`[${new Date().toLocaleString()}] [uid ${user_id} GET /home]`);
+  if (Object.keys(req.query).length > 0) {
+    keyword = req.query.keyword;
+  }
+
+  console.log(`[${new Date().toLocaleString()}] [uid ${user_id} GET /home] keyword=${keyword}`);
+
+
 
   // 서버 목록 검색
   // - 서버명, 다음 미팅 날짜
@@ -29,11 +36,12 @@ router.get("/", async (req, res) => {
     // await conn.beginTransaction() // 트랜잭션 적용 시작
 
     let sql =
-      "SELECT s.srv_id, s.srv_name, " +
-      "(SELECT calendar_start FROM calendar c WHERE c.srv_id=s.srv_id and calendar_YN = 'N' and calendar_start >= now() order by calendar_start asc limit 1) as calendar_start " +
-      "FROM srvuser su, srv s " +
-      "WHERE su.user_id=(?) and su.srv_id = s.srv_id and su.srvuser_YN = 'N' and s.srv_YN=\'N\' " +
-      "order by srvuser_lastaccess desc";
+      `SELECT s.srv_id, s.srv_name, 
+      (SELECT calendar_start FROM calendar c WHERE c.srv_id=s.srv_id and calendar_YN = 'N' and calendar_start >= now() order by calendar_start asc limit 1) as calendar_start 
+      FROM srvuser su, srv s 
+      WHERE su.user_id=? and su.srv_id = s.srv_id and su.srvuser_YN = 'N' and s.srv_YN=\'N\' 
+      and s.srv_name LIKE '%${keyword}%' 
+      order by srvuser_lastaccess desc`;
     const sel = await conn.query(
       sql
       , [user_id])
