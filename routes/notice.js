@@ -45,7 +45,8 @@ async function noticeList(srv_id, admin_yn, res) {
         let sql =
             'SELECT notice_id as n_id, notice_name as n_name, notice_write as n_write '
             + 'FROM notice '
-            + 'WHERE srv_id=? and notice_YN=\'N\'';
+            + 'WHERE srv_id=? and notice_YN=\'N\' '
+            + 'ORDER BY n_id DESC'
         const sel = await conn.query(
             sql
             , [srv_id])
