@@ -12,7 +12,7 @@ COVID-19로 수업 방식이 오프라인에서 온라인으로 변화함에따�
 
 본 프로젝트의 목표는 캘린터를 통해 온라인 수업(화상 강의)를 예약 및 조회할 수 있는 플랫폼을 구현하는 것이다.
 
-![Alt Text](/images/video.gif)
+![Alt Text](/setting/video.gif)
 
 ## ⚙ HOW TO USE
 
