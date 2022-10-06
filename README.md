@@ -1,79 +1,47 @@
-# <p align="center">Real-Time-Online-Class-Platform</p>
+# 도란도란
 
-<p align="center">
-<img src="https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=Node.js&logoColor=white"/>
-<img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/>
-<img src="https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=Postman&logoColor=white"/>
-</p>
+담당 Skills & 사용 라이브러리: <img src="https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=Node.js&logoColor=white"/> <img src="https://img.shields.io/badge/express-339933?style=flat-square&logo=Node.js&logoColor=white"/> <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/> <img src="https://img.shields.io/badge/WebRTC-FF6C37?style=flat-square&logo=L&logoColor=white"/> <br/>
+진행기간: 2022년 3월 2일 → 2022년 5월 31일  <br/>
+팀 구성: 백엔드 1명, 프론트엔드 2명  <br/>
+한 줄 소개: 편리한 온라인 수업 일정 관리를 위해 캘린더 서비스를 도입한 실시간 온라인 수업 플랫폼 <br/>
 
-## 💻 프로젝트 설명
+### Link
 
-COVID-19로 수업 방식이 오프라인에서 온라인으로 변화함에따라 온라인 플랫폼의 사용 빈도가 증가하였다. 이에 효율적인 온라인 수업을 진행할 수 있는 플랫폼을 구현하였다.
+**구현 영상**
 
-본 프로젝트의 목표는 캘린더를 통해 온라인 수업(화상 강의)를 예약 및 조회할 수 있는 플랫폼을 구현하는 것이다.
+[도란도란 실시간 온라인 수업 플랫폼](https://www.youtube.com/watch?v=VXXxPEaxOw0)
 
-![Alt Text](/setting/video.gif)
+### 상세내용
+![456](https://user-images.githubusercontent.com/80824750/194249116-0e692461-a914-4210-a6ac-40ea1735fd0c.png)
 
-## ⚙ HOW TO USE
 
-NPM 모듈 설치
+🏫 교내 캡스톤 디자인 과목에서 진행한 프로젝트입니다. 도란도란은 COVID-19 이후 증가한 온라인 수업을 위한 **실시간 온라인 수업 플랫폼**입니다. 캘린더를 통해 화상 강의 예약 및 조회가 가능하게 함으로써 온라인 수업 일정을 쉽게 관리할 수 있도록 하고자 개발하게 되었습니다. 도란도란은 수업 서버 개설, 수강생 초대, 공지, 일정 생성 및 관리 기능을 제공합니다.
 
-```
-npm install
-```
 
-실행
+### 사용 기술 및 라이브러리
 
-```
-npm run dev
-```
+- NodeJS, express
+- MySQL
+- WebRTC
+- Ubuntu 18.0, NCP
+- vscode, DBeaver, MobaXterm, Postman
 
-Open http://localhost:3000 in browser
+### 담당한 기능 (BackEnd Server)
 
-## 🔧 프로젝트 구조
+- **DB** 설계
+- **프로젝트 전반의 API** 개발
+    - 로그인, 회원가입, 메인화면
+    - 회원, 공지, 일정 기능
+- **WebRTC Open Source**를 이용하여 **화상강의** 구현
 
-```
-DEMO-NODE
-⊢ models    // DB 관련 스키마, 연결 코드
-⊢ config    // crypto, passport 등 모듈
-⊢ routes    // 라우터
-⊢ app.js    // 서버
-⊢ package.json
-⊢ nodemon.json
-⊢ babel.cofing.json
-⊢ .env      // 환경변수, 비밀번호 등 보호되어야할 정보들이 담긴 파일
-⊢ readme.md
-⊢ setting  // 설정 정리 파일
-⊢ images  // 이미지 파일
-```
+### 깨달은 점
 
-### 🗂️ 메뉴 구조 및 기능
+- 프로젝트 **기획서, 화면 설계서** 작성 과정을 통해 프로젝트 기획 단계의 중요성을 알았다.
+- Back-End 와 Front-End 를 분리하여 개발함으로써 **REST API** 에 대한 이해를 하였다.
+- 개발한 서버 API를 프론트엔드에 제공하기 위한 방법을 고민하였으며, 그 결과 **Notion** 을 이용하여 API를 문서화 하여 제공하였다.
+- WebRTC 를 적용하면서 **Open Source** 를 사용해볼 수 있었다.
 
-![menuStructure](https://user-images.githubusercontent.com/80824750/179705391-408ee6c3-5edf-4000-b7ca-5d68a368d18e.png)
-![menuFeatures](https://user-images.githubusercontent.com/80824750/179705376-009530ec-840a-40bc-b809-8c0cdbf9fbc4.png)
-
-### 📑 DB 설계
-
-![DB](https://user-images.githubusercontent.com/80824750/179705494-f8dbf7ee-6b7b-4bd0-ab89-4310a30bd0df.png)
-
-## 📈 ROUTES
-
-| Name           | Description                           |
-| -------------- | ------------------------------------- |
-| send           | Response 전송                         |
-| auth           | 계정관련 전반적인 기능                |
-| jwt            | jwt 발급, 유효성 검사                 |
-| setting        | 계정 정보 조회 및 이름, 비밀번호 변경 |
-| home           | 서버 목록(검색 가능) 조회             |
-| required       | 서버 접근 권한 검사                   |
-| server         | 서버 접속 및 정보 조회, 추가          |
-| notice         | 공지 목록 및 상세 내용 조회, 추가     |
-| calendar       | 일정 목록 및 상세 내용 조회, 추가     |
-| member         | 서버 수강생 조회, 초대, 삭제          |
-| video          | 화상강의 참여 수강생 이름 조회        |
-| socket, Logger | 화상강의 socket                       |
-
-## 📃 LICENSE
+### 사용한 OpenSource 에 관한 LICENSE
 
 📱 WebRTC P2P : [MiroTalk](https://github.com/miroslavpejic85/mirotalk)
 
@@ -87,21 +55,3 @@ DEMO-NODE
 MiroTalk is free and can be modified and forked. But the conditions of the AGPLv3 (GNU Affero General Public License v3.0) need to be respected. In particular modifications need to be free as well and made available to the public. Get a quick overview of the license at [Choose an open source license](https://choosealicense.com/licenses/agpl-3.0/).
 
 </details>
-
-<details>
-<summary>수정 및 사용 파일</summary>
-
-<br/>
-
-| MiroTalk | 프로젝트 적용 | 설명                 |
-| -------- | ------------- | -------------------- |
-| server   | app           | https server         |
-| server   | socket        | webRTC socket server |
-| Logger   | Logger        |                      |
-
-</details>
-
-## ✅ 추후 구현 예정
-
-    - 서버, 공지, 일정 삭제 기능
-    - 채팅 기능
